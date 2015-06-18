@@ -3073,5 +3073,125 @@
             "testing",
             "tests"
         ]
+    },
+    {
+        "name": "smarty/smarty",
+        "version": "v3.1.27",
+        "version_normalized": "3.1.27.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/smarty-php/smarty.git",
+            "reference": "4537d8aae6c4a26f5439bc3a05d3437d25c2c4d2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/smarty-php/smarty/zipball/4537d8aae6c4a26f5439bc3a05d3437d25c2c4d2",
+            "reference": "4537d8aae6c4a26f5439bc3a05d3437d25c2c4d2",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2"
+        },
+        "time": "2015-06-18 00:55:59",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.1.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "libs/Smarty.class.php",
+                "libs/SmartyBC.class.php",
+                "libs/sysplugins/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "LGPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "Monte Ohrt",
+                "email": "monte@ohrt.com"
+            },
+            {
+                "name": "Uwe Tews",
+                "email": "uwe.tews@googlemail.com"
+            },
+            {
+                "name": "Rodney Rehm",
+                "email": "rodney.rehm@medialize.de"
+            }
+        ],
+        "description": "Smarty - the compiling PHP template engine",
+        "homepage": "http://www.smarty.net",
+        "keywords": [
+            "templating"
+        ]
+    },
+    {
+        "name": "ytake/laravel-smarty",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/ytake/Laravel.Smarty.git",
+            "reference": "a2edc9241f823d6059cb6e14493848fc22dc4fa5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/ytake/Laravel.Smarty/zipball/a2edc9241f823d6059cb6e14493848fc22dc4fa5",
+            "reference": "a2edc9241f823d6059cb6e14493848fc22dc4fa5",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/config": "5.*",
+            "illuminate/console": "5.*",
+            "illuminate/events": "5.*",
+            "illuminate/support": "5.*",
+            "illuminate/view": "5.*",
+            "php": ">=5.4.0",
+            "smarty/smarty": "3.*@stable"
+        },
+        "require-dev": {
+            "mockery/mockery": "*",
+            "phpunit/phpunit": "4.*",
+            "predis/predis": "~1.0",
+            "satooshi/php-coveralls": "*",
+            "symfony/console": "2.*",
+            "symfony/framework-bundle": "2.*"
+        },
+        "suggest": {
+            "ext-memcached": "memcached Template Cache Driver",
+            "predis/predis": "Redis Template Cache Driver"
+        },
+        "time": "2015-06-09 16:14:03",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Ytake\\LaravelSmarty\\": "src/Smarty"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Yuuki Takezawa",
+                "email": "yuuki.takezawa@comnect.jp.net"
+            }
+        ],
+        "description": "smarty template engine for laravel",
+        "keywords": [
+            "cache",
+            "laravel",
+            "smarty",
+            "template",
+            "view"
+        ]
     }
 ]

@@ -1,25 +1,16 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
+use Auth;
+use Redirect;
 use App\User;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Support\Facades\Input;
 
 class AuthController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Registration & Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users, as well as the
-    | authentication of existing users. By default, this controller uses
-    | a simple trait to add these behaviors. Why don't you explore it?
-    |
-    */
-
     use AuthenticatesAndRegistersUsers;
 
     /**
@@ -29,13 +20,15 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'getLogout']);
+        $this->middleware('guest', [
+            'except' => 'getLogout'
+        ]);
     }
 
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -43,14 +36,14 @@ class AuthController extends Controller
         return Validator::make($data, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
+            'password' => 'required|confirmed|min:6'
         ]);
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      * @return User
      */
     protected function create(array $data)
@@ -58,7 +51,59 @@ class AuthController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+            'password' => bcrypt($data['password'])
         ]);
+    }
+
+    public function getRegister()
+    {
+        return view('auth.register');
+    }
+
+    public function postRegister()
+    {
+        return User::create([
+            'name' => Input::get('name'),
+            'email' => Input::get('email'),
+            'password' => bcrypt(Input::get('password'))
+        ]);
+    }
+
+    public function getLogin()
+    {
+        return view('auth.login');
+    }
+
+    public function postLogin()
+    {
+        // 验证输入。
+        $validator = Validator::make(Input::all(), array(
+            'email' => 'required|email',
+            'password' => 'required'
+        ));
+        if ($validator->fails()) {
+            return redirect()->back()->with('message_error', $validator->messages()
+                ->first());
+            ;
+        }
+        // 登录验证。
+        if (! Auth::attempt([
+            'email' => Input::get('email'),
+            'password' => Input::get('password')
+        ], Input::has('remember'))) {
+            return Redirect::back()->withErrors([
+                '用户名与密码不匹配。'
+            ]);
+        }
+
+        // 登录成功
+        return Redirect::route('/');
+    }
+
+    public function getLogout()
+    {
+        // 退出系统
+        Auth::logout();
+        return Redirect::route('/');
     }
 }
