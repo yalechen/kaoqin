@@ -1,0 +1,14 @@
+/vendor
+
+/node_modules
+.env
+
+.env
+/.settings/*
+.buildpath
+.env.example
+.idea
+.project
+composer.lock
+/storage/smarty/*
+public/upload_files/
