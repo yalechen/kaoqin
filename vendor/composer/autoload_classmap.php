@@ -24,6 +24,7 @@ return array(
     'CreateRolePurviewsTable' => $baseDir . '/database/migrations/2015_06_19_100321_create_role_purviews_table.php',
     'CreateRolesTable' => $baseDir . '/database/migrations/2015_06_19_100247_create_roles_table.php',
     'CreateTaskAssignTable' => $baseDir . '/database/migrations/2015_06_19_095741_create_task_assign_table.php',
+    'CreateTaskCustsTable' => $baseDir . '/database/migrations/2015_06_20_050857_create_task_custs_table.php',
     'CreateTaskGeneralTable' => $baseDir . '/database/migrations/2015_06_19_095724_create_task_general_table.php',
     'CreateTaskLogsTable' => $baseDir . '/database/migrations/2015_06_19_095951_create_task_logs_table.php',
     'CreateTaskSignTable' => $baseDir . '/database/migrations/2015_06_19_095655_create_task_sign_table.php',

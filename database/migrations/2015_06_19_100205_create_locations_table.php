@@ -1,10 +1,10 @@
 <?php
-
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateLocationsTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -12,8 +12,30 @@ class CreateLocationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('locations', function (Blueprint $table) {
+        // 位置表
+        Schema::create('locations', function (Blueprint $table)
+        {
+            // 主键ID
             $table->increments('id');
+
+            // 员工ID
+            $table->unsignedInteger('user_id');
+
+            // 星期几
+            $table->string('weekday');
+
+            // 日期
+            $table->date('date');
+
+            // 时间
+            $table->string('time');
+
+            // 经度
+            $table->string('lng');
+
+            // 纬度
+            $table->string('lat');
+
             $table->timestamps();
         });
     }

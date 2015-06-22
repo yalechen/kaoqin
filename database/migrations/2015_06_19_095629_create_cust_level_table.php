@@ -1,10 +1,10 @@
 <?php
-
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateCustLevelTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -12,8 +12,21 @@ class CreateCustLevelTable extends Migration
      */
     public function up()
     {
-        Schema::create('cust_level', function (Blueprint $table) {
+        // 商户登记表
+        Schema::create('cust_level', function (Blueprint $table)
+        {
+            // 主键ID
             $table->increments('id');
+
+            // 等级名称
+            $table->string('name');
+
+            // 每月拜访次数
+            $table->tinyInteger('times')->default(0);
+
+            // 排序
+            $table->unsignedInteger('sort')->default(100);
+
             $table->timestamps();
         });
     }

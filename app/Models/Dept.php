@@ -23,6 +23,6 @@ class Dept extends Model
      */
     public function org()
     {
-        return $this->belongsTo('App\Org');
+        return $this->belongsTo('App\Models\Org');
     }
 }

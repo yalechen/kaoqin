@@ -51,7 +51,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function org()
     {
-        return $this->hasMany('App\Org');
+        return $this->hasMany('App\Models\Org');
     }
 
     /**
@@ -59,7 +59,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function dept()
     {
-        return $this->hasOne('App\Dept');
+        return $this->hasOne('App\Models\Dept');
     }
 
     /**
@@ -67,6 +67,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function leader()
     {
-        return $this->hasMany('App\User', 'parent_user_id', 'id');
+        return $this->hasMany('App\Models\User', 'parent_user_id', 'id');
     }
 }
