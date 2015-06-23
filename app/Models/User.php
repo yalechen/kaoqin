@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Support\Facades\Hash;
 
+/**
+ * 用户模型
+ */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
     // 性别：男
@@ -68,5 +72,13 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function leader()
     {
         return $this->hasMany('App\Models\User', 'parent_user_id', 'id');
+    }
+
+    /**
+     * 所属角色
+     */
+    public function roles()
+    {
+        return $this->belongsToMany('App\Models\Role', 'user_roles', 'user_id', 'role_id');
     }
 }

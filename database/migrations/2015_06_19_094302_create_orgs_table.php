@@ -40,10 +40,10 @@ class CreateOrgsTable extends Migration
             $table->string('address')->default('');
 
             // 经度
-            $table->string('lng')->default(0);
+            $table->string('lng')->default('');
 
             // 纬度
-            $table->string('lat')->default(0);
+            $table->string('lat')->default('');
 
             // 排序
             $table->unsignedInteger('sort')->default(100);

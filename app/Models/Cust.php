@@ -20,8 +20,16 @@ class Cust extends Model
     /**
      * 旗下部门
      */
-    public function level()
+    public function custLevel()
     {
         return $this->belongsTo('App\Models\CustLevel');
+    }
+
+    /**
+     * 巡店人
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
     }
 }

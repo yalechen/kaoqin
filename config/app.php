@@ -144,6 +144,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        'Ytake\LaravelSmarty\SmartyServiceProvider',
+        'Intervention\Image\ImageServiceProvider',
+        'Latrell\Swagger\SwaggerServiceProvider',
     ],
 
     /*
@@ -192,6 +195,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
 
+        'Image' => 'Intervention\Image\Facades\Image',
     ],
 
 ];

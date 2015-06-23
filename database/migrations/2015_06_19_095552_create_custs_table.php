@@ -23,7 +23,7 @@ class CreateCustsTable extends Migration
             $table->string('number')->unique();
 
             // 名称
-            $table->string('name');
+            $table->string('name')->unique();
 
             // 类型[门店&集团]
             $table->enum('type', [
@@ -41,7 +41,7 @@ class CreateCustsTable extends Migration
             $table->string('contacts');
 
             // 联系方式
-            $table->string('mobile');
+            $table->string('mobile')->unique();
 
             // logo
             $table->string('logo_path');
