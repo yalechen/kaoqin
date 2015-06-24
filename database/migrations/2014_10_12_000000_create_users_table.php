@@ -73,6 +73,15 @@ class CreateUsersTable extends Migration
                 User::STATUS_OFF
             ])->default(User::STATUS_ON);
 
+            // 上次登录时间
+            $table->timestamp('last_login_time');
+
+            // 此次登录时间
+            $table->timestamp('this_login_time');
+
+            // 设备信息
+            $table->string('device_info')->default('');
+
             $table->rememberToken();
             $table->timestamps();
         });

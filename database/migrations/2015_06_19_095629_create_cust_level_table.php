@@ -19,7 +19,7 @@ class CreateCustLevelTable extends Migration
             $table->increments('id');
 
             // 等级名称
-            $table->string('name');
+            $table->string('name')->unique();
 
             // 每月拜访次数
             $table->tinyInteger('times')->default(0);

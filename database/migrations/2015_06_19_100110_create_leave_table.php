@@ -25,7 +25,7 @@ class CreateLeaveTable extends Migration
             $table->unsignedInteger('user_id');
 
             // 请假者真实姓名
-            $table->string('real_name');
+            $table->string('realname');
 
             // 所属部门
             $table->unsignedInteger('dept_id');
