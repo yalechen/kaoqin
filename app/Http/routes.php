@@ -35,6 +35,18 @@ Route::group([
     'namespace' => 'Admin'
 ], function ()
 {
+    // 获取城市列表
+    Route::get('city', [
+        'as' => 'CityPull',
+        'uses' => 'BaseController@getCity'
+    ]);
+
+    // 获取区县列表
+    Route::get('district', [
+        'as' => 'DistrictPull',
+        'uses' => 'BaseController@getDistrict'
+    ]);
+
     // 退出
     Route::get('logout', [
         'as' => 'AdminLogout',
@@ -72,9 +84,14 @@ Route::group([
                 'uses' => 'OrgController@index'
             ]);
             // 机构添加&编辑
-            Route::get('edit/{id?}', [
+            Route::get('edit', [
                 'as' => 'OrgEdit',
                 'uses' => 'OrgController@edit'
+            ]);
+            // 获取某机构的下级机构
+            Route::get('sub', [
+                'as' => 'OrgSub',
+                'uses' => 'OrgController@subOrgs'
             ]);
         });
 

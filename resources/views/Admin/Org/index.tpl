@@ -9,14 +9,32 @@
 <div class="row">
 	<div class="col-sm-12">
 		<section class="panel">
-			<header class="panel-heading head-border"> Hover Table </header>
+			<header class="panel-heading head-border"> 机构管理 </header>
+			<div class="panel-body">
+				<form class="form-inline" role="form" action="{Route('OrgIndex')}" method="get">
+					<div class="form-group">
+						<label class="sr-only" for="key">名称</label>
+                        <input type="text" class="form-control" id="name" name="key" placeholder="关键字">
+                    </div>
+                    <div class="form-group">
+						<select class="form-control" name="org_id">
+							<option value="0" {if !$smarty.get.org_id}selected{/if}>--全部机构--</option>
+							{foreach $org as $item}
+								<option value="{$item.id}" {if $item.id eq $smarty.get.org_id}selected{/if}>{$item.name}</option>
+							{/foreach}
+                    	</select>
+                    </div>
+					<button type="submit" class="btn btn-success"><i class="fa fa-search"></i> 查询</button>
+					<a href="{route('OrgEdit')}"><button type="button" class="btn btn-primary"><i class="fa fa-plus"></i> 添加机构 </button></a>
+				</form>
+			</div>
 			<table class="table table-hover">
 				<thead>
 					<tr>
 						<th>#</th>
 						<th>编号</th>
-						<th>分类名称</th>
-						<th>上级分类名称</th>
+						<th>名称</th>
+						<th>上级机构</th>
 						<th>所属区域</th>
 						<th>排序值</th>
 						<th>创建日期</th>
@@ -51,4 +69,6 @@
 </div>
 {/block} 
 
-{block script} {/block}
+{block script} 
+
+{/block}
