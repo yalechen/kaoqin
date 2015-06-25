@@ -13,23 +13,23 @@
 			<header class="panel-heading head-border"> {$title}机构 </header>
 			<div class="panel-body">
 				<div class="form">
-					<form class="cmxform form-horizontal tasi-form" id="commentForm" method="get" action="{route('OrgEdit')}">
+					<form class="cmxform form-horizontal tasi-form" id="commentForm" method="post" action="{route('OrgSave')}">
 						<div class="form-group">
 							<label for="name" class="control-label col-lg-2">名称</label>
 							<div class="col-lg-10">
-                               	<input class="form-control" id="name" name="name" minlength="2" type="text" required />
+                               	<input class="form-control" id="name" name="name" value="{old('name')}" minlength="2" type="text" required />
                             </div>
 						</div>
                         <div class="form-group">
                             <label for="number" class="control-label col-lg-2">编号</label>
                             <div class="col-lg-10">
-                                <input class="form-control " id="number" type="text" minlength="5" name="number" required />
+                                <input class="form-control " id="number" type="text" value="{old('number')}" minlength="5" name="number" required />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="area" class="control-label col-lg-2">所属区域</label>
                             <div class="col-lg-10">
-                                <input class="form-control " id="area" type="text" name="area" required />
+                                <input class="form-control " id="area" type="text" name="area" value="{old('area')}" required />
                             </div>
                         </div>
                         {if $data.id gt 0}
@@ -46,7 +46,7 @@
                                 <select class="form-control sub_category" style="width:30%;display:inline;" name="path[]">
                                 	<option value="0" selected>--做为第一级机构--</option>
 									{foreach $org as $item}
-					                	<option value="{$item.id}">{$item.name}</option>
+					                	<option value="{$item.id}" {if old('path').0 eq $item.id}selected{/if}>{$item.name}</option>
 					                {/foreach}
                                 </select>
                             </div>
@@ -57,28 +57,28 @@
                                 <select class="form-control" style="width:30%;display:inline;" id="province" tabindex="1" name="province_id">
 									<option value="">--请选择省份--</option>
 									{foreach $province as $item}
-										<option value="{$item.id}" {if $data.province_id eq $item.id}selected{/if}>{$item.name}</option>
+										<option value="{$item.id}" {if $data.province_id|default:old('province_id') eq $item.id}selected{/if}>{$item.name}</option>
 									{/foreach}
 			                    </select>
 			                    <select class="form-control" style="width:30%;display:inline;" id="city" tabindex="1" name="city_id">
 									<option value="">--请选择城市--</option>
 			                    </select>
-			                    <select class="form-control" style="width:30%;display:inline;" id="district" tabindex="1" name="district_id">
+			                    <!-- <select class="form-control" style="width:30%;display:inline;" id="district" tabindex="1" name="district_id">
 									<option value="">--请选择区县--</option>
-			                    </select>
+			                    </select> -->
                             </div>
                         </div>
                         
                         <div class="form-group">
                             <label for="address" class="control-label col-lg-2">具体地址</label>
                             <div class="col-lg-10">
-                                <textarea class="form-control " id="address" name="address" required></textarea>
+                                <textarea class="form-control " id="address" name="address" required>{old('address')}</textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="sort" class="control-label col-lg-2">排序值</label>
                             <div class="col-lg-10">
-                                <input class="form-control" type="text" id="sort" name="sort" required></textarea>
+                                <input class="form-control" type="text" id="sort" name="sort" value="{old('sort')|default:100}" required></textarea>
                             </div>
                         </div>
                         <div class="form-group">
@@ -174,12 +174,9 @@ function getCity() {
 	}
 }
 
-
-
-$("#city").change(function() {
+/* $("#city").change(function() {
 	getDistrict();
 });
-
 
 function getDistrict() {
     var city_id = $("#city").val();
@@ -205,7 +202,7 @@ function getDistrict() {
 	}else{
 		$("#district option").not(":first").remove();
 	}
-}
+} */
 </script>
 
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=fNRGtmRhQ9t2Byno569QoYUG"></script>

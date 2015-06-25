@@ -93,6 +93,11 @@ Route::group([
                 'as' => 'OrgSub',
                 'uses' => 'OrgController@subOrgs'
             ]);
+            // 保存机构
+            Route::post('save', [
+                'as' => 'OrgSave',
+                'uses' => 'OrgController@save'
+            ]);
         });
 
         // 部门管理

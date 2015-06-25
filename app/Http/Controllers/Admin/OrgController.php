@@ -91,57 +91,68 @@ class OrgController extends BaseController
         $validator = Validator::make(Input::all(), [
             'province_id' => 'required|exists:province,id',
             'city_id' => 'required|exists:city,id',
-            'name' => 'required',
-            'number' => 'required',
-            'sort' => 'required',
+            'name' => 'required|unique:orgs,name,id,' . Input::get('id'),
+            'number' => 'required|unique:orgs,number,id,' . Input::get('id'),
+            'sort' => 'required|integer',
             'longitude' => 'required',
             'latitude' => 'required',
             'address' => 'required',
-            'area' => 'required'
-        ]
-        , [
+            'area' => 'required',
+            'path' => 'required'
+        ], [
             'province_id.required' => '省份不能为空',
             'province_id.exists' => '省份不存在',
             'city_id.required' => '城市不能为空',
             'city_id.exists' => '城市不存在',
-            'name.required' => '企业名称不能为空',
-            'legal.required' => '法人代表不能为空',
-            'contacts.required' => '联系人姓名不能为空',
-            'phone.required' => '联系电话不能为空',
+            'name.required' => '机构名称不能为空',
+            'name.unique' => '机构名称已经存在',
+            'number.required' => '机构编号不能为空',
+            'number.unique' => '机构编号已经存在',
+            'sort.required' => '排序值不能为空',
+            'sort.integer' => '排序值只能是大于0的数字',
+            'longitude.required' => '经度不能为空',
+            'latitude.required' => '纬度不能为空',
             'address.required' => '详细地址不能为空',
-            'description.required' => '企业简介不能为空'
+            'area.required' => '所在区域不能为空',
+            'path.required' => '父级机构不能为空！'
         ]);
         if ($validator->fails()) {
-            return $validator->messages()->first();
+            return Redirect::route('OrgEdit')->withError($validator->messages()
+                ->toArray())
+                ->withInput();
         }
 
-        $enterprise = Enterprise::find($this->enterprise_id);
+        $id = Input::has('id') ? Input::get('id') : 0;
+        $parent_id = array_filter(Input::get('path'));
+        $org = Org::findOrNew(Input::get('id'));
 
-        $enterprise->name = $inputs['name'];
-        $enterprise->brand_name = $inputs['brand_name'];
-        $enterprise->legal = $inputs['legal'];
-        $enterprise->contacts = $inputs['contacts'];
-        $enterprise->phone = $inputs['phone'];
-        $enterprise->address = $inputs['address'];
-        $enterprise->description = $inputs['description'];
-        $enterprise->logo_id = $inputs['logo_id'];
-        $enterprise->weibo = $inputs['weibo'];
-        $enterprise->web_url = $inputs['web_url'];
-        $enterprise->weixin = $inputs['weixin'];
-        $enterprise->weixin_picture_id = $inputs['weixin_picture_id'];
-        $enterprise->license = Input::get('license', '');
-        $enterprise->trademark = Input::get('trademark', '');
-        $enterprise->scope = Input::get('scope', '');
-        if (Input::has('build_date')) {
-            $enterprise->build_date = Input::get('build_date');
+        // 修改时判断
+        if ($id > 0 && ! empty($parent_id)) {
+            // 上级分类不能为自己，及其子孙分类所在分类
+            $parent_info = GoodsCategory::find(end($parent_id));
+
+            $path_node = array_filter(explode(':', $parent_info->path));
+            if (in_array($id, $path_node)) {
+                return Redirect::route("OrgEdit", $id)->withInput()->withMessageError('修改失败，新的父级分类不能是其本类或其子孙分类');
+            }
         }
-        $enterprise->province_id = $inputs['province_id'];
-        $enterprise->city_id = $inputs['city_id'];
-        $enterprise->district_id = $inputs['district_id'];
-        $enterprise->longitude = $inputs['longitude'];
-        $enterprise->latitude = $inputs['latitude'];
-        $enterprise->save();
 
-        return $enterprise;
+        // 上级为全部分类，即新增的为第一级分类
+        $parent_id = empty($parent_id) ? 0 : end($parent_id);
+
+        $org->name = trim(Input::get('name'));
+        $org->number = Input::get('number');
+        $org->address = Input::get('address');
+        $org->area = Input::get('area');
+        $org->sort = Input::get('scope', '100');
+        $org->province_id = Input::get('province_id');
+        $org->city_id = Input::get('city_id');
+        //$org->district_id = Input::get('district_id');
+        $org->lng = Input::get('longitude');
+        $org->lat = Input::get('latitude');
+        $org->parent_id = $parent_id;
+        $org->save();
+
+        return Redirect::route("OrgIndex")->withMessageSuccess('保存成功');
     }
 }
