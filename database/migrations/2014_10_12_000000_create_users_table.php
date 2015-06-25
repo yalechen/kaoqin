@@ -35,7 +35,7 @@ class CreateUsersTable extends Migration
             $table->string('number')->unique();
 
             // 真实姓名
-            $table->string('realname');
+            $table->string('realname')->default('');
 
             // 手机号
             $table->string('mobile')->unique();
@@ -43,7 +43,7 @@ class CreateUsersTable extends Migration
             // 性别
             $table->enum('gender', [
                 User::GENDER_MALE,
-                User::GENDER_MALE
+                User::GENDER_FEMALE
             ])->default(User::GENDER_MALE);
 
             // 出生年月
@@ -66,6 +66,9 @@ class CreateUsersTable extends Migration
 
             // 上级用户
             $table->unsignedInteger('parent_user_id')->default(0);
+
+            // 所巡门店ID
+            $table->unsignedInteger('cust_id')->default(0);
 
             // 状态
             $table->enum('status', [

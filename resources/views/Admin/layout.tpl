@@ -40,7 +40,7 @@
             <!--<span class="sub-title">Welcome to Static Table</span>-->
             <div class="state-information">
                 <ol class="breadcrumb m-b-less bg-less">
-                    <li><a href="#">Home</a></li>
+                    <li><a href="{route('AdminIndex')}">主页</a></li>
                     {block breadcrumb}
                     <li><a href="#">Form</a></li>
                     <li class="active">Form Layout</li>
