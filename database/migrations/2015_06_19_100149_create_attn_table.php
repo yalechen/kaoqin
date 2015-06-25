@@ -40,20 +40,23 @@ class CreateAttnTable extends Migration
             // 是否休假:0-否；1-是
             $table->tinyInteger('is_vacation');
 
+            // 是否请假:0-否；1-是
+            $table->tinyInteger('is_leave');
+
             // 是否加班:0-否；1-是
             $table->tinyInteger('is_overtime');
 
-            // 总体状态，以上全部为1，则是OK
+            // 总体状态，当有上下班签到，不迟到，不请假，不加班时为OK，否则是NG
             $table->enum('status', [
                 Attn::STATUS_OK,
                 Attn::STATUS_NG
             ])->default(Attn::STATUS_NG);
 
             // 里程数
-            $table->tinyInteger('mileage');
+            $table->tinyInteger('mileage')->default(0);
 
             // 巡店数
-            $table->tinyInteger('visited_custs');
+            $table->tinyInteger('visited_custs')->default(0);
 
             $table->timestamps();
         });

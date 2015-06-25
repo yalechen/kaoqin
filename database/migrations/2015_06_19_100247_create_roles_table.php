@@ -26,7 +26,7 @@ class CreateRolesTable extends Migration
             $table->string('name');
 
             // 备注
-            $table->string('remark');
+            $table->string('remark')->default('');
 
             // 状态
             $table->enum('status', [

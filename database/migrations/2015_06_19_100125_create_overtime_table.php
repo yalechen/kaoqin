@@ -46,8 +46,8 @@ class CreateOvertimeTable extends Migration
                 Overtime::STATUS_NG
             ])->default(Overtime::STATUS_OK);
 
-            // reject_reason
-            $table->string('reject_reason');
+            // 驳回理由
+            $table->string('reject_reason')->default('');
 
             $table->timestamps();
         });

@@ -37,9 +37,6 @@ class CreateTaskGeneralTable extends Migration
             // 等级
             $table->unsignedInteger('cust_level_id');
 
-            // 客户ID，一对多，为数组
-            $table->string('cust_ids');
-
             // 拜访客户数，这个数字要小于等于拜访次数
             $table->tinyInteger('custs')->default(0);
 

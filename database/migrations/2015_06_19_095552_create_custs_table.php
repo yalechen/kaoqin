@@ -32,10 +32,10 @@ class CreateCustsTable extends Migration
             ])->default(Cust::TYPE_GROUP);
 
             // 负责的巡店人
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id')->default(0);
 
             // 等级
-            $table->unsignedBigInteger('cust_level_id');
+            $table->unsignedInteger('cust_level_id');
 
             // 联系人名称
             $table->string('contacts');
@@ -44,7 +44,7 @@ class CreateCustsTable extends Migration
             $table->string('mobile')->unique();
 
             // logo
-            $table->string('logo_path');
+            $table->string('logo_path')->default('');
 
             // 详细地址
             $table->string('address')->default('');

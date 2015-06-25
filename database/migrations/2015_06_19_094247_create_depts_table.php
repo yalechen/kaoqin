@@ -23,10 +23,10 @@ class CreateDeptsTable extends Migration
             $table->string('name');
 
             // 描述
-            $table->string('remark');
+            $table->string('remark')->default('');
 
             // 所属机构
-            $table->unsignedInteger('org_id', false)->default(0);
+            $table->unsignedInteger('org_id', false);
 
             // 排序
             $table->unsignedInteger('sort')->default(100);
