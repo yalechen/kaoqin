@@ -21,9 +21,6 @@ class CreateLocationsTable extends Migration
             // 员工ID
             $table->unsignedInteger('user_id');
 
-            // 星期几
-            $table->string('weekday');
-
             // 日期
             $table->date('date');
 

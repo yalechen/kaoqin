@@ -12,13 +12,13 @@ class UserTableSeeder extends Seeder
 
         // 填充总管理员用户
         $user = new User();
-        $user->name = 'admin';
+        $user->name = 'root';
         $user->number = '00000000';
-        $user->email = 'admin@admin.com';
-        $user->mobile = '13799475827';
+        $user->email = 'root@admin.com';
+        $user->mobile = '13799475820';
         $user->password = '123456';
         $user->avatar_path = 'upload_files/init/fa24a612110135f42e8a3b1ec5db9239.png';
-        $user->realname = '管理员';
+        $user->realname = '超级管理员';
         $user->status = User::STATUS_ON;
         $user->save();
         // 添加管理员角色
@@ -26,7 +26,23 @@ class UserTableSeeder extends Seeder
             1
         ]);
 
-        // 创建20个外勤业务员用户 http://zhmn/customer/card/edit?card_id=4
+        // 填充总管理员用户
+        $user = new User();
+        $user->name = 'admin';
+        $user->number = '00000001';
+        $user->email = 'admin@admin.com';
+        $user->mobile = '13799475821';
+        $user->password = '123456';
+        $user->avatar_path = 'upload_files/init/fa24a612110135f42e8a3b1ec5db9239.png';
+        $user->realname = '公司管理员';
+        $user->status = User::STATUS_ON;
+        $user->save();
+        // 添加管理员角色
+        $user->roles()->sync([
+            2
+            ]);
+
+        // 创建20个外勤业务员用户
         $realnames = [
             '郑砚平',
             '符强',
@@ -72,7 +88,7 @@ class UserTableSeeder extends Seeder
             '13503328394'
         ];
         for ($i = 0; $i < 20; $i ++) {
-            $j = $i + 1;
+            $j = $i + 2;
             $user = new User();
             $user->name = "user{$i}";
             $user->number = "0000000{$j}";
@@ -85,7 +101,7 @@ class UserTableSeeder extends Seeder
             $user->save();
             // 添加业务员角色
             $user->roles()->sync([
-                2
+                3
             ]);
         }
     }

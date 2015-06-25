@@ -13,7 +13,7 @@ class CreateTaskAssignTable extends Migration
      */
     public function up()
     {
-        // 指定任务表，即临时任务
+        // 指定任务表，即临时任务，不能和常规任务重复
         Schema::create('task_assign', function (Blueprint $table)
         {
             // 主键ID
@@ -36,6 +36,27 @@ class CreateTaskAssignTable extends Migration
 
             // 结束时间
             $table->timestamp('end_time');
+
+            // 任务执行参考图片
+            $table->string('image1_path')->default('');
+
+            // 任务执行参考图片
+            $table->string('image2_path')->default('');
+
+            // 任务执行参考图片
+            $table->string('image3_path')->default('');
+
+            // 任务执行参考图片
+            $table->string('image4_path')->default('');
+
+            // 任务执行参考图片
+            $table->string('image5_path')->default('');
+
+            // 总的拜访次数，必须大于0
+            $table->unsignedInteger('times');
+
+            // 总的已拜访次数
+            $table->unsignedInteger('visited_times')->default(0);
 
             // 结果:完成-有门店签到即算完成&进行中
             $table->enum('status', [

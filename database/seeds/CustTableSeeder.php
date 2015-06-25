@@ -164,7 +164,7 @@ class CustTableSeeder extends Seeder
             $cust->name = $item['name'];
             $cust->number = $item['number'];
             $cust->type = $item['type'];
-            $cust->user()->associate(User::find($key + 2));
+            $cust->user()->associate(User::find($key + 3));
             $cust->custLevel()->associate(CustLevel::find(mt_rand(1, 7)));
             $cust->contacts = $item['contacts'];
             $cust->mobile = $item['mobile'];

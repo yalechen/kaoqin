@@ -28,6 +28,9 @@ class CreateAttnTable extends Migration
             // 哪天
             $table->tinyInteger('day');
 
+            // 星期几
+            $table->string('weekday');
+
             // 是否已上班签到:0-否；1-是
             $table->tinyInteger('is_sign_on');
 

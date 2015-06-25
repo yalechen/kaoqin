@@ -55,9 +55,38 @@ Route::group([
         'middleware' => 'auth.admin'
     ], function ()
     {
+        // 后台首页
         Route::get('/', [
             'as' => 'AdminIndex',
             'uses' => 'IndexController@index'
         ]);
+
+        // 机构管理
+        Route::group([
+            'prefix' => 'org'
+        ], function ()
+        {
+            // 机构首页
+            Route::get('/', [
+                'as' => 'OrgIndex',
+                'uses' => 'OrgController@index'
+            ]);
+            // 机构添加&编辑
+            Route::get('edit/{id?}', [
+                'as' => 'OrgEdit',
+                'uses' => 'OrgController@edit'
+            ]);
+        });
+
+        // 部门管理
+        Route::group([
+            'prefix' => 'dept'
+        ], function ()
+        {
+            Route::get('/', [
+                'as' => 'DeptIndex',
+                'uses' => 'DeptController@index'
+            ]);
+        });
     });
 });
