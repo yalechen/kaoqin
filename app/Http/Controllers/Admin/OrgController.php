@@ -2,12 +2,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Org;
+use App\Models\Dept;
 use App\Models\Province;
 use Validator;
 use Input;
 use Auth;
 use Redirect;
 use Response;
+use URL;
+use App\Models\City;
 
 class OrgController extends BaseController
 {
@@ -46,15 +49,18 @@ class OrgController extends BaseController
         // 获取第一级机构
         $org = Org::whereParentPath('')->get();
 
+        // 省份
+        $province = Province::all();
+
         // 获取编辑信息
         if (Input::has('id')) {
             $data = Org::find(Input::input('id'));
             $parent_node = $data->parentNode()->first();
-            return v('edit')->with(compact('data', 'parent_node'));
+            if ($data->province_id > 0) {
+                $city = City::whereProvinceId($data->province_id)->get();
+            }
+            return v('edit')->with(compact('data', 'parent_node', 'province', 'city', 'org'));
         }
-
-        // 省份
-        $province = Province::all();
 
         return v('edit', compact('data', 'org', 'province'));
     }
@@ -69,7 +75,9 @@ class OrgController extends BaseController
         if (is_array($parent_id)) {
             $ids = [];
             foreach ($parent_id as $id) {
-                $cid = Org::find($id)->childNode()->lists('id');
+                $cid = Org::find($id)->childNode()
+                    ->lists('id')
+                    ->all();
                 $ids = array_merge($ids, $cid);
             }
             $org = Org::findMany($ids);
@@ -82,18 +90,15 @@ class OrgController extends BaseController
     /**
      * 保存
      */
-    /**
-     * 保存企业信息
-     */
     public function save()
     {
         // 验证输入。
         $validator = Validator::make(Input::all(), [
             'province_id' => 'required|exists:province,id',
             'city_id' => 'required|exists:city,id',
-            'name' => 'required|unique:orgs,name,id,' . Input::get('id'),
-            'number' => 'required|unique:orgs,number,id,' . Input::get('id'),
-            'sort' => 'required|integer',
+            'name' => 'required|unique:orgs,name,' . Input::get('id') . '|min:3|max:60',
+            'number' => 'required|unique:orgs,number,' . Input::get('id'),
+            'sort' => 'required|integer|min:0',
             'longitude' => 'required',
             'latitude' => 'required',
             'address' => 'required',
@@ -106,10 +111,13 @@ class OrgController extends BaseController
             'city_id.exists' => '城市不存在',
             'name.required' => '机构名称不能为空',
             'name.unique' => '机构名称已经存在',
+            'name.min' => '机构名称必须最少要有3个字符',
+            'name.max' => '机构名称不能大于60个字符',
             'number.required' => '机构编号不能为空',
             'number.unique' => '机构编号已经存在',
             'sort.required' => '排序值不能为空',
             'sort.integer' => '排序值只能是大于0的数字',
+            'sort.min' => '排序值只能是大于0的数字',
             'longitude.required' => '经度不能为空',
             'latitude.required' => '纬度不能为空',
             'address.required' => '详细地址不能为空',
@@ -117,8 +125,8 @@ class OrgController extends BaseController
             'path.required' => '父级机构不能为空！'
         ]);
         if ($validator->fails()) {
-            return Redirect::route('OrgEdit')->withError($validator->messages()
-                ->toArray())
+            return Redirect::to(URL::previous())->withMessageError($validator->messages()
+                ->all())
                 ->withInput();
         }
 
@@ -128,31 +136,66 @@ class OrgController extends BaseController
 
         // 修改时判断
         if ($id > 0 && ! empty($parent_id)) {
-            // 上级分类不能为自己，及其子孙分类所在分类
-            $parent_info = GoodsCategory::find(end($parent_id));
+            // 上级机构不能为自己，及其子孙机构所在机构
+            $parent_info = Org::find(end($parent_id));
 
             $path_node = array_filter(explode(':', $parent_info->path));
             if (in_array($id, $path_node)) {
-                return Redirect::route("OrgEdit", $id)->withInput()->withMessageError('修改失败，新的父级分类不能是其本类或其子孙分类');
+                return Redirect::route("OrgEdit", $id)->withInput()->withMessageError('修改失败，新的机构不能是其本身或其子孙机构');
             }
         }
 
-        // 上级为全部分类，即新增的为第一级分类
+        // 上级为全部机构，即新增的为第一级机构
         $parent_id = empty($parent_id) ? 0 : end($parent_id);
 
         $org->name = trim(Input::get('name'));
         $org->number = Input::get('number');
         $org->address = Input::get('address');
         $org->area = Input::get('area');
-        $org->sort = Input::get('scope', '100');
+        $org->sort = Input::get('sort', '100');
         $org->province_id = Input::get('province_id');
         $org->city_id = Input::get('city_id');
-        //$org->district_id = Input::get('district_id');
         $org->lng = Input::get('longitude');
         $org->lat = Input::get('latitude');
         $org->parent_id = $parent_id;
         $org->save();
 
-        return Redirect::route("OrgIndex")->withMessageSuccess('保存成功');
+        return Redirect::route("OrgIndex")->withMessageSuccess($id > 0 ? '修改成功' : '新增成功');
+    }
+
+    /**
+     * 删除机构
+     */
+    public function delete()
+    {
+        // 验证数据。
+        $validator = Validator::make(Input::all(), [
+            'id' => 'required|exists:orgs,id'
+        ], [
+            'id.required' => '所选机构不能为空',
+            'id.exists' => '所选机构不存在'
+        ]);
+        if ($validator->fails()) {
+            return Redirect::route("OrgIndex")->withMessageError($validator->messages()
+                ->all());
+        }
+
+        // 判断此机构是否有下级机构，有则不能删除
+        $child_ids = Org::find(Input::get('id'))->childNodes()
+            ->lists('id')
+            ->all();
+        if (! empty($child_ids)) {
+            return Redirect::to(URL::previous())->withMessageError('此机构有下级机构，不能删除！');
+        }
+
+        array_push($child_ids, Input::get('id'));
+        $temp = Dept::whereIn('org_id', $child_ids)->first();
+        if (is_null($temp)) {
+            $org = Org::find(Input::get('id'));
+            $org->delete();
+            return Redirect::to(URL::previous())->withMessageSuccess('删除成功');
+        }
+
+        return Redirect::to(URL::previous())->withMessageError('此机构底下有部门，需先删除机构旗下的部门');
     }
 }

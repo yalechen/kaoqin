@@ -1,6 +1,6 @@
 {extends file='Admin/layout.tpl'} 
 
-{block title}{if $data.id gt 0}{assign "title" "编辑"}{else}{assign "title" "新增"}{/if}机构{/block} 
+{block title}{if $data.id gt 0}{assign "title" "编辑"}{else}{assign "title" "新增"}{/if}{$title}机构{/block} 
 {block breadcrumb}
 <li><a href="{route('OrgIndex')}">机构管理</a></li>
 <li class="active"><a href="{route('OrgEdit',['id'=>$data.id])}">{$title}机构</a></li>
@@ -10,26 +10,26 @@
 <div class="row">
 	<div class="col-sm-12">
 		<section class="panel">
-			<header class="panel-heading head-border"> {$title}机构 </header>
+			<!-- <header class="panel-heading head-border"> {$title}机构 </header> -->
 			<div class="panel-body">
 				<div class="form">
 					<form class="cmxform form-horizontal tasi-form" id="commentForm" method="post" action="{route('OrgSave')}">
 						<div class="form-group">
 							<label for="name" class="control-label col-lg-2">名称</label>
 							<div class="col-lg-10">
-                               	<input class="form-control" id="name" name="name" value="{old('name')}" minlength="2" type="text" required />
+                               	<input class="form-control" id="name" name="name" value="{old('name')|default:$data.name}" minlength="2" type="text" required />
                             </div>
 						</div>
                         <div class="form-group">
                             <label for="number" class="control-label col-lg-2">编号</label>
                             <div class="col-lg-10">
-                                <input class="form-control " id="number" type="text" value="{old('number')}" minlength="5" name="number" required />
+                                <input class="form-control " id="number" type="text" value="{old('number')|default:$data.number}" minlength="5" name="number" required />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="area" class="control-label col-lg-2">所属区域</label>
                             <div class="col-lg-10">
-                                <input class="form-control " id="area" type="text" name="area" value="{old('area')}" required />
+                                <input class="form-control " id="area" type="text" name="area" value="{old('area')|default:$data.area}" required />
                             </div>
                         </div>
                         {if $data.id gt 0}
@@ -46,18 +46,18 @@
                                 <select class="form-control sub_category" style="width:30%;display:inline;" name="path[]">
                                 	<option value="0" selected>--做为第一级机构--</option>
 									{foreach $org as $item}
-					                	<option value="{$item.id}" {if old('path').0 eq $item.id}selected{/if}>{$item.name}</option>
+					                	<option value="{$item.id}">{$item.name}</option>
 					                {/foreach}
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group"{if $data.id gt 0}style="display: none;"{/if}>
+                        <div class="form-group">
                             <label for="province" class="control-label col-lg-2">省市区</label>
                             <div class="col-lg-10">
                                 <select class="form-control" style="width:30%;display:inline;" id="province" tabindex="1" name="province_id">
 									<option value="">--请选择省份--</option>
 									{foreach $province as $item}
-										<option value="{$item.id}" {if $data.province_id|default:old('province_id') eq $item.id}selected{/if}>{$item.name}</option>
+										<option value="{$item.id}" {if old('province_id')|default:$data.province_id eq $item.id}selected{/if}>{$item.name}</option>
 									{/foreach}
 			                    </select>
 			                    <select class="form-control" style="width:30%;display:inline;" id="city" tabindex="1" name="city_id">
@@ -72,13 +72,13 @@
                         <div class="form-group">
                             <label for="address" class="control-label col-lg-2">具体地址</label>
                             <div class="col-lg-10">
-                                <textarea class="form-control " id="address" name="address" required>{old('address')}</textarea>
+                                <textarea class="form-control " id="address" name="address" required>{old('address')|default:$data.address}</textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="sort" class="control-label col-lg-2">排序值</label>
                             <div class="col-lg-10">
-                                <input class="form-control" type="text" id="sort" name="sort" value="{old('sort')|default:100}" required></textarea>
+                                <input class="form-control" type="text" id="sort" name="sort" value="{old('sort')|default:$data.sort|default:100}" required />
                             </div>
                         </div>
                         <div class="form-group">
@@ -94,10 +94,11 @@
                         </div>
                         <div class="form-group">
                             <div class="col-lg-offset-2 col-lg-10">
-                            	<input type="hidden" name="longitude" id="longitude"  value="{$data.longitude}"/>
-        						<input type="hidden" name="latitude"  id="latitude"  value="{$data.latitude}"/>
-                                <button class="btn btn-success" type="submit"><i class="fa-save"></i> 保存</button>
-                                <button class="btn btn-default" type="button"><i class="fa-undo"></i> 取消</button>
+                            	<input type="hidden" name="longitude" id="longitude"  value="{$data.lng|default:old('longitude')|default:'118.145208'}"/>
+        						<input type="hidden" name="latitude"  id="latitude"  value="{$data.lat|default:old('latitude')|default:'24.478839'}"/>
+        						<input type="hidden" name="id" value="{$data.id}" />
+                                <button class="btn btn-success" type="submit"> 保存</button>
+                                <button class="btn btn-default" type="button"> 取消</button>
                             </div>
                         </div>
                     </form>

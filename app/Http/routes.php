@@ -98,6 +98,11 @@ Route::group([
                 'as' => 'OrgSave',
                 'uses' => 'OrgController@save'
             ]);
+            // 删除机构
+            Route::post('delete', [
+                'as' => 'OrgDelete',
+                'uses' => 'OrgController@delete'
+            ]);
         });
 
         // 部门管理
@@ -105,9 +110,30 @@ Route::group([
             'prefix' => 'dept'
         ], function ()
         {
+            // 部门首页
             Route::get('/', [
                 'as' => 'DeptIndex',
                 'uses' => 'DeptController@index'
+            ]);
+            // 部门添加&编辑
+            Route::get('edit', [
+                'as' => 'DeptEdit',
+                'uses' => 'DeptController@edit'
+            ]);
+            // 保存部门
+            Route::post('save', [
+                'as' => 'DeptSave',
+                'uses' => 'DeptController@save'
+            ]);
+            // 删除部门
+            Route::post('delete', [
+                'as' => 'DeptDelete',
+                'uses' => 'DeptController@delete'
+            ]);
+            // 切换部门状态
+            Route::post('status', [
+                'as' => 'DeptStatusChange',
+                'uses' => 'DeptController@postToggleStatus'
             ]);
         });
     });

@@ -50,6 +50,7 @@
         </div>
 
         <div class="wrapper">
+        	{include 'Admin/message.tpl'}
         	{block main}{/block}
         </div>
 
@@ -63,6 +64,42 @@
     </div>
 </section>
 
+<!-- Modal -->
+<div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body" id="alertMessage"></div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal -->
+                
+<!-- Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog"> <!-- modal-sm modal-lg -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">操作确认</h4>
+            </div>
+            <div class="modal-body" id="confirmMessage"></div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-default" type="button" id="confirmCancelAction">取消</button>
+                <button data-dismiss="modal" class="btn btn-success" type="button" id="confirmAction">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal -->
+                
+
 <script type="text/javascript" src="{asset('js/jquery-1.10.2.min.js')}"></script>
 <script type="text/javascript" src="{asset('js/jquery-ui/jquery-ui-1.10.1.custom.min.js')}"></script>
 <script type="text/javascript" src="{asset('js/jquery-migrate.js')}"></script>
@@ -73,50 +110,72 @@
 <script type="text/javascript" src="{asset('js/switchery/switchery.min.js')}"></script>
 <script type="text/javascript" src="{asset('js/switchery/switchery-init.js')}"></script>
 <!--flot chart -->
-<script type="text/javascript" src="{asset('js/flot-chart/jquery.flot.js')}"></script>
+<!-- <script type="text/javascript" src="{asset('js/flot-chart/jquery.flot.js')}"></script>
 <script type="text/javascript" src="{asset('js/flot-chart/flot-spline.js')}"></script>
 <script type="text/javascript" src="{asset('js/flot-chart/jquery.flot.resize.js')}"></script>
 <script type="text/javascript" src="{asset('js/flot-chart/jquery.flot.tooltip.min.js')}"></script>
 <script type="text/javascript" src="{asset('js/flot-chart/jquery.flot.pie.js')}"></script>
 <script type="text/javascript" src="{asset('js/flot-chart/jquery.flot.selection.js')}"></script>
 <script type="text/javascript" src="{asset('js/flot-chart/jquery.flot.stack.js')}"></script>
-<script type="text/javascript" src="{asset('js/flot-chart/jquery.flot.crosshair.js')}"></script>
+<script type="text/javascript" src="{asset('js/flot-chart/jquery.flot.crosshair.js')}"></script> -->
 <!--earning chart init-->
-<script type="text/javascript" src="{asset('js/earning-chart-init.js')}"></script>
+<!-- <script type="text/javascript" src="{asset('js/earning-chart-init.js')}"></script> -->
 <!--Sparkline Chart-->
-<script type="text/javascript" src="{asset('js/sparkline/jquery.sparkline.js')}"></script>
-<script type="text/javascript" src="{asset('js/sparkline/sparkline-init.js')}"></script>
+<!-- <script type="text/javascript" src="{asset('js/sparkline/jquery.sparkline.js')}"></script>
+<script type="text/javascript" src="{asset('js/sparkline/sparkline-init.js')}"></script> -->
 <!--easy pie chart-->
 <script type="text/javascript" src="{asset('js/jquery-easy-pie-chart/jquery.easy-pie-chart.js')}"></script>
 <script type="text/javascript" src="{asset('js/easy-pie-chart.js')}"></script>
 <!--vectormap-->
-<script type="text/javascript" src="{asset('js/vector-map/jquery-jvectormap-1.2.2.min.js')}"></script>
+<!-- <script type="text/javascript" src="{asset('js/vector-map/jquery-jvectormap-1.2.2.min.js')}"></script>
 <script type="text/javascript" src="{asset('js/vector-map/jquery-jvectormap-world-mill-en.js')}"></script>
-<script type="text/javascript" src="{asset('js/dashboard-vmap-init.js')}"></script>
+<script type="text/javascript" src="{asset('js/dashboard-vmap-init.js')}"></script> -->
 <!--Icheck-->
 <script type="text/javascript" src="{asset('js/icheck/skins/icheck.min.js')}"></script>
 <script type="text/javascript" src="{asset('js/todo-init.js')}"></script>
 <!--jquery countTo-->
-<script  type="text/javascript" src="{asset('js/jquery-countTo/jquery.countTo.js')}"></script>
+<!-- <script  type="text/javascript" src="{asset('js/jquery-countTo/jquery.countTo.js')}"></script> -->
 <!--owl carousel-->
-<script   type="text/javascript"src="{asset('js/owl.carousel.js')}"></script>
+<!-- <script   type="text/javascript"src="{asset('js/owl.carousel.js')}"></script> -->
 <!--common scripts for all pages-->
 <script type="text/javascript" src="{asset('js/scripts.js')}"></script>
 {block script}{/block}
 <script type="text/javascript">
 $(document).ready(function() {
-        //countTo
-        $('.timer').countTo();
-        
-        //owl carousel
-        $("#news-feed").owlCarousel({
-            navigation : true,
-            slideSpeed : 300,
-            paginationSpeed : 400,
-            singleItem : true,
-            autoPlay:true
-        });
+    //countTo
+    //$('.timer').countTo();
+    
+    //owl carousel
+    /* $("#news-feed").owlCarousel({
+        navigation : true,
+        slideSpeed : 300,
+        paginationSpeed : 400,
+        singleItem : true,
+        autoPlay:true
+    }); */
+    
+    function ialert(msg) {
+        $("#alertMessage").html(msg);
+        $("#alertModal").modal('show');
+    }
 });
+
+function iconfirm(msg, func)
+{
+    $("#confirmMessage").html(msg);
+    $("#confirmModal").modal('show');
+    $("#confirmAction").one('click', function() {
+        func();
+    });
+    if (arguments[2]) {
+        $("#confirmCancelAction").one('click', function() {
+            arguments[2]();
+        })
+    }
+    //$('#confirmModal').on('hidden.bs.modal', function (e) {
+    //    $("#confirmAction").unbind('click');
+    //})
+}
 
 $(window).on("resize",function(){
     var owl = $("#news-feed").data("owlCarousel");
