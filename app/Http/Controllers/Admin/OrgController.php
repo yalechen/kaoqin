@@ -66,28 +66,6 @@ class OrgController extends BaseController
     }
 
     /**
-     * 获取下级机构
-     */
-    public function subOrgs()
-    {
-        $org = array();
-        $parent_id = Input::get('parent_id');
-        if (is_array($parent_id)) {
-            $ids = [];
-            foreach ($parent_id as $id) {
-                $cid = Org::find($id)->childNode()
-                    ->lists('id')
-                    ->all();
-                $ids = array_merge($ids, $cid);
-            }
-            $org = Org::findMany($ids);
-        } elseif ($parent_id > 0) {
-            $org = Org::find(Input::get('parent_id'))->childNode()->get();
-        }
-        return Response::json($org);
-    }
-
-    /**
      * 保存
      */
     public function save()
@@ -197,5 +175,61 @@ class OrgController extends BaseController
         }
 
         return Redirect::to(URL::previous())->withMessageError('此机构底下有部门，需先删除机构旗下的部门');
+    }
+
+    /**
+     * 获取下级机构
+     */
+    public function subOrgs()
+    {
+        $org = array();
+        $parent_id = Input::get('parent_id');
+        if (is_array($parent_id)) {
+            $ids = [];
+            foreach ($parent_id as $id) {
+                $cid = Org::find($id)->childNode()
+                    ->lists('id')
+                    ->all();
+                $ids = array_merge($ids, $cid);
+            }
+            $org = Org::findMany($ids);
+        } elseif ($parent_id > 0) {
+            $org = Org::find(Input::get('parent_id'))->childNode()->get();
+        }
+        return Response::json($org);
+    }
+
+    /**
+     * 获取某机构下级所有部门
+     */
+    public function subDepts()
+    {
+        $parent_id = Input::get('parent_id');
+        $ids = [];
+        if (is_array($parent_id)) {
+            foreach ($parent_id as $id) {
+                $cid = Org::find($id)->childNode()
+                    ->lists('id')
+                    ->all();
+                $ids = array_merge($ids, $cid);
+            }
+            $ids = array_merge($ids, $parent_id);
+        } elseif ($parent_id > 0) {
+            $ids = Org::find(Input::get('parent_id'))->childNodes()
+                ->lists('id')
+                ->all();
+            $ids = array_merge($ids, [
+                0 => intval($parent_id)
+            ]);
+        }
+        // 获取该机构及所有子机构下的部门
+        $dept_ids = [];
+        foreach ($ids as $org_id) {
+            $did = Org::find($org_id)->depts()
+                ->lists('id')
+                ->all();
+            $dept_ids = array_merge($dept_ids, $did);
+        }
+        return Response::json(Dept::findMany($dept_ids));
     }
 }

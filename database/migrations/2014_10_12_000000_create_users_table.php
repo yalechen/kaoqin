@@ -46,7 +46,7 @@ class CreateUsersTable extends Migration
                 User::GENDER_FEMALE
             ])->default(User::GENDER_MALE);
 
-            // 出生年月
+            // 出生年月日
             $table->date('birthday');
 
             // 地址：省
@@ -66,9 +66,6 @@ class CreateUsersTable extends Migration
 
             // 上级用户
             $table->unsignedInteger('parent_user_id')->default(0);
-
-            // 所巡门店ID
-            $table->unsignedInteger('cust_id')->default(0);
 
             // 状态
             $table->enum('status', [

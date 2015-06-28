@@ -55,7 +55,7 @@
         </div>
 
         <footer>
-            2015 &copy; SlickLab by VectorLab.
+            2015 &copy; kaoqin by Robote-Jois.
         </footer>
 
         <div class="sb-slidebar sb-right sb-style-overlay">

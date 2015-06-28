@@ -32,4 +32,28 @@ class Cust extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
+
+    /**
+     * 所属省份
+     */
+    public function province()
+    {
+        return $this->belongsTo('App\Models\Province');
+    }
+
+    /**
+     * 所属市级
+     */
+    public function city()
+    {
+        return $this->belongsTo('App\Models\City');
+    }
+
+    /**
+     * 所属县区
+     */
+    public function district()
+    {
+        return $this->belongsTo('App\Models\District');
+    }
 }

@@ -63,7 +63,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function dept()
     {
-        return $this->hasOne('App\Models\Dept');
+        return $this->belongsTo('App\Models\Dept');
     }
 
     /**

@@ -18,46 +18,21 @@
         <li>
             <h3 class="navigation-title">组织架构</h3>
         </li>
-        <li {if Route::currentRouteName() eq 'OrgIndex'}class="active"{/if}><a href="{route('OrgIndex')}"><i class="fa fa-home"></i> <span>机构管理</span></a></li>
-        <li {if Route::currentRouteName() eq 'DeptIndex'}class="active"{/if}><a href="{route('DeptIndex')}"><i class="fa fa-home"></i> <span>部门管理</span></a></li>
+        <li {if in_array(Route::currentRouteName(),['OrgIndex','OrgEdit'])}class="active"{/if}><a href="{route('OrgIndex')}"><i class="fa fa-home"></i> <span>机构管理</span></a></li>
+        <li {if in_array(Route::currentRouteName(),['DeptIndex','DeptEdit'])}class="active"{/if}><a href="{route('DeptIndex')}"><i class="fa fa-home"></i> <span>部门管理</span></a></li>
         
         
         <li>
-            <h3 class="navigation-title">考勤管理</h3>
+            <h3 class="navigation-title">CRM管理</h3>
         </li>
-        <li class="menu-list"><a href=""><i class="fa fa-cogs"></i> <span>请假管理 <span class="badge noti-arrow bg-success pull-right">3</span> </span></a>
+        <li {if in_array(Route::currentRouteName(),['UserIndex','UserEdit'])}class="active"{/if}><a href="{route('UserIndex')}"><i class="fa fa-home"></i> <span>用户管理</span></a></li>
+        <li class="menu-list"><a href=""><i class="fa fa-cogs"></i> <span>商户管理 <span class="badge noti-arrow bg-success pull-right">3</span> </span></a>
             <ul class="child-list">
-                <li><a href="grid.html"> 请假列表</a></li>
-                <li><a href="calendar.html"> 请假审批</a></li>
-                <li><a href="timeline.html"> 假别管理 </a></li>
-                <li><a href="gallery.html"> 批量导入 </a></li>
+                <li><a href="grid.html"> 商户管理</a></li>
+                <li><a href="calendar.html"> 等级管理</a></li>
             </ul>
         </li>
-        <li class="menu-list"><a href="javascript:;"><i class="fa fa-th-list"></i> <span>加班管理</span></a>
-            <ul class="child-list">
-                <li><a href="table-static.html"> 加班列表</a></li>
-                <li><a href="table-dynamic.html"> 加班审批</a></li>
-            </ul>
-        </li>
-        <li class="menu-list"><a href=""><i class="fa fa-tasks"></i> <span>里程管理</span></a>
-            <ul class="child-list">
-                <li><a href="form-layout.html"> 里程列表</a></li>
-                <li><a href="advanced-components.html"> 行驶轨迹</a></li>
-            </ul>
-        </li>
-        <li class="menu-list"><a href=""><i class="fa fa-bar-chart-o"></i> <span>位置管理</span></a>
-            <ul class="child-list">
-                <li><a href="flot-chart.html"> 实时位置</a></li>
-                <li><a href="morris-chart.html"> 轨迹列表</a></li>
-            </ul>
-        </li>
-        <li class="menu-list"><a href=""><i class="fa fa-bar-chart-o"></i> <span>考勤管理</span></a>
-            <ul class="child-list">
-                <li><a href="flot-chart.html"> 考勤列表</a></li>
-                <li><a href="morris-chart.html"> 考勤导出</a></li>
-            </ul>
-        </li>
-        
+        <li {if Route::currentRouteName() eq 'OrgIndex'}class="active"{/if}><a href="{route('OrgIndex')}"><i class="fa fa-home"></i> <span>意见反馈管理</span></a></li>
         
         <li>
             <h3 class="navigation-title">统计分析</h3>

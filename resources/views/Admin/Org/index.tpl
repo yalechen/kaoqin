@@ -18,7 +18,7 @@
                     </div>
                     <div class="form-group">
 						<select class="form-control" name="org_id">
-							<option value="0" {if !$smarty.get.org_id}selected{/if}>--全部机构--</option>
+							<option value="0" {if !$smarty.get.org_id}selected{/if}>--所有机构--</option>
 							{foreach $org as $item}
 								<option value="{$item.id}" {if $item.id eq $smarty.get.org_id}selected{/if}>{$item.name}</option>
 							{/foreach}

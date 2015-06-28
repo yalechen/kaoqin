@@ -55,8 +55,14 @@ class CreateCustsTable extends Migration
             // 纬度
             $table->string('lat')->default('');
 
-            // 所属区域
-            $table->string('area')->default('');
+            //所属省份ID
+            $table->unsignedInteger('province_id')->default(0);
+
+            //所属城市ID
+            $table->unsignedInteger('city_id')->default(0);
+
+            //所属地区ID
+            $table->unsignedInteger('district_id')->default(0);
 
             // 备注
             $table->string('remark')->default('');

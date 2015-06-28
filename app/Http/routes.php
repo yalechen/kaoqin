@@ -47,6 +47,12 @@ Route::group([
         'uses' => 'BaseController@getDistrict'
     ]);
 
+    // 上传文件
+    Route::post('file', [
+        'as' => 'FileUpload',
+        'uses' => 'StorageController@postFile'
+    ]);
+
     // 退出
     Route::get('logout', [
         'as' => 'AdminLogout',
@@ -93,6 +99,11 @@ Route::group([
                 'as' => 'OrgSub',
                 'uses' => 'OrgController@subOrgs'
             ]);
+            // 获取某机构的下级部门
+            Route::get('sub/dept', [
+                'as' => 'OrgSubDepts',
+                'uses' => 'OrgController@subDepts'
+            ]);
             // 保存机构
             Route::post('save', [
                 'as' => 'OrgSave',
@@ -134,6 +145,48 @@ Route::group([
             Route::post('status', [
                 'as' => 'DeptStatusChange',
                 'uses' => 'DeptController@postToggleStatus'
+            ]);
+        });
+
+        // 用户管理
+        Route::group([
+            'prefix' => 'user'
+        ], function ()
+        {
+            // 部门首页
+            Route::get('/', [
+                'as' => 'UserIndex',
+                'uses' => 'UserController@index'
+            ]);
+            // 部门添加&编辑
+            Route::get('edit', [
+                'as' => 'UserEdit',
+                'uses' => 'UserController@edit'
+            ]);
+            // 保存部门
+            Route::post('save', [
+                'as' => 'UserSave',
+                'uses' => 'UserController@save'
+            ]);
+            // 删除部门
+            Route::post('delete', [
+                'as' => 'UserDelete',
+                'uses' => 'UserController@delete'
+            ]);
+            // 切换用户状态
+            Route::post('status', [
+                'as' => 'UserStatusChange',
+                'uses' => 'UserController@postToggleStatus'
+            ]);
+            // 指派所巡店的商户
+            Route::get('cust', [
+                'as' => 'UserAssignCust',
+                'uses' => 'UserController@assignCust'
+            ]);
+            // 保存指派所巡店的商户
+            Route::post('cust', [
+                'as' => 'UserAssignCustSave',
+                'uses' => 'UserController@saveAssignCust'
             ]);
         });
     });
