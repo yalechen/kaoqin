@@ -141,7 +141,7 @@ function getCity(obj) {
 	}
 }
 
-//删除确认
+//指派确认
 function assignConfirm(user_id, user_name, cust_id,cust_name){
 	$("#user_id").val(user_id);
 	$("#user_name").text(user_name);
