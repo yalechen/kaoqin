@@ -170,22 +170,22 @@ Route::group([
             'prefix' => 'user'
         ], function ()
         {
-            // 部门首页
+            // 用户首页
             Route::get('/', [
                 'as' => 'UserIndex',
                 'uses' => 'UserController@index'
             ]);
-            // 部门添加&编辑
+            // 用户添加&编辑
             Route::get('edit', [
                 'as' => 'UserEdit',
                 'uses' => 'UserController@edit'
             ]);
-            // 保存部门
+            // 保存用户
             Route::post('save', [
                 'as' => 'UserSave',
                 'uses' => 'UserController@save'
             ]);
-            // 删除部门
+            // 删除用户
             Route::post('delete', [
                 'as' => 'UserDelete',
                 'uses' => 'UserController@delete'
@@ -219,6 +219,70 @@ Route::group([
             Route::post('avatar', [
                 'as' => 'UserAvatarSave',
                 'uses' => 'UserController@avatarSave'
+            ]);
+        });
+
+        // 商户管理
+        Route::group([
+            'prefix' => 'cust'
+        ], function ()
+        {
+            // 商户首页
+            Route::get('/', [
+                'as' => 'CustIndex',
+                'uses' => 'CustController@index'
+            ]);
+            // 商户添加&编辑
+            Route::get('edit', [
+                'as' => 'CustEdit',
+                'uses' => 'CustController@edit'
+            ]);
+            // 保存商户
+            Route::post('save', [
+                'as' => 'CustSave',
+                'uses' => 'CustController@save'
+            ]);
+            // 删除商户
+            Route::post('delete', [
+                'as' => 'CustDelete',
+                'uses' => 'CustController@delete'
+            ]);
+            // 搜索巡店者
+            Route::get('search-users', [
+                'as' => 'SearchCustUsers',
+                'uses' => 'CustController@searchCustUser'
+            ]);
+            // 指派巡店者
+            Route::post('assign-cust-users', [
+                'as' => 'AssignCustUsers',
+                'uses' => 'CustController@assignCustUser'
+            ]);
+
+            // 商户等级首页
+            Route::get('level', [
+                'as' => 'CustLevelIndex',
+                'uses' => 'CustLevelController@index'
+            ]);
+            // 商户等级添加&编辑
+            Route::get('level/edit', [
+                'as' => 'CustLevelEdit',
+                'uses' => 'CustLevelController@edit'
+            ]);
+            // 商户等级添加&编辑
+            Route::post('level/save', [
+                'as' => 'CustLevelSave',
+                'uses' => 'CustLevelController@save'
+            ]);
+            // 删除商户等级
+            Route::post('level/delete', [
+                'as' => 'CustLevelDelete',
+                'uses' => 'CustLevelController@delete'
+            ]);
+
+            // 意见反馈管理
+            Route::get('feedback', [
+                'as' => 'FeedbackIndex',
+                'uses' => 'FeedbackController@index'
             ]);
         });
     });

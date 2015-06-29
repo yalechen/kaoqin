@@ -26,13 +26,18 @@
             <h3 class="navigation-title">CRM管理</h3>
         </li>
         <li {if in_array(Route::currentRouteName(),['UserIndex','UserEdit'])}class="active"{/if}><a href="{route('UserIndex')}"><i class="fa fa-home"></i> <span>用户管理</span></a></li>
-        <li class="menu-list"><a href=""><i class="fa fa-cogs"></i> <span>商户管理 <span class="badge noti-arrow bg-success pull-right">3</span> </span></a>
+        <li class="menu-list {if substr(Route::currentRouteName(),0,4) eq 'Cust'}nav-active{/if}">
+        	<a href=""><i class="fa fa-cogs"></i> <span>商户管理 <span class="badge noti-arrow bg-success pull-right">2</span> </span></a>
             <ul class="child-list">
-                <li><a href="grid.html"> 商户管理</a></li>
-                <li><a href="calendar.html"> 等级管理</a></li>
+                <li {if in_array(Route::currentRouteName(),['CustIndex','CustEdit','SearchCustUsers'])}class="active"{/if}>
+                	<a href="{route('CustIndex')}"> 商户管理</a>
+                </li>
+                <li {if in_array(Route::currentRouteName(),['CustLevelIndex','CustLevelEdit'])}class="active"{/if}>
+                	<a href="{route('CustLevelIndex')}"> 等级管理</a>
+                </li>
             </ul>
         </li>
-        <li {if Route::currentRouteName() eq 'OrgIndex'}class="active"{/if}><a href="{route('OrgIndex')}"><i class="fa fa-home"></i> <span>意见反馈管理</span></a></li>
+        <li {if Route::currentRouteName() eq 'FeedbackIndex'}class="active"{/if}><a href="{route('FeedbackIndex')}"><i class="fa fa-home"></i> <span>意见反馈管理</span></a></li>
         
         <li>
             <h3 class="navigation-title">统计分析</h3>

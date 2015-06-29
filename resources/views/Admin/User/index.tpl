@@ -202,7 +202,7 @@ $(function() {
         });
     });
 });
-
+//保存头像
 $("#closeAvatarModal").click(function(){
 	var avatar_hash=$("#avatar_hash").val();
 	var user_id=$("#target_user_id").val();

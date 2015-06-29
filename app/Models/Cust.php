@@ -56,4 +56,12 @@ class Cust extends Model
     {
         return $this->belongsTo('App\Models\District');
     }
+
+    /**
+     * 获取头像的绝对路径
+     */
+    public function getLogoPathAttribute()
+    {
+        return config('app.url') . str_replace('\\', '/', $this->attributes['logo_path']);
+    }
 }
