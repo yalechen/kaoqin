@@ -37,16 +37,20 @@
                 </li>
             </ul>
         </li>
-        <li {if Route::currentRouteName() eq 'FeedbackIndex'}class="active"{/if}><a href="{route('FeedbackIndex')}"><i class="fa fa-home"></i> <span>意见反馈管理</span></a></li>
+        <li {if Route::currentRouteName() eq 'FeedbackIndex'}class="active"{/if}><a href="{route('FeedbackIndex')}"><i class="fa fa-home"></i> <span>意见反馈</span></a></li>
         
         <li>
-            <h3 class="navigation-title">统计分析</h3>
+            <h3 class="navigation-title">考勤管理</h3>
         </li>
-        <li class="menu-list"><a href="javascript:;"><i class="fa fa-envelope-o"></i> <span>Email <span class="label noti-arrow bg-danger pull-right">4 Unread</span> </span></a>
+        <li class="menu-list {if substr(Route::currentRouteName(),0,5) eq 'Leave'}nav-active{/if}"><a href="javascript:;"><i class="fa fa-envelope-o"></i> <span>请假管理 <span class="label noti-arrow bg-danger pull-right">4 Unread</span> </span></a>
             <ul class="child-list">
-                <li><a href="inbox.html"> 渠道拜访</a></li>
-                <li><a href="inbox-details.html"> 考勤分析</a></li>
-                <li><a href="inbox-compose.html"> 里程统计</a></li>
+                <li {if in_array(Route::currentRouteName(),['LeaveTypeIndex','LeaveTypeEdit'])}class="active"{/if}>
+                	<a href="{route('LeaveTypeIndex')}"> 请假类型</a>
+                </li>
+                <li {if in_array(Route::currentRouteName(),['LeaveExcelImport'])}class="active"{/if}>
+                	<a href="{route('LeaveExcelImport')}"> Excel批量导入</a>
+                </li>
+                <li><a href="inbox-compose.html"> 请假列表</a></li>
             </ul>
         </li>
         

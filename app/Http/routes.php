@@ -284,6 +284,48 @@ Route::group([
                 'as' => 'FeedbackIndex',
                 'uses' => 'FeedbackController@index'
             ]);
+            // 删除意见反馈
+            Route::post('feedback/delete', [
+                'as' => 'FeedbackDelete',
+                'uses' => 'FeedbackController@delete'
+            ]);
+        });
+
+        // 商户管理
+        Route::group([
+            'prefix' => 'attn'
+        ], function ()
+        {
+            // 请假类型首页
+            Route::get('level', [
+                'as' => 'LeaveTypeIndex',
+                'uses' => 'LeaveTypeController@index'
+            ]);
+            // 请假类型添加&编辑
+            Route::get('level/edit', [
+                'as' => 'LeaveTypeEdit',
+                'uses' => 'LeaveTypeController@edit'
+            ]);
+            // 请假类型添加&编辑
+            Route::post('level/save', [
+                'as' => 'LeaveTypeSave',
+                'uses' => 'LeaveTypeController@save'
+            ]);
+            // 删除请假类型
+            Route::post('level/delete', [
+                'as' => 'LeaveTypeDelete',
+                'uses' => 'LeaveTypeController@delete'
+            ]);
+            // Excel批量导入页
+            Route::get('level/import', [
+                'as' => 'LeaveExcelIndex',
+                'uses' => 'LeaveController@index'
+            ]);
+            // Excel批量导入处理
+            Route::post('level/import', [
+                'as' => 'LeaveExcelImport',
+                'uses' => 'LeaveController@import'
+            ]);
         });
     });
 });

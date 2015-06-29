@@ -148,6 +148,7 @@ return [
         'Ytake\LaravelSmarty\SmartyServiceProvider',
         'Intervention\Image\ImageServiceProvider',
         'Latrell\Swagger\SwaggerServiceProvider',
+        'Maatwebsite\Excel\ExcelServiceProvider',
     ],
 
     /*
@@ -197,6 +198,7 @@ return [
         'View'      => Illuminate\Support\Facades\View::class,
 
         'Image' => 'Intervention\Image\Facades\Image',
+        'Excel' => 'Maatwebsite\Excel\Facades\Excel',
     ],
 
 ];

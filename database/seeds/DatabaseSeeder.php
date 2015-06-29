@@ -29,8 +29,10 @@ class DatabaseSeeder extends Seeder
         $this->call('DeptTableSeeder');
         // 客户等级
         $this->call('CustLevelTableSeeder');
-        // 客户等级
+        // 客户
         $this->call('CustTableSeeder');
+        // 意见反馈
+        $this->call('FeedbackTableSeeder');
 
 
         // 结束提醒

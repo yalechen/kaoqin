@@ -6,7 +6,6 @@
 {/block} 
 
 {block main}
-<link rel="stylesheet" type="text/css" href="{asset('js/bootstrap-fileinput-master/css/fileinput.css')}" />
 <div class="row">
 	<div class="col-sm-12">
 		<section class="panel">

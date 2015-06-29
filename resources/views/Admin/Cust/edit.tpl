@@ -16,7 +16,7 @@
 		<section class="panel">
 			<div class="panel-body">
 				<div class="form">
-					<form class="cmxform form-horizontal tasi-form" id="commentForm" method="post" action="{route('CustSave')}">
+					<form class="cmxform form-horizontal tasi-form" method="post" action="{route('CustSave')}">
 						<div class="form-group">
 							<label for="name" class="control-label col-lg-2">名称</label>
 							<div class="col-lg-10">

@@ -10,7 +10,8 @@
         "ytake/laravel-smarty": "dev-master",
         "gregwar/captcha": "dev-master",
         "intervention/image": "dev-master",
-        "latrell/swagger": "dev-master"
+        "latrell/swagger": "dev-master",
+        "maatwebsite/excel": "~2.0.6"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
