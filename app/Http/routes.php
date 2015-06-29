@@ -29,6 +29,29 @@ Route::get('Logout', [
     'uses' => 'Auth\AuthController@getLogout'
 ]);
 
+// ckeditor 上传文件
+Route::post('ck-file', [
+    'as' => 'CKFileUpload',
+    'uses' => 'CkEditorController@postFile'
+]);
+// 通用上传文件
+Route::post('upload-file', [
+    'as' => 'UploadFile',
+    'uses' => 'StorageController@postFile'
+]);
+// 表单上传文件
+Route::post('form-upload-file', [
+    'as' => 'FormUploadFile',
+    'uses' => 'StorageController@formUploadFile'
+]);
+
+// 获取文件
+Route::get('file', [
+    'as' => 'FilePull',
+    'name' => '获取文件',
+    'uses' => 'StorageController@getFile'
+]);
+
 // 后台管理
 Route::group([
     'prefix' => 'admin',
@@ -45,12 +68,6 @@ Route::group([
     Route::get('district', [
         'as' => 'DistrictPull',
         'uses' => 'BaseController@getDistrict'
-    ]);
-
-    // 上传文件
-    Route::post('file', [
-        'as' => 'FileUpload',
-        'uses' => 'StorageController@postFile'
     ]);
 
     // 退出
@@ -187,6 +204,21 @@ Route::group([
             Route::post('cust', [
                 'as' => 'UserAssignCustSave',
                 'uses' => 'UserController@saveAssignCust'
+            ]);
+            // 搜索上级领导用户列表
+            Route::get('search-users', [
+                'as' => 'SearchParentUsers',
+                'uses' => 'UserController@searchParentUser'
+            ]);
+            // 指派上级领导
+            Route::post('assign-parent-users', [
+                'as' => 'AssignParentUsers',
+                'uses' => 'UserController@assignParentUser'
+            ]);
+            // 保存头像
+            Route::post('avatar', [
+                'as' => 'UserAvatarSave',
+                'uses' => 'UserController@avatarSave'
             ]);
         });
     });

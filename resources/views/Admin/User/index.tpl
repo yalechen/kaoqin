@@ -6,6 +6,7 @@
 {/block} 
 
 {block main}
+<link rel="stylesheet" type="text/css" href="{asset('js/bootstrap-fileinput-master/css/fileinput.css')}" />
 <div class="row">
 	<div class="col-sm-12">
 		<section class="panel">
@@ -13,7 +14,7 @@
 				<form class="form-inline" role="form" action="{Route('UserIndex')}" method="get">
 					<div class="form-group">
 						<label class="sr-only" for="key">名称</label>
-                        <input type="text" class="form-control" id="name" name="key" value="{$smarty.get.key}" placeholder="用户名\姓名\手机号\邮箱">
+                        <input type="text" class="form-control" id="name" name="key" value="{$smarty.get.key}" placeholder="用户名\姓名\手机号">
                     </div>
 					<button type="submit" class="btn btn-info"><i class="fa fa-search"></i> 查询</button>
 					<a href="{route('UserEdit')}"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i> 添加用户 </button></a>
@@ -23,6 +24,7 @@
 				<thead>
 					<tr>
 						<th>#</th>
+						<th>头像</th>
 						<th>编号</th>
 						<th>用户名</th>
 						<th>姓名</th>
@@ -39,6 +41,7 @@
 						{foreach $data as $item}
 						<tr>
 							<td>{$item.id}</td>
+							<td><img src="{$item.avatar_path}" style="width:35px; height:35px;"/></td>
 							<td>{$item.number}</td>
 							<td>{$item.name}</td>
 							<td>{$item.realname}</td>
@@ -48,13 +51,15 @@
 							<td><span class="toggle-status label {if $item.status eq constant('App\Models\User::STATUS_OFF')}label-danger{else}label-success{/if}" data-id="{$item.id}" data-status="{$item.status}">{trans('user.status.'|cat:$item.status)}</span></td>
 							<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
 							<td>
-								<a class="btn btn-sm btn-info" href="{route('UserAssignCust', ['user_id'=>$item.id])}"><i class="icon-emoticon-smile"></i> 头像</a>
-								<a class="btn btn-sm btn-warning" data-toggle="modal" href="#parentUserModal"><i class="icon-user"></i> 上级</a>
+								<a class="btn btn-sm btn-info" data-toggle="modal" href="#UserAvatarModal" onclick="setAvatar({$item.id}, '{$item.name}')"><i class="icon-emoticon-smile"></i> 头像</a>
+								<a class="btn btn-sm btn-warning" data-toggle="modal" href="#parentUserModal" onclick="parentUserAssign({$item.id}, '{$item.name}')"><i class="icon-user"></i> 上级</a>
 								<a class="btn btn-sm btn-success" href="{route('UserAssignCust', ['user_id'=>$item.id])}"><i class="icon-star"></i> 巡店</a>
 								<a class="btn btn-sm btn-primary" href="{route('UserEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
 								<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id}, '{$item.name}')"><i class="icon-trash"></i> 删除</a>
 							</td>
 						</tr>
+						{foreachelse}
+							<tr><td colspan="9" class="text-center">无相关数据！</td></tr>
 						{/foreach}
 					{/if}
 				</tbody>
@@ -97,45 +102,60 @@
                 <h4 class="modal-title">指派<span id="user_name"></span>上级领导</h4>
             </div>
             <div class="modal-body">
+            	接下来您将给“<STRONG id="parent_user_objname"></STRONG>”指派上级领导，请使用关键字搜索
             	<div class="row">
-                <div class="col-sm-12">
-					<section class="panel">
-						<div class="panel-body">
-							<form class="form-inline" role="form" action="{Route('UserIndex')}" method="get">
-								<div class="form-group">
-									<label class="sr-only" for="key">名称</label>
-			                        <input type="text" class="form-control" id="name" name="key" value="{$smarty.get.key}" placeholder="用户名\姓名\手机号\邮箱">
-			                    </div>
-								<button type="submit" class="btn btn-info"><i class="fa fa-search"></i> 查询</button>
-								<a href="{route('UserEdit')}"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i> 添加用户 </button></a>
-							</form>
-						</div>
-						<table class="table table-hover">
-							<thead>
-								<tr>
-									<th>#</th>
-									<th>编号</th>
-									<th>用户名</th>
-									<th>姓名</th>
-									<th>手机号</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>1</td>
-									<td>1</td>
-									<td>2</td>
-									<td>33</td>
-									<td>asd</td>
-								</tr>
-							</tbody>
-						</table>
-					</section>
-				</div>
+	                <div class="col-sm-12">
+						<section class="panel">
+							<div class="panel-body">
+								<form class="form-inline" role="form" id="parent_user_search_form">
+									<div class="form-group">
+										<label class="sr-only" for="key">关键字</label>
+				                        <input type="text" class="form-control" id="modal_key" name="modal_key" value="{$smarty.get.modal_key}" placeholder="用户名\姓名\手机号">
+				                    </div>
+				                    <INPUT type="hidden" value="" name="user_id" id="user_id" />
+									<button type="button" class="btn btn-info" id="ParentUserFind"><i class="fa fa-search"></i> 查询</button>
+								</form>
+							</div>
+							<div id="UsersList">
+							
+							</div>
+						</section>
+					</div>
 				</div>
             </div>
             <div class="modal-footer">
-                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                <button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+                <!-- <button class="btn btn-success" type="button">关闭</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="UserAvatarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">设置“<STRONG id="user_name_avatar"></STRONG>”头像</h4>
+            </div>
+            <div class="modal-body">
+            	<div class="row">
+            		<form role="form">
+		                <div class="form-group ">
+		                    <div class="col-md-12">
+		                        <input id="file_avatar" class="file" type="file" name="file" multiple=true>
+		                        <span class="help-block">请上传[jpg、png、gif]格式的图片，不大于1M </span>
+		                    </div>
+		                </div>
+	                </form>
+	            </div>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-success" type="button" id="closeAvatarModal">保存头像</button>
+                <input type="hidden" value="" id="avatar_hash" />
+                <input type="hidden" value="" id="target_user_id" />
             </div>
         </div>
     </div>
@@ -144,12 +164,83 @@
 {/block} 
 
 {block script} 
+<script type="text/javascript" src="{asset('js/bootstrap-fileinput-master/js/fileinput.js')}"></script>
+<script type="text/javascript" src="{asset('js/file-input-init.js')}"></script>
 <script type="text/javascript">
+//设置头像
+function setAvatar(id, name){
+	$("#target_user_id").val(id);
+	$("#user_name_avatar").text(name);
+}
+//约束上传条件
+$("#file_avatar").fileinput({
+    allowedFileExtensions : ['jpg', 'png','gif'],
+    showPreview : true,
+    maxFileSize: 1000,
+    minImageWidth: 500,
+    minImageHeight: 500,
+    showUpload:false,
+    //maxFilesNum: 1,
+    //uploadUrl: '{route("UploadFile")}', // server upload action 配合showPreview : false,
+    //uploadAsync: true,  enctype="multipart/form-data" method="post" action="{route('FormUploadFile')}"
+});
+$(function() {
+	//开始上传
+    $(document).on('change', "#file_avatar", function() {
+        $.ajaxFileUpload({
+            url : '{route('FormUploadFile')}',
+            secureuri : false,
+            fileElementId : 'file_avatar',
+            dataType : 'json',
+            data : {  },
+            success : function (data, status) {
+                $("#avatar_hash").val(data.hash);
+            },
+            error : function (data, status, e) {
+                alert(e);
+            }
+        });
+    });
+});
+
+$("#closeAvatarModal").click(function(){
+	var avatar_hash=$("#avatar_hash").val();
+	var user_id=$("#target_user_id").val();
+	if(avatar_hash && user_id>0){
+		$.ajax({
+			type:'POST',
+			url:'{route('UserAvatarSave')}',
+			data:{ hash:avatar_hash, user_id:user_id },
+			dataType:'json',
+			success:function(data){
+				window.location.reload();
+			},
+			error:function(xhq){
+				alert(xhq.responseText);
+			}
+		});
+	}
+	
+});
+
 //删除确认
 function deleteConfirm(id, name){
 	$("#id").val(id);
 	$("#user_name").text(name);
 }
+
+//上级领导指派
+function parentUserAssign(id, name){
+	$("#user_id").val(id);
+	$("#parent_user_objname").text(name);
+}
+
+//上级模态框的搜索
+$("#ParentUserFind").click(function() {
+    $.get('{route("SearchParentUsers")}', $("#parent_user_search_form").serialize(), function(data) {
+        $("#UsersList").html(data);
+    },'html');
+});
 
 //更换状态
 $(".toggle-status").click(function() {

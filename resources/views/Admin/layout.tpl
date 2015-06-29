@@ -139,6 +139,7 @@
 <!-- <script   type="text/javascript"src="{asset('js/owl.carousel.js')}"></script> -->
 <!--common scripts for all pages-->
 <script type="text/javascript" src="{asset('js/scripts.js')}"></script>
+<script type="text/javascript" src="{asset('js/ajaxfileupload.js')}"></script>
 {block script}{/block}
 <script type="text/javascript">
 $(document).ready(function() {

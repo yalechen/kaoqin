@@ -13,6 +13,7 @@ use Redirect;
 use Response;
 use URL;
 use App\Models\City;
+use App\Models\Storage;
 
 class UserController extends BaseController
 {
@@ -29,8 +30,7 @@ class UserController extends BaseController
             $key = Input::get('key');
             $data->where('name', 'like', "%{$key}%")
                 ->orWhere('mobile', 'like', "%{$key}%")
-                ->orWhere('realname', 'like', "%{$key}%")
-                ->orWhere('email', 'like', "%{$key}%");
+                ->orWhere('realname', 'like', "%{$key}%");
         }
         $data = $data->paginate(15);
 
@@ -283,5 +283,89 @@ class UserController extends BaseController
         $cust->save();
 
         return Redirect::route("UserIndex")->withMessageSuccess($user->name . '被成功指派的门店为' . $cust->name);
+    }
+
+    /**
+     * 上级搜索
+     */
+    public function searchParentUser()
+    {
+        $validator = Validator::make(Input::all(), [
+            'user_id' => 'required|exists:users,id,status,' . User::STATUS_ON
+        ], [
+            'user_id.required' => '用户不能为空',
+            'user_id.exists' => '用户不存在或已离职'
+        ]);
+        if ($validator->fails()) {
+            return v('parent_users_list')->withMessageError($validator->messages()
+                ->first());
+        }
+
+        // 取得数据模型。
+        $user_id = Input::get('user_id');
+        $data = User::latest('id')->where('status', User::STATUS_ON);
+
+        // 处理筛选条件。
+        if (Input::has('modal_key')) {
+            $key = Input::get('modal_key');
+            $data->where('name', 'like', "%{$key}%")
+                ->orWhere('mobile', 'like', "%{$key}%")
+                ->orWhere('realname', 'like', "%{$key}%");
+        }
+        // 返回单页数据。
+        $data = $data->paginate(Input::get('limit', 6));
+
+        return v('parent_users_list')->with(compact('data', 'user_id'));
+    }
+
+    /**
+     * 指派上级领导
+     */
+    public function assignParentUser()
+    {
+        $validator = Validator::make(Input::all(), [
+            'parent_user_id' => 'required|exists:users,id,status,' . User::STATUS_ON,
+            'user_id' => 'required|exists:users,id,status,' . User::STATUS_ON
+        ], [
+            'parent_user_id.required' => '上级用户不能为空',
+            'parent_user_id.exists' => '上级用户不存在或已离职',
+            'user_id.required' => '被指派用户不能为空',
+            'user_id.exists' => '被指派用户不存在或已离职'
+        ]);
+        if ($validator->fails()) {
+            return Response::make($validator->messages()->first(), 402);
+        }
+
+        $user = User::find(Input::get('user_id'));
+        $user->parent_user_id = Input::get('parent_user_id');
+        $user->save();
+
+        return $user;
+    }
+
+    /**
+     * 保存头像
+     */
+    public function avatarSave()
+    {
+        $validator = Validator::make(Input::all(), [
+            'hash' => 'required|exists:storages,hash',
+            'user_id' => 'required|exists:users,id,status,' . User::STATUS_ON
+        ], [
+            'hash.required' => '图片不能为空',
+            'hash.exists' => '图片上传不成功',
+            'user_id.required' => '用户不能为空',
+            'user_id.exists' => '用户不存在或已离职'
+        ]);
+        if ($validator->fails()) {
+            return Response::make($validator->messages()->first(), 402);
+        }
+
+        $storage = Storage::find(Input::get('hash'));
+        $user = User::find(Input::get('user_id'));
+        $user->avatar_path = $storage->path;
+        $user->save();
+
+        return $user;
     }
 }

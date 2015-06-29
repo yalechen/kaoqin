@@ -2,7 +2,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStorageTable extends Migration
+class CreateStoragesTable extends Migration
 {
 
     /**
@@ -13,10 +13,18 @@ class CreateStorageTable extends Migration
     public function up()
     {
         // 存储管理
-        Schema::create('storage', function (Blueprint $table)
+        Schema::create('storages', function (Blueprint $table)
         {
             // 文件使用md5作为 hash_id。
             $table->char('hash', 32)->primary();
+
+            // 缩列图所属原图
+            $table->char('parent_hash', 32)
+                ->index()
+                ->default('');
+
+            // 文件名
+            $table->string('filename')->default('');
 
             // 字节大小。
             $table->integer('size')
@@ -33,19 +41,14 @@ class CreateStorageTable extends Migration
                 ->unsigned()
                 ->default(0);
 
+            // 秒数
+            $table->decimal('seconds', 12, 3)->default(0);
+
             // Mime。
             $table->string('mime')->default('');
 
-            // 时长（秒）。
-            $table->double('seconds', 18, 8)
-                ->unsigned()
-                ->default(0);
-
             // 文件格式。
             $table->string('format')->default('');
-
-            // 文件名
-            $table->string('filename');
 
             // 文件路径。
             $table->string('path')->default('');
@@ -61,6 +64,6 @@ class CreateStorageTable extends Migration
      */
     public function down()
     {
-        Schema::drop('storage');
+        Schema::drop('storages');
     }
 }

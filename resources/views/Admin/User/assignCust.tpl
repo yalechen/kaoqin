@@ -68,7 +68,7 @@
 							</td>
 						</tr>
 						{foreachelse}
-							<tr><td colspan="10" class="center">无相关数据！</td></tr>
+							<tr><td colspan="10" class="text-center">无相关数据！</td></tr>
 						{/foreach}
 					{/if}
 				</tbody>

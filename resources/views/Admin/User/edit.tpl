@@ -27,14 +27,15 @@
                                 <input class="form-control " id="number" type="text" value="{old('number')|default:$data.number}" minlength="5" name="number" required />
                             </div>
                         </div>
-                        {if !$data}
+                        {*if !$data*}
                         <div class="form-group">
                             <label for="password" class="control-label col-lg-2">密码</label>
                             <div class="col-lg-10">
-                                <input class="form-control " id="password" type="text" value="{old('password')|default:$data.password}" minlength="6" name="password" required />
+                                <input class="form-control " id="password" type="text" value="{old('password')}" minlength="6" name="password" {if $data.id gt 0}{else}required{/if} />
+                                {if $data.id gt 0}<p class="help-block">如果不修改原来的密码，就无需输入，保留空则表示密码不被修改</p>{/if}
                             </div>
                         </div>
-                        {/if}
+                        {*/if*}
                         <div class="form-group">
                             <label for="mobile" class="control-label col-lg-2">手机号</label>
                             <div class="col-lg-10">

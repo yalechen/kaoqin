@@ -81,4 +81,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         return $this->belongsToMany('App\Models\Role', 'user_roles', 'user_id', 'role_id');
     }
+
+    /**
+     * 获取头像的绝对路径
+     */
+    public function getAvatarPathAttribute()
+    {
+        return config('app.url').str_replace('\\', '/', $this->attributes['avatar_path']);
+    }
 }
