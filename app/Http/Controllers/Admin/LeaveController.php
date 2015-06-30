@@ -19,10 +19,10 @@ class LeaveController extends BaseController
     /**
      * 请假批量导入页
      */
-    public function index()
+    public function excel()
     {
         // 返回视图
-        return v('index');
+        return v('excel');
     }
 
     /**
@@ -144,5 +144,92 @@ class LeaveController extends BaseController
             DB::insert("insert into `leave`(leave_type_id,leave_type_name,user_id,realname,dept_id,start_time,end_time,days,hours,created_at,updated_at) values {$values}");
         }
         return Redirect::route('LeaveExcelIndex')->withMessageWarning("成功导入{$success}条数据！")->with(compact('logs'));
+    }
+
+    /**
+     * 请假列表管理页
+     */
+    public function index()
+    {
+        $data = Leave::latest()->paginate(15);
+        // 返回视图
+        return v('index')->with(compact('data'));
+    }
+
+    /**
+     * 请假列表管理页
+     */
+    public function edit()
+    {
+        // 获取编辑信息
+        if (Input::has('id')) {
+            $data = Leave::find(Input::get('id'));
+            return v('edit', compact('data'));
+        }
+
+        // 返回错误
+        return Redirect::route('LeaveIndex')->withMessageError('参数错误');
+    }
+
+    /**
+     * 保存
+     */
+    public function save()
+    {
+        // 验证输入。
+        $validator = Validator::make(Input::all(), [
+            'start_time' => 'required|date_format:Y-m-d H:i:s',
+            'end_time' => 'required|date_format:Y-m-d H:i:s',
+            'days' => 'required|integer|min:0',
+            'hours' => 'required|integer|min:0'
+        ], [
+            'start_time.required' => '开始时间不能为空',
+            'start_time.date_format' => '开始时间格式错误',
+            'end_time.required' => '结束时间不能为空',
+            'end_time.date_format' => '结束时间格式错误',
+            'days.required' => '请假天数不能为空',
+            'days.integer' => '请假天数只能为整数',
+            'days.min' => '请假天数至少要有一次',
+            'hours.required' => '请假小时数不能为空',
+            'hours.integer' => '请假小时数只能为整数',
+            'hours.min' => '请假小时数必须要大于等于0'
+        ]);
+        if ($validator->fails()) {
+            return Redirect::to(URL::previous())->withMessageError($validator->messages()
+                ->all())
+                ->withInput();
+        }
+
+        $id = Input::has('id') ? Input::get('id') : 0;
+        $leave = Leave::findOrNew(Input::get('id'));
+        $leave->start_time = trim(Input::get('start_time'));
+        $leave->end_time = trim(Input::get('end_time'));
+        $leave->days = Input::get('days');
+        $leave->hours = Input::get('hours');
+        $leave->save();
+
+        return Redirect::route("LeaveIndex")->withMessageSuccess($id > 0 ? '修改成功' : '新增成功');
+    }
+
+    /**
+     * 删除请假
+     */
+    public function delete()
+    {
+        // 验证数据。
+        $validator = Validator::make(Input::all(), [
+            'id' => 'required|exists:leave,id'
+        ], [
+            'id.required' => '所选请假记录不能为空',
+            'id.exists' => '所选请假记录不存在'
+        ]);
+        if ($validator->fails()) {
+            return Redirect::route("LeaveIndex")->withMessageError($validator->messages()
+                ->all());
+        }
+
+        $leave = Leave::find(Input::get('id'));
+        $leave->delete();
+        return Redirect::to(URL::previous())->withMessageSuccess('删除成功');
     }
 }

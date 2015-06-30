@@ -24,14 +24,14 @@
                         <div class="form-group">
                             <label for="number" class="control-label col-lg-2">编号</label>
                             <div class="col-lg-10">
-                                <input class="form-control " id="number" type="text" value="{old('number')|default:$data.number}" minlength="5" name="number" required />
+                                <input class="form-control" id="number" type="text" value="{old('number')|default:$data.number}" minlength="5" name="number" required />
                             </div>
                         </div>
                         {*if !$data*}
                         <div class="form-group">
                             <label for="password" class="control-label col-lg-2">密码</label>
                             <div class="col-lg-10">
-                                <input class="form-control " id="password" type="text" value="{old('password')}" minlength="6" name="password" {if $data.id gt 0}{else}required{/if} />
+                                <input class="form-control" id="password" type="text" value="{old('password')}" minlength="6" name="password" {if $data.id gt 0}{else}required{/if} />
                                 {if $data.id gt 0}<p class="help-block">如果不修改原来的密码，就无需输入，保留空则表示密码不被修改</p>{/if}
                             </div>
                         </div>
@@ -39,19 +39,19 @@
                         <div class="form-group">
                             <label for="mobile" class="control-label col-lg-2">手机号</label>
                             <div class="col-lg-10">
-                                <input class="form-control " id="mobile" type="text" name="mobile" value="{old('mobile')|default:$data.mobile}" required />
+                                <input class="form-control" id="mobile" type="text" name="mobile" value="{old('mobile')|default:$data.mobile}" required />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="email" class="control-label col-lg-2">邮箱</label>
                             <div class="col-lg-10">
-                                <input class="form-control " id="email" type="email" name="email" value="{old('email')|default:$data.email}" required />
+                                <input class="form-control" id="email" type="email" name="email" value="{old('email')|default:$data.email}" required />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="realname" class="control-label col-lg-2">真实姓名</label>
                             <div class="col-lg-10">
-                                <input class="form-control " id="area" type="text" name="realname" value="{old('realname')|default:$data.realname}" required />
+                                <input class="form-control" id="area" type="text" name="realname" value="{old('realname')|default:$data.realname}" required />
                             </div>
                         </div>
                         {if $data.id gt 0}
@@ -104,7 +104,7 @@
                         <div class="form-group">
                             <label for="address" class="control-label col-lg-2">具体地址</label>
                             <div class="col-lg-10">
-                                <textarea class="form-control " id="address" name="address" required>{old('address')|default:$data.address}</textarea>
+                                <textarea class="form-control" id="address" name="address" required>{old('address')|default:$data.address}</textarea>
                             </div>
                         </div>
                         <div class="form-group">

@@ -319,12 +319,32 @@ Route::group([
             // Excel批量导入页
             Route::get('leave/import', [
                 'as' => 'LeaveExcelIndex',
-                'uses' => 'LeaveController@index'
+                'uses' => 'LeaveController@excel'
             ]);
             // Excel批量导入处理
             Route::post('leave/import', [
                 'as' => 'LeaveExcelImport',
                 'uses' => 'LeaveController@import'
+            ]);
+            // 请假列表
+            Route::get('leave', [
+                'as' => 'LeaveIndex',
+                'uses' => 'LeaveController@index'
+            ]);
+            // 修改请假
+            Route::get('leave/edit', [
+                'as' => 'LeaveEdit',
+                'uses' => 'LeaveController@edit'
+            ]);
+            // 保存修改
+            Route::post('leave/save', [
+                'as' => 'LeaveSave',
+                'uses' => 'LeaveController@save'
+            ]);
+            // 删除请假数据
+            Route::post('leave/delete', [
+                'as' => 'LeaveDelete',
+                'uses' => 'LeaveController@delete'
             ]);
         });
     });
