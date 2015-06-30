@@ -7,7 +7,7 @@
 {/block} 
 
 {block main}
-<link rel="stylesheet" type="text/css" href="{asset('js/bootstrap-datepicker/css/datepicker.css')}"/>
+<link rel="stylesheet" type="text/css" href="{asset('js/bootstrap-datetimepicker/css/datetimepicker.css')}"/>
 <div class="row">
 	<div class="col-sm-12">
 		<section class="panel">
@@ -29,13 +29,13 @@
                         <div class="form-group">
                             <label for="start_time" class="control-label col-lg-2">开始时间</label>
                             <div class="col-lg-10">
-                                <input class="form-control form_datetime" size="16" id="start_time" type="text" name="start_time" value="{old('start_time')|default:$data.start_time}" required />
+                                <input class="form-control form_datetime" size="16" id="start_time" type="text" name="start_time" value="{old('start_time')|default:$data.start_time|date_format:"%Y-%m-%d %H:%M"}" required />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="end_time" class="control-label col-lg-2">结束时间</label>
                             <div class="col-lg-10">
-                                <input class="form-control form_datetime" size="16" id="end_time" type="text" name="end_time" value="{old('end_time')|default:$data.end_time}" required />
+                                <input class="form-control form_datetime" size="16" id="end_time" type="text" name="end_time" value="{old('end_time')|default:$data.end_time|date_format:"%Y-%m-%d %H:%M"}" required />
                             </div>
                         </div>
                         <div class="form-group">
@@ -66,11 +66,11 @@
 {/block} 
 
 {block script} 
-<script type="text/javascript" src="{asset('js/bootstrap-datepicker/js/bootstrap-datepicker.js')}"></script>
-<script type="text/javascript" src="{asset('js/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js')}"></script>
+<script type="text/javascript" src="{asset('js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js')}"></script>
+<script type="text/javascript" src="{asset('js/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js')}"></script>
 <script type="text/javascript">
-$('.form_datetime').datepicker({
-    format: 'yyyy-mm-dd',
+$('.form_datetime').datetimepicker({
+    format: 'yyyy-mm-dd hh:ii',
     autoclose:true,
     language: "zh-CN",
 })

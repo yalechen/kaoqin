@@ -19,7 +19,7 @@
                         <input type="text" class="form-control" id="name" name="key" value="{$smarty.get.key}" placeholder="关键字">
                     </div>
                     <div class="form-group">
-						<select class="form-control" name="org_id" placeholder="所属机构">
+						<select class="form-control" name="org_id">
 							<option value="0" {if !$smarty.get.org_id}selected{/if}>--全部机构--</option>
 							{foreach $org as $item}
 								<option value="{$item.id}" {if $item.id eq $smarty.get.org_id}selected{/if}>{$item.name}</option>

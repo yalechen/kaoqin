@@ -178,8 +178,8 @@ class LeaveController extends BaseController
     {
         // 验证输入。
         $validator = Validator::make(Input::all(), [
-            'start_time' => 'required|date_format:Y-m-d H:i:s',
-            'end_time' => 'required|date_format:Y-m-d H:i:s',
+            'start_time' => 'required|date_format:Y-m-d H:i',
+            'end_time' => 'required|date_format:Y-m-d H:i',
             'days' => 'required|integer|min:0',
             'hours' => 'required|integer|min:0'
         ], [

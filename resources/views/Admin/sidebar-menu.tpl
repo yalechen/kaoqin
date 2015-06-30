@@ -55,6 +55,7 @@
                 </li>
             </ul>
         </li>
+        <li {if Route::currentRouteName() eq 'OvertimeIndex'}class="active"{/if}><a href="{route('OvertimeIndex')}"><i class="fa fa-home"></i> <span>加班管理</span></a></li>
         
         <li>
             <h3 class="navigation-title">报表统计</h3>

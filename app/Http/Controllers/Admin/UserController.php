@@ -368,4 +368,26 @@ class UserController extends BaseController
 
         return $user;
     }
+
+    /**
+     * 异步获取上级领导
+     */
+    public function parentUser()
+    {
+        $validator = Validator::make(Input::all(), [
+            'user_id' => 'required|exists:users,id,status,' . User::STATUS_ON
+        ], [
+            'user_id.required' => '用户不能为空',
+            'user_id.exists' => '用户不存在或已离职'
+        ]);
+        if ($validator->fails()) {
+            return Response::make($validator->messages()->first(), 402);
+        }
+
+        $user = User::find(Input::get('user_id'));
+        if (! is_null($user->leader)) {
+            return $user->leader;
+        }
+        return null;
+    }
 }

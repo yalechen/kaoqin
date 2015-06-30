@@ -52,7 +52,7 @@ class CustController extends BaseController
     }
 
     /**
-     * 新增&编辑用户
+     * 新增&编辑商户
      */
     public function edit()
     {

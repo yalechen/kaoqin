@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 class Overtime extends Model
 {
     // 状态：审核通过
-    const STATUS_OK = 'Ok';
-    // 状态：审核不通过
-    const STATUS_NG = 'Ng';
+    const STATUS_PASS = 'Pass';
+    // 状态：审核驳回
+    const STATUS_REJECT = 'Reject';
+    // 状态：待审核中
+    const STATUS_WAIT = 'Wait';
 
     protected $table = 'overtime';
 

@@ -195,6 +195,12 @@ Route::group([
                 'as' => 'UserStatusChange',
                 'uses' => 'UserController@postToggleStatus'
             ]);
+            // 用户的上级领导
+            Route::get('parent-user', [
+                'as' => 'UserParentUser',
+                'uses' => 'UserController@parentUser'
+            ]);
+
             // 指派所巡店的商户
             Route::get('cust', [
                 'as' => 'UserAssignCust',
@@ -345,6 +351,27 @@ Route::group([
             Route::post('leave/delete', [
                 'as' => 'LeaveDelete',
                 'uses' => 'LeaveController@delete'
+            ]);
+
+            // 加班列表
+            Route::get('overtime', [
+                'as' => 'OvertimeIndex',
+                'uses' => 'OvertimeController@index'
+            ]);
+            // 修改请假
+            Route::get('overtime/edit', [
+                'as' => 'OvertimeEdit',
+                'uses' => 'OvertimeController@edit'
+            ]);
+            // 加班修改
+            Route::post('overtime/save', [
+                'as' => 'OvertimeSave',
+                'uses' => 'OvertimeController@save'
+            ]);
+            // 删除加班数据
+            Route::post('overtime/delete', [
+                'as' => 'OvertimeDelete',
+                'uses' => 'OvertimeController@delete'
             ]);
         });
     });

@@ -71,7 +71,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function leader()
     {
-        return $this->hasMany('App\Models\User', 'parent_user_id', 'id');
+        return $this->hasMany('App\Models\User', 'id','parent_user_id');
     }
 
     /**

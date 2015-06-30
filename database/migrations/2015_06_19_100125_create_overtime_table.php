@@ -42,9 +42,10 @@ class CreateOvertimeTable extends Migration
 
             // 审核状态
             $table->enum('status', [
-                Overtime::STATUS_OK,
-                Overtime::STATUS_NG
-            ])->default(Overtime::STATUS_OK);
+                Overtime::STATUS_PASS,
+                Overtime::STATUS_REJECT,
+                Overtime::STATUS_WAIT
+            ])->default(Overtime::STATUS_WAIT);
 
             // 驳回理由
             $table->string('reject_reason')->default('');
