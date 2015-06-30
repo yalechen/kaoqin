@@ -21,6 +21,9 @@ class CreateLeaveTable extends Migration
             //请假类型
             $table->unsignedInteger('leave_type_id');
 
+            //请假类型名称
+            $table->string('leave_type_name');
+
             // 请假者
             $table->unsignedInteger('user_id');
 

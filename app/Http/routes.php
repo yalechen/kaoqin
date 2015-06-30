@@ -291,38 +291,38 @@ Route::group([
             ]);
         });
 
-        // 商户管理
+        // 考勤管理
         Route::group([
             'prefix' => 'attn'
         ], function ()
         {
             // 请假类型首页
-            Route::get('level', [
+            Route::get('leave-type', [
                 'as' => 'LeaveTypeIndex',
                 'uses' => 'LeaveTypeController@index'
             ]);
             // 请假类型添加&编辑
-            Route::get('level/edit', [
+            Route::get('leave-type/edit', [
                 'as' => 'LeaveTypeEdit',
                 'uses' => 'LeaveTypeController@edit'
             ]);
             // 请假类型添加&编辑
-            Route::post('level/save', [
+            Route::post('leave-type/save', [
                 'as' => 'LeaveTypeSave',
                 'uses' => 'LeaveTypeController@save'
             ]);
             // 删除请假类型
-            Route::post('level/delete', [
+            Route::post('leave-type/delete', [
                 'as' => 'LeaveTypeDelete',
                 'uses' => 'LeaveTypeController@delete'
             ]);
             // Excel批量导入页
-            Route::get('level/import', [
+            Route::get('leave/import', [
                 'as' => 'LeaveExcelIndex',
                 'uses' => 'LeaveController@index'
             ]);
             // Excel批量导入处理
-            Route::post('level/import', [
+            Route::post('leave/import', [
                 'as' => 'LeaveExcelImport',
                 'uses' => 'LeaveController@import'
             ]);

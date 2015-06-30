@@ -47,7 +47,7 @@
                 <li {if in_array(Route::currentRouteName(),['LeaveTypeIndex','LeaveTypeEdit'])}class="active"{/if}>
                 	<a href="{route('LeaveTypeIndex')}"> 请假类型</a>
                 </li>
-                <li {if in_array(Route::currentRouteName(),['LeaveExcelImport'])}class="active"{/if}>
+                <li {if in_array(Route::currentRouteName(),['LeaveExcelIndex'])}class="active"{/if}>
                 	<a href="{route('LeaveExcelImport')}"> Excel批量导入</a>
                 </li>
                 <li><a href="inbox-compose.html"> 请假列表</a></li>

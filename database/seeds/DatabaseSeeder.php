@@ -33,6 +33,8 @@ class DatabaseSeeder extends Seeder
         $this->call('CustTableSeeder');
         // 意见反馈
         $this->call('FeedbackTableSeeder');
+        // 请假类型
+        $this->call('LeaveTypeTableSeeder');
 
 
         // 结束提醒
