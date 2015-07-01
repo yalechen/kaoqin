@@ -6,7 +6,7 @@
 {/block} 
 
 {block main}
-<link rel="stylesheet" type="text/css" href="{asset('js/bootstrap-fileinput-master/css/fileinput.css')}" />
+<!-- <link rel="stylesheet" type="text/css" href="{asset('js/bootstrap-fileinput-master/css/fileinput.css')}" /> -->
 <div class="row">
 	<div class="col-sm-12">
 		<section class="panel">
@@ -52,28 +52,26 @@
 					</tr>
 				</thead>
 				<tbody>
-					{if $data}
-						{foreach $data as $item}
-						<tr>
-							<td>{$item.id}</td>
-							<td><img src="{$item.logo_path}" style="width:35px; height:35px;"/></td>
-							<td>{$item.number}</td>
-							<td>{$item.name}</td>
-							<td><span class="toggle-status label {if $item.type eq constant('App\Models\Cust::TYPE_STORE')}label-danger{else}label-success{/if}" data-id="{$item.id}" data-status="{$item.status}">{trans('cust.type.'|cat:$item.type)}</span></td>
-							<td>{$item.custLevel.name}</td>
-							<td>{$item.user.name}</td>
-							<td>{$item.contacts}</td>
-							<td>{$item.mobile}</td>
-							<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
-							<td>
-								<a class="btn btn-sm btn-primary" href="{route('CustEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
-								<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id}, '{$item.name}')"><i class="icon-trash"></i> 删除</a>
-							</td>
-						</tr>
-						{foreachelse}
-							<tr><td colspan="12" class="text-center">无相关数据！</td></tr>
-						{/foreach}
-					{/if}
+					{foreach $data as $item}
+					<tr>
+						<td>{$item.id}</td>
+						<td><img src="{$item.logo_path}" style="width:35px; height:35px;"/></td>
+						<td>{$item.number}</td>
+						<td>{$item.name}</td>
+						<td><span class="toggle-status label {if $item.type eq constant('App\Models\Cust::TYPE_STORE')}label-danger{else}label-success{/if}" data-id="{$item.id}" data-status="{$item.status}">{trans('cust.type.'|cat:$item.type)}</span></td>
+						<td>{$item.custLevel.name}</td>
+						<td>{$item.user.name}</td>
+						<td>{$item.contacts}</td>
+						<td>{$item.mobile}</td>
+						<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
+						<td>
+							<a class="btn btn-sm btn-primary" href="{route('CustEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
+							<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id}, '{$item.name}')"><i class="icon-trash"></i> 删除</a>
+						</td>
+					</tr>
+					{foreachelse}
+						<tr><td colspan="12" class="text-center">无相关数据！</td></tr>
+					{/foreach}
 				</tbody>
 			</table>
 			<div class="text-center">
@@ -107,8 +105,8 @@
 {/block} 
 
 {block script} 
-<script type="text/javascript" src="{asset('js/bootstrap-fileinput-master/js/fileinput.js')}"></script>
-<script type="text/javascript" src="{asset('js/file-input-init.js')}"></script>
+<!-- <script type="text/javascript" src="{asset('js/bootstrap-fileinput-master/js/fileinput.js')}"></script>
+<script type="text/javascript" src="{asset('js/file-input-init.js')}"></script> -->
 <script type="text/javascript">
 //删除确认
 function deleteConfirm(id, name){

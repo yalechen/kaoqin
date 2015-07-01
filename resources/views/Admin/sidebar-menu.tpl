@@ -58,6 +58,12 @@
         <li {if Route::currentRouteName() eq 'OvertimeIndex'}class="active"{/if}><a href="{route('OvertimeIndex')}"><i class="fa fa-home"></i> <span>加班管理</span></a></li>
         
         <li>
+            <h3 class="navigation-title">任务管理</h3>
+        </li>
+        <li {if Route::currentRouteName() eq 'TaskGeneralIndex'}class="active"{/if}><a href="{route('TaskGeneralIndex')}"><i class="fa fa-home"></i> <span>常规任务</span></a></li>
+        <li {if Route::currentRouteName() eq 'TaskAssignIndex'}class="active"{/if}><a href="{route('TaskAssignIndex')}"><i class="fa fa-home"></i> <span>临时任务</span></a></li>
+        
+        <li>
             <h3 class="navigation-title">报表统计</h3>
         </li>
         <li class="menu-list">

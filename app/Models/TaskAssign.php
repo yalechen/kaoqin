@@ -17,7 +17,7 @@ class TaskAssign extends Model
      */
     public function acceptUser()
     {
-        return $this->belongsTo('App\Models\User', 'accept_user_id', 'id');
+        return $this->belongsTo('App\Models\User');
     }
 
     /**
@@ -25,6 +25,6 @@ class TaskAssign extends Model
      */
     public function publishUser()
     {
-        return $this->belongsTo('App\Models\User', 'publish_user_id', 'id');
+        return $this->belongsTo('App\Models\User');
     }
 }

@@ -37,31 +37,29 @@
 					</tr>
 				</thead>
 				<tbody>
-					{if $data}
-						{foreach $data as $item}
-						<tr>
-							<td>{$item.id}</td>
-							<td><img src="{$item.avatar_path}" style="width:35px; height:35px;"/></td>
-							<td>{$item.number}</td>
-							<td>{$item.name}</td>
-							<td>{$item.realname}</td>
-							<td>{$item.mobile}</td>
-							<!-- <td>{$item.email}</td> -->
-							<td>{if $item.dept_id gt 0}{$item->dept->name}{else}<span class="toggle-status label label-danger">未指派</span>{/if}</td>
-							<td><span class="toggle-status label {if $item.status eq constant('App\Models\User::STATUS_OFF')}label-danger{else}label-success{/if}" data-id="{$item.id}" data-status="{$item.status}">{trans('user.status.'|cat:$item.status)}</span></td>
-							<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
-							<td>
-								<a class="btn btn-sm btn-info" data-toggle="modal" href="#UserAvatarModal" onclick="setAvatar({$item.id}, '{$item.name}')"><i class="icon-emoticon-smile"></i> 头像</a>
-								<a class="btn btn-sm btn-warning" data-toggle="modal" href="#parentUserModal" onclick="parentUserAssign({$item.id}, '{$item.name}')"><i class="icon-user"></i> 上级</a>
-								<a class="btn btn-sm btn-success" href="{route('UserAssignCust', ['user_id'=>$item.id])}"><i class="icon-star"></i> 巡店</a>
-								<a class="btn btn-sm btn-primary" href="{route('UserEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
-								<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id}, '{$item.name}')"><i class="icon-trash"></i> 删除</a>
-							</td>
-						</tr>
-						{foreachelse}
-							<tr><td colspan="9" class="text-center">无相关数据！</td></tr>
-						{/foreach}
-					{/if}
+					{foreach $data as $item}
+					<tr>
+						<td>{$item.id}</td>
+						<td><img src="{$item.avatar_path}" style="width:35px; height:35px;"/></td>
+						<td>{$item.number}</td>
+						<td>{$item.name}</td>
+						<td>{$item.realname}</td>
+						<td>{$item.mobile}</td>
+						<!-- <td>{$item.email}</td> -->
+						<td>{if $item.dept_id gt 0}{$item->dept->name}{else}<span class="toggle-status label label-danger">未指派</span>{/if}</td>
+						<td><span class="toggle-status label {if $item.status eq constant('App\Models\User::STATUS_OFF')}label-danger{else}label-success{/if}" data-id="{$item.id}" data-status="{$item.status}">{trans('user.status.'|cat:$item.status)}</span></td>
+						<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
+						<td>
+							<a class="btn btn-sm btn-info" data-toggle="modal" href="#UserAvatarModal" onclick="setAvatar({$item.id}, '{$item.name}')"><i class="icon-emoticon-smile"></i> 头像</a>
+							<a class="btn btn-sm btn-warning" data-toggle="modal" href="#parentUserModal" onclick="parentUserAssign({$item.id}, '{$item.name}')"><i class="icon-user"></i> 上级</a>
+							<a class="btn btn-sm btn-success" href="{route('UserAssignCust', ['user_id'=>$item.id])}"><i class="icon-star"></i> 巡店</a>
+							<a class="btn btn-sm btn-primary" href="{route('UserEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
+							<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id}, '{$item.name}')"><i class="icon-trash"></i> 删除</a>
+						</td>
+					</tr>
+					{foreachelse}
+						<tr><td colspan="9" class="text-center">无相关数据！</td></tr>
+					{/foreach}
 				</tbody>
 			</table>
 			<div class="text-center">

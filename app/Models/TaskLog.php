@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class TaskLog extends Model
 {
 
-    protected $table = 'task_assign';
+    protected $table = 'task_logs';
 
     /**
      * 执行者
@@ -22,5 +22,13 @@ class TaskLog extends Model
     public function task()
     {
         return $this->morphTo();
+    }
+
+    /**
+     * 所拜访门店
+     */
+    public function cust()
+    {
+        return $this->belongsTo('App\Models\Cust');
     }
 }

@@ -29,21 +29,19 @@
 					</tr>
 				</thead>
 				<tbody>
-					{if $data}
-						{foreach $data as $item}
-						<tr>
-							<td>{$item.id}</td>
-							<td>{$item.user.name}</td>
-							<td>{$item.content|truncate:30:"...":true}</td>
-							<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
-							<td>
-								<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id})"><i class="icon-trash"></i> 删除</a>
-							</td>
-						</tr>
-						{foreachelse}
-							<tr><td colspan="12" class="text-center">无相关数据！</td></tr>
-						{/foreach}
-					{/if}
+					{foreach $data as $item}
+					<tr>
+						<td>{$item.id}</td>
+						<td>{$item.user.name}</td>
+						<td>{$item.content|truncate:30:"...":true}</td>
+						<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
+						<td>
+							<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id})"><i class="icon-trash"></i> 删除</a>
+						</td>
+					</tr>
+					{foreachelse}
+						<tr><td colspan="12" class="text-center">无相关数据！</td></tr>
+					{/foreach}
 				</tbody>
 			</table>
 			<div class="text-center">

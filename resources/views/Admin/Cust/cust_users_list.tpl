@@ -10,22 +10,20 @@
 		</tr>
 	</thead>
 	<tbody id="UsersList">
-		{if $data}
-			{foreach $data as $item}
-			<tr>
-				<td>{$item.id}</td>
-				<td>{$item.number}</td>
-				<td>{$item.name}</td>
-				<td>{$item.realname}</td>
-				<td>{$item.mobile}</td>
-				<td>
-					<a class="btn btn-sm btn-warning" href="javascript:void(0)" onclick="assignParentUser({$item.id}, {$user_id})"><i class="icon-login"></i> 指派</a>
-				</td>
-			</tr>
-			{foreachelse}
-				<tr><td colspan="6" class="text-center">无相关数据！</td></tr>
-			{/foreach}
-		{/if}
+		{foreach $data as $item}
+		<tr>
+			<td>{$item.id}</td>
+			<td>{$item.number}</td>
+			<td>{$item.name}</td>
+			<td>{$item.realname}</td>
+			<td>{$item.mobile}</td>
+			<td>
+				<a class="btn btn-sm btn-warning" href="javascript:void(0)" onclick="assignParentUser({$item.id}, {$user_id})"><i class="icon-login"></i> 指派</a>
+			</td>
+		</tr>
+		{foreachelse}
+			<tr><td colspan="6" class="text-center">无相关数据！</td></tr>
+		{/foreach}
 	</tbody>
 </table>
 {if $data}

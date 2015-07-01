@@ -18,7 +18,7 @@
 						<div class="form-group">
 							<label for="name" class="control-label col-lg-2">用户名</label>
 							<div class="col-lg-10">
-                               	<input class="form-control" id="name" name="name" value="{old('name')|default:$data.name}" minlength="2" type="text" required />
+                               	<input class="form-control" id="name" name="name" value="{old('name')|default:$data.name}" type="text" required />
                             </div>
 						</div>
                         <div class="form-group">

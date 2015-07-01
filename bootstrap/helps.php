@@ -1,10 +1,53 @@
 <?php
+use Illuminate\Support\Facades\DB;
+
+/**
+ * 分布式事务临时解决方案
+ *
+ * @param Closure $callback
+ * @return boolean
+ */
+function db_transaction(Closure $callback)
+{
+    DB::transaction(function ($global) use($callback)
+    {
+        return $callback($global);
+    });
+}
+
+/**
+ * 开启分布式事务
+ */
+function db_begin_transaction()
+{
+    DB::beginTransaction();
+}
+
+/**
+ * 回滚分布式事务
+ */
+function db_rollback()
+{
+    DB::rollBack();
+}
+
+/**
+ * 提交分布式事务
+ */
+function db_commit()
+{
+    DB::commit();
+}
 
 /**
  * 视图扩展函数
- * @param null $view 视图名
- * @param array $data 视图数据
- * @param array $mergeData 视图扩展数据
+ *
+ * @param null $view
+ *            视图名
+ * @param array $data
+ *            视图数据
+ * @param array $mergeData
+ *            视图扩展数据
  * @return mixed
  */
 function v($view = null, $data = array(), $mergeData = array())
@@ -66,7 +109,7 @@ function mformat($mobile)
 }
 
 /**
- * 商品缩略图
+ * 缩略图
  */
 function thumbnail($hash, $width = 150, $height = 150)
 {
@@ -150,7 +193,6 @@ function getObjectClass($object)
     return 'App\\Models\\' . end($class);
 }
 
-
 /**
  * 生成带头像的二维码
  */
@@ -183,7 +225,20 @@ function avatarQrcode($content, $file, $avatar, $level = 0)
 }
 
 /**
- * 生成名片序列号
+ * 创建一个分布式唯一ID
+ *
+ * @return string
+ */
+function uniqueid()
+{
+    $uniqid = uniqid(gethostname(), true);
+    $md5 = substr(md5($uniqid), 12, 8); // 8位md5
+    $uint = hexdec($md5);
+    return sprintf('%s%010u', date('Ymd'), $uint);
+}
+
+/**
+ * 生成唯一序列号
  */
 function generateCardSn()
 {
@@ -193,7 +248,7 @@ function generateCardSn()
     do {
         shuffle($arr);
         $sn = implode('', array_slice($arr, 0, 6));
-    } while (\App\Card::where('serial_number', $sn)->count() > 0);
+    } while (\App\Models\Card::where('serial_number', $sn)->count() > 0);
 
     return $sn;
 }
@@ -205,7 +260,7 @@ function qrcode($content, $user)
 {
     include_once app_path('Services/phpqrcode/phpqrcode.php');
 
-    $dir = 'qrcodes/'.date('Ym');
+    $dir = 'qrcodes/' . date('Ym');
     if (! is_dir($dir)) {
         @mkdir($dir);
     }
@@ -213,4 +268,57 @@ function qrcode($content, $user)
     $file = "{$dir}/activity_{$user->id}.png";
     QRcode::png($content, $file, QR_ECLEVEL_H, 16, 1);
     return $file;
+}
+
+/**
+ * 自定义的四舍五入
+ */
+function round_custom($number, $decimal = 2)
+{
+    return sprintf("%.{$decimal}f", round($number, 2));
+}
+
+/**
+ * 指定长度的左边补零
+ */
+function id_pad($id, $len = 6)
+{
+    return str_pad($id, $len, '0', STR_PAD_LEFT);
+}
+
+/**
+ * 隐藏手机号码中间4位数字
+ */
+function anonymous_mobile($mobile, $replace_str = '****')
+{
+    $mobile = str_split($mobile, 1);
+    return $mobile[0] . $mobile[1] . $mobile[2] . $replace_str . $mobile[7] . $mobile[8] . $mobile[9] . $mobile[10];
+}
+
+/**
+ * 根据每月的拜访次数生成拜访描述，如5天一次，2周一次
+ */
+function times_remark($times)
+{
+    if ($times == 0) {
+        return '';
+    }
+    if ($times == 2) {
+        return "半月1次";
+    }
+    $a = $times / 3;
+    $b = $times / 4;
+    if (is_int($a)) {
+        for ($x = 1; $x <= 10; $x ++) {
+            $c = $x * ($a / 10);
+            if (strpos($c, '.') === false) {
+                return "{$x}天{$c}次";
+                break;
+            }
+        }
+    }
+    if (is_int($b)) {
+        return "每周{$b}次";
+    }
+    return "每月{$times}次";
 }

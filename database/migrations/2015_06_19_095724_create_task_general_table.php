@@ -23,7 +23,7 @@ class CreateTaskGeneralTable extends Migration
             $table->string('title');
 
             // 月份
-            $table->string('ymongth');
+            $table->string('ymonth');
 
             // 接收者
             $table->unsignedInteger('accept_user_id');
@@ -40,8 +40,14 @@ class CreateTaskGeneralTable extends Migration
             // 拜访客户数，这个数字要小于等于拜访次数
             $table->tinyInteger('custs')->default(0);
 
+            // 已拜访客户数
+            $table->tinyInteger('visited_custs')->default(0);
+
             // 拜访描述(eg:5天一次,2周一次)
             $table->string('times_remark');
+
+            // 总拜访次数
+            $table->tinyInteger('times')->default(0);
 
             // 已拜访次数
             $table->tinyInteger('visited_times')->default(0);

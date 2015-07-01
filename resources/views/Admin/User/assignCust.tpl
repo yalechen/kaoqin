@@ -51,26 +51,24 @@
 					</tr>
 				</thead>
 				<tbody>
-					{if $data}
-						{foreach $data as $item}
-						<tr>
-							<td>{$item.id}</td>
-							<td>{$item.number}</td>
-							<td>{$item.name}</td>
-							<td><span class="toggle-status label {if $item.type eq constant('App\Models\Cust::TYPE_GROUP')}label-danger{else}label-warning{/if}">{trans('cust.type.'|cat:$item.type)}</span></td>
-							<td>{if $item.user_id gt 0}{$item.user.name}{else}<span class="toggle-status label label-danger">未指派{/if}</td>
-							<td>{$item.custLevel.name}</td>
-							<td>{$item.contacts}</td>
-							<td>{$item.mobile}</td>
-							<td>{if $item.province_id gt 0}{$item.province.name}{/if}{if $item.city_id gt 0}{$item.city.name}{/if}{if $item.district_id gt 0}{$item.district.name}{/if}</td>
-							<td>
-								<a class="btn btn-sm btn-success" onclick="assignConfirm({$user.id}, '{$user.name}',{$item.id}, '{$item.name}')" data-toggle="modal" href="#AssignCustModal"><i class="icon-star"></i> 马上指派</a>
-							</td>
-						</tr>
-						{foreachelse}
-							<tr><td colspan="10" class="text-center">无相关数据！</td></tr>
-						{/foreach}
-					{/if}
+					{foreach $data as $item}
+					<tr>
+						<td>{$item.id}</td>
+						<td>{$item.number}</td>
+						<td>{$item.name}</td>
+						<td><span class="toggle-status label {if $item.type eq constant('App\Models\Cust::TYPE_GROUP')}label-danger{else}label-warning{/if}">{trans('cust.type.'|cat:$item.type)}</span></td>
+						<td>{if $item.user_id gt 0}{$item.user.name}{else}<span class="toggle-status label label-danger">未指派{/if}</td>
+						<td>{$item.custLevel.name}</td>
+						<td>{$item.contacts}</td>
+						<td>{$item.mobile}</td>
+						<td>{if $item.province_id gt 0}{$item.province.name}{/if}{if $item.city_id gt 0}{$item.city.name}{/if}{if $item.district_id gt 0}{$item.district.name}{/if}</td>
+						<td>
+							<a class="btn btn-sm btn-success" onclick="assignConfirm({$user.id}, '{$user.name}',{$item.id}, '{$item.name}')" data-toggle="modal" href="#AssignCustModal"><i class="icon-star"></i> 马上指派</a>
+						</td>
+					</tr>
+					{foreachelse}
+						<tr><td colspan="10" class="text-center">无相关数据！</td></tr>
+					{/foreach}
 				</tbody>
 			</table>
 			<div class="text-center">

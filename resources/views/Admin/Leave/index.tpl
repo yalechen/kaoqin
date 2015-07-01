@@ -24,26 +24,24 @@
 					</tr>
 				</thead>
 				<tbody>
-					{if $data}
-						{foreach $data as $item}
-						<tr>
-							<td>{$item.id}</td>
-							<td>{$item.realname}</td>
-							<td>{$item.leave_type_name}</td>
-							<td>{$item.start_time}</td>
-							<td>{$item.end_time}</td>
-							<td>{$item.days}</td>
-							<td>{$item.hours}</td>
-							<td>{$item.created_at}</td>
-							<td>
-								<a class="btn btn-sm btn-primary" href="{route('LeaveEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
-								<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id})"><i class="icon-trash"></i> 删除</a>
-							</td>
-						</tr>
-						{foreachelse}
-							<tr><td colspan="12" class="text-center">无相关数据！</td></tr>
-						{/foreach}
-					{/if}
+					{foreach $data as $item}
+					<tr>
+						<td>{$item.id}</td>
+						<td>{$item.realname}</td>
+						<td>{$item.leave_type_name}</td>
+						<td>{$item.start_time}</td>
+						<td>{$item.end_time}</td>
+						<td>{$item.days}</td>
+						<td>{$item.hours}</td>
+						<td>{$item.created_at}</td>
+						<td>
+							<a class="btn btn-sm btn-primary" href="{route('LeaveEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
+							<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id})"><i class="icon-trash"></i> 删除</a>
+						</td>
+					</tr>
+					{foreachelse}
+						<tr><td colspan="12" class="text-center">无相关数据！</td></tr>
+					{/foreach}
 				</tbody>
 			</table>
 		</section>

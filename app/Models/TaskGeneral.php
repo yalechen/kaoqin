@@ -26,7 +26,7 @@ class TaskGeneral extends Model
      */
     public function acceptUser()
     {
-        return $this->belongsTo('App\Models\User', 'accept_user_id', 'id');
+        return $this->belongsTo('App\Models\User');
     }
 
     /**
@@ -34,6 +34,14 @@ class TaskGeneral extends Model
      */
     public function publishUser()
     {
-        return $this->belongsTo('App\Models\User', 'publish_user_id', 'id');
+        return $this->belongsTo('App\Models\User');
+    }
+
+    /**
+     * 门店等级
+     */
+    public function custLevel()
+    {
+        return $this->belongsTo('App\Models\CustLevel');
     }
 }

@@ -31,6 +31,9 @@ class CreateTaskAssignTable extends Migration
             // 描述
             $table->string('remark')->default('');
 
+            // 月份
+            $table->string('ymonth');
+
             // 开始时间
             $table->timestamp('start_time');
 

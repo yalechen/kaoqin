@@ -27,6 +27,9 @@ class CreateTaskLogsTable extends Migration
             // 拜访的客户ID(只有常规任务，或者是指定任务)
             $table->unsignedInteger('cust_id')->default(0);
 
+            // 拜访时间
+            $table->timestamp('visit_time');
+
             // 备注
             $table->string('remark');
 
