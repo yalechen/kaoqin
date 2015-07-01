@@ -7,6 +7,7 @@ use Input;
 use Auth;
 use Redirect;
 use App\Models\User;
+use Illuminate\Support\Facades\URL;
 
 class TaskAssignController extends BaseController
 {
@@ -96,7 +97,7 @@ class TaskAssignController extends BaseController
         }
         $task_assign->save();
 
-        return Redirect::route("TaskGeneralIndex")->withMessageSuccess($id > 0 ? '修改成功' : '新增成功');
+        return Redirect::route("TaskAssignIndex")->withMessageSuccess($id > 0 ? '修改成功' : '新增成功');
     }
 
     /**
@@ -112,7 +113,7 @@ class TaskAssignController extends BaseController
             'id.exists' => '所选常规任务不存在'
         ]);
         if ($validator->fails()) {
-            return Redirect::route("TaskGeneralIndex")->withMessageError($validator->messages()
+            return Redirect::route("TaskAssignIndex")->withMessageError($validator->messages()
                 ->all());
         }
 
