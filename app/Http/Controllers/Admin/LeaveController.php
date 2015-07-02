@@ -70,7 +70,7 @@ class LeaveController extends BaseController
                 'mobile' => 'required|mobile',
                 'leave_type_name' => 'required|exists:leave_type,name',
                 'start_time' => 'required|date_format:Y-m-d H:i:s',
-                'end_time' => 'required|date_format:Y-m-d H:i:s',
+                'end_time' => 'required|date_format:Y-m-d H:i:s|after:' . $inputs['start_time'],
                 'days' => 'required|integer|min:0',
                 'hours' => 'required|integer|min:0'
             ], [
@@ -84,6 +84,7 @@ class LeaveController extends BaseController
                 'start_time.date_format' => '开始时间格式错误，请输入0000-00-00 00:00:00的格式',
                 'end_time.required' => '结束时间不能为空',
                 'end_time.date_format' => '结束时间格式错误，请输入0000-00-00 00:00:00的格式',
+                'end_time.after' => '结束时间必须是在是开始时间之后',
                 'days.integer' => '请假天数必须是一个整数',
                 'days.min' => '请假天数必须大于等于0！',
                 'days.required' => '请假天数不能为空',

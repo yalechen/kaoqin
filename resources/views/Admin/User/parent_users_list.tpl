@@ -32,7 +32,7 @@
 </div>
 {/if}
 <script type="text/javascript">
-//删除确认
+//指派确认
 function assignParentUser(parent_user_id, user_id){
 	var obj=$(this);
 	if( parent_user_id > 0 && user_id>0){

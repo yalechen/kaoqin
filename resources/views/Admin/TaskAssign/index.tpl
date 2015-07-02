@@ -25,9 +25,10 @@
                     </div>
                     <div class="form-group">
                     	<label class="sr-only" for="ymonth">年月份</label>
-                    	<input class="form-control form-control-inline input-medium default-date-picker"  size="16" name="ymonth" id="ymonth" type="text" value="{$smarty.get.ymonth}" />
+                    	<input class="form-control form-control-inline input-medium default-date-picker"  size="16" name="ymonth" id="ymonth" type="text" value="{$smarty.get.ymonth}" placeholder="年月份" />
                     </div>
 					<button type="submit" class="btn btn-info"><i class="fa fa-search"></i> 查询</button>
+					<a href="{route('TaskAssignEdit')}"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i> 添加临时任务 </button></a>
 				</form>
 			</div>
 			<table class="table table-hover">
@@ -38,6 +39,7 @@
 						<th>标题</th>
 						<th>开始时间</th>
 						<th>结束时间</th>
+						<th>商户门店</th>
 						<th>总拜访数/已拜访数</th>
 						<th>状态</th>
 						<th>操作</th>
@@ -49,8 +51,9 @@
 						<td>{$item.id}</td>
 						<td>{$item.acceptUser.realname}</td>
 						<td>{$item.title|truncate:30:"..":true}</td>
-						<td>{$item.start_time|date_format:"%Y-%m%-%d %H:%M"}</td>
-						<td>{$item.end_time|date_format:"%Y-%m%-%d %H:%M"}</td>
+						<td>{$item.start_time|date_format:"%Y-%m-%d %H:%M"}</td>
+						<td>{$item.end_time|date_format:"%Y-%m-%d %H:%M"}</td>
+						<td>{$item.cust.name}</td>
 						<td>{$item.times}/{$item.visited_times}</td>
 						<td><span class="toggle-status label {if constant('App\Models\TaskAssign::STATUS_STARTING') eq $item.status}label-danger{else}label-success{/if}">{trans('task_assign.status.'|cat:$item.status)}</span></td>
 						<td>
@@ -59,7 +62,7 @@
 						</td>
 					</tr>
 					{foreachelse}
-						<tr><td colspan="12" class="text-center">无相关数据！</td></tr>
+						<tr><td colspan="9" class="text-center">无相关数据！</td></tr>
 					{/foreach}
 				</tbody>
 			</table>

@@ -55,8 +55,11 @@ class CreateTaskAssignTable extends Migration
             // 任务执行参考图片
             $table->string('image5_path')->default('');
 
-            // 总的拜访次数，必须大于0
-            $table->unsignedInteger('times');
+            // 所拜访的商户ID
+            $table->unsignedInteger('cust_id');
+
+            // 拜访次数，必须大于0
+            $table->tinyInteger('times');
 
             // 总的已拜访次数
             $table->unsignedInteger('visited_times')->default(0);
