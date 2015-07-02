@@ -28,6 +28,7 @@
                     	<input class="form-control form-control-inline input-medium default-date-picker"  size="16" name="ymonth" id="ymonth" type="text" value="{$smarty.get.ymonth}" />
                     </div>
 					<button type="submit" class="btn btn-info"><i class="fa fa-search"></i> 查询</button>
+					<a href="{route('TaskAssignEdit')}"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i> 添加临时任务 </button></a>
 				</form>
 			</div>
 			<table class="table table-hover">
@@ -49,8 +50,8 @@
 						<td>{$item.id}</td>
 						<td>{$item.acceptUser.realname}</td>
 						<td>{$item.title|truncate:30:"..":true}</td>
-						<td>{$item.start_time|date_format:"%Y-%m%-%d %H:%M"}</td>
-						<td>{$item.end_time|date_format:"%Y-%m%-%d %H:%M"}</td>
+						<td>{$item.start_time|date_format:"%Y-%m-%d %H:%M"}</td>
+						<td>{$item.end_time|date_format:"%Y-%m-%d %H:%M"}</td>
 						<td>{$item.times}/{$item.visited_times}</td>
 						<td><span class="toggle-status label {if constant('App\Models\TaskAssign::STATUS_STARTING') eq $item.status}label-danger{else}label-success{/if}">{trans('task_assign.status.'|cat:$item.status)}</span></td>
 						<td>

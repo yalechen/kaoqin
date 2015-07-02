@@ -423,6 +423,11 @@ Route::group([
                         'as' => 'TaskAssignDelete',
                         'uses' => 'TaskAssignController@delete'
                     ]);
+                    // 搜索临时任务接收者
+                    Route::get('search-users', [
+                        'as' => 'SearchAcceptUsers',
+                        'uses' => 'TaskAssignController@searchAcceptUser'
+                    ]);
                 });
             });
     });

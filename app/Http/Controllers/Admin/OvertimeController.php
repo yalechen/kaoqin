@@ -70,7 +70,7 @@ class OvertimeController extends BaseController
         $validator = Validator::make(Input::all(), [
             'id' => 'required|exists:overtime,id',
             'start_time' => 'required|date_format:Y-m-d H:i',
-            'end_time' => 'required|date_format:Y-m-d H:i',
+            'end_time' => 'required|date_format:Y-m-d H:i|after:' . Input::get('start_time'),
             'hours' => 'required|integer|min:0',
             'reason' => 'required'
         ], [
@@ -78,6 +78,7 @@ class OvertimeController extends BaseController
             'start_time.date_format' => '开始时间格式错误',
             'end_time.required' => '结束时间不能为空',
             'end_time.date_format' => '结束时间格式错误',
+            'end_time.after' => '结束时间必须实在开始时间后面',
             'hours.required' => '请假小时数不能为空',
             'hours.integer' => '请假小时数只能为整数',
             'hours.min' => '请假小时数必须要大于等于0',
