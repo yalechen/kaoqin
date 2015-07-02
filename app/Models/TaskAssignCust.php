@@ -17,7 +17,7 @@ class TaskAssignCust extends Model
      */
     public function task()
     {
-        return $this->belongsTo('App\Models\TaskAssign', 'id', 'task_assign_id');
+        return $this->belongsTo('App\Models\TaskAssign', 'task_assign_id', 'id');
     }
 
     /**

@@ -37,7 +37,8 @@ function assignAcceptUser(user_id,user_name){
 	var obj=$(this);
 	if( user_id){
 		$("#accept_user_id").val(user_id);
-		$("#accept_user_name").text(user_name);
+		$("#accept_user_name").val(user_name);
+		$("#span_accept_user_name").text(user_name);
 		$("#close_modal").trigger('click');
 	}else{
 		alert("参数错误！");

@@ -39,7 +39,7 @@
 						<th>标题</th>
 						<th>开始时间</th>
 						<th>结束时间</th>
-						<th>商户门店</th>
+						<!-- <th>商户门店</th> -->
 						<th>总拜访数/已拜访数</th>
 						<th>状态</th>
 						<th>操作</th>
@@ -53,7 +53,12 @@
 						<td>{$item.title|truncate:30:"..":true}</td>
 						<td>{$item.start_time|date_format:"%Y-%m-%d %H:%M"}</td>
 						<td>{$item.end_time|date_format:"%Y-%m-%d %H:%M"}</td>
-						<td>{$item.cust.name}</td>
+						{*<td>
+							{foreach $item.custs as $cust}
+								{if $cust@last}{$cust.cust.name}{else}
+								{$cust.cust.name}|{/if}
+							{/foreach}
+						</td>*}
 						<td>{$item.times}/{$item.visited_times}</td>
 						<td><span class="toggle-status label {if constant('App\Models\TaskAssign::STATUS_STARTING') eq $item.status}label-danger{else}label-success{/if}">{trans('task_assign.status.'|cat:$item.status)}</span></td>
 						<td>

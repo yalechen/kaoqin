@@ -37,6 +37,10 @@ class CreateTaskAssignCustTable extends Migration
                 TaskAssignCust::STATUS_END
             ])->default(TaskAssignCust::STATUS_STARTING);
 
+            $table->unique([
+                'task_assign_id',
+                'cust_id'
+            ]);
             $table->timestamps();
         });
     }

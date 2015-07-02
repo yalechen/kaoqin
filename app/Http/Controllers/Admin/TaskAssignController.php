@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\URL;
 use App\Models\Storage;
 use App\Models\Cust;
 use App\Models\TaskLog;
+use App\Models\TaskAssignCust;
 
 class TaskAssignController extends BaseController
 {
@@ -21,7 +22,8 @@ class TaskAssignController extends BaseController
     public function index()
     {
         // 所有临时指定任务
-        $data = TaskAssign::with('acceptUser','cust');
+        $data = TaskAssign::with('acceptUser', 'custs');
+        // dd(TaskAssign::find(1)->custs()->get()->toArray());
         if (Input::has('ymonth')) {
             $data->whereYmonth(Input::get('ymonth'));
         }
@@ -48,9 +50,12 @@ class TaskAssignController extends BaseController
 
         // 获取编辑信息
         if (Input::has('id')) {
-            $data = TaskAssign::find(Input::input('id'));
+            $data = TaskAssign::with('acceptUser')->find(Input::input('id'));
+
+            // 已分配的商户门店
+            $task_custs = TaskAssignCust::whereTaskAssignId(Input::get('id'))->get();
         }
-        return v('edit', compact('data', 'cust'));
+        return v('edit', compact('data', 'cust', 'task_custs'));
     }
 
     /**
@@ -60,7 +65,7 @@ class TaskAssignController extends BaseController
     {
         // 验证输入。
         $validator = Validator::make(Input::all(), [
-            'title' => 'required|unique:task_assign,title,id,' . Input::get('id'),
+            'title' => 'required|unique:task_assign,title,' . Input::get('id'),
             'accept_user_id' => 'required|exists:users,id,status,' . User::STATUS_ON,
             'start_time' => 'required|date_format:Y-m-d H:i',
             'end_time' => 'required|date_format:Y-m-d H:i|after:' . Input::get('start_time'),
@@ -109,38 +114,77 @@ class TaskAssignController extends BaseController
             return Redirect::to(URL::previous())->withMessageError('需要拜访的商户未指派')->withInput();
         }
 
-        foreach ($arr as $key => $value) {
-            $id = Input::has('id') ? Input::get('id') : 0;
-            $task_assign = TaskAssign::findOrNew(Input::get('id'));
-            $task_assign->remark = Input::get('remark', '');
-            $task_assign->title = trim(Input::get('title'));
-            $task_assign->accept_user_id = Input::get('accept_user_id');
-            $task_assign->publish_user_id = Auth::user()->id;
-            $task_assign->start_time = Input::get('start_time');
-            $task_assign->end_time = Input::get('end_time');
-            $task_assign->times = $value;
-            $task_assign->cust_id = $key;
-            if (Input::has('images')) {
-                $images = explode(',', Input::get('images'));
-                foreach ($images as $key => $image) {
-                    if ($key == 0) {
-                        $task_assign->image1_path = Storage::find($image)->path;
+        $task_assign = TaskAssign::findOrNew(Input::get('id'));
+        if (Input::has('id')) {
+            // 旧商户门店ID
+            $old_custs = TaskAssignCust::whereTaskAssignId($task_assign->id)->get();
+            // 已被执行的门店IDS
+            $logs_cust_ids = TaskLog::whereTaskID(Input::get('id'))->whereTaskType($task_assign->getModel())
+                ->lists('cust_id')
+                ->all();
+            if (! empty($logs_cust_ids)) {
+                $logs_cust_ids = array_unique($logs_cust_ids);
+                // key和value互换
+                array_flip($logs_cust_ids);
+                // 求得差集，新的商户数组应该都有包含已被执行的商户门店ID
+                foreach ($logs_cust_ids as $k => $v) {
+                    if (! isset($arr[$k])) {
+                        // 查询旧的门店是否已经被执行了任务了，被执行了就不能删除了
+                        return Redirect::to(URL::previous())->withMessageError('原先的***门店已经有被接收者执行了任务，不能移除它')->withInput();
                     }
-                    if ($key == 1) {
-                        $task_assign->image2_path = Storage::find($image)->path;
-                    }
-                    if ($key == 2) {
-                        $task_assign->image3_path = Storage::find($image)->path;
-                    }
-                    if ($key == 3) {
-                        $task_assign->image4_path = Storage::find($image)->path;
-                    }
-                    if ($key == 4) {
-                        $task_assign->image5_path = Storage::find($image)->path;
+                    // 判断旧的拜访数被改成已经拜访的数量了
+                    $count = TaskLog::whereTaskID(Input::get('id'))->whereTaskType($task_assign->getModel())
+                        ->whereCustId($k)
+                        ->count();
+                    if ($count > $arr[$k]) {
+                        $temp = Cust::find($k);
+                        return Redirect::to(URL::previous())->withMessageError($temp->name . '已经有被接收者执行了任务' . $count . '次，大于你修改的' . $arr[$k])->withInput();
                     }
                 }
             }
-            $task_assign->save();
+        }
+
+        $id = Input::has('id') ? Input::get('id') : 0;
+        $task_assign->remark = Input::get('remark', '');
+        $task_assign->title = trim(Input::get('title'));
+        $task_assign->accept_user_id = Input::get('accept_user_id');
+        $task_assign->publish_user_id = Auth::user()->id;
+        $task_assign->start_time = Input::get('start_time');
+        $task_assign->end_time = Input::get('end_time');
+        $task_assign->times = array_sum($arr);
+        if (Input::has('images')) {
+            $images = explode(',', Input::get('images'));
+            foreach ($images as $key => $image) {
+                if ($key == 0) {
+                    $task_assign->image1_path = Storage::find($image)->path;
+                }
+                if ($key == 1) {
+                    $task_assign->image2_path = Storage::find($image)->path;
+                }
+                if ($key == 2) {
+                    $task_assign->image3_path = Storage::find($image)->path;
+                }
+                if ($key == 3) {
+                    $task_assign->image4_path = Storage::find($image)->path;
+                }
+                if ($key == 4) {
+                    $task_assign->image5_path = Storage::find($image)->path;
+                }
+            }
+        }
+        $task_assign->save();
+
+        // 先删除就的商户门店(这边保证新商户门店都是正确的了)
+        TaskAssignCust::whereTaskAssignId($task_assign->id)->delete();
+        foreach ($arr as $key => $value) {
+            $task_assign_cust = TaskAssignCust::whereTaskID(Input::get('id'))->whereCustID($key)->first();
+            if (is_null($task_assign_cust)) {
+                $task_assign_cust = new TaskAssignCust();
+            }
+            $task_assign_cust->task()->associate($task_assign);
+            $task_assign_cust->cust_id = $key;
+            $task_assign_cust->times = $value;
+            $task_assign_cust->save();
         }
 
         return Redirect::route("TaskAssignIndex")->withMessageSuccess($id > 0 ? '修改成功' : '新增成功');

@@ -31,9 +31,10 @@
                         <div class="form-group">
                             <label for="accept_user_id" class="control-label col-lg-2">接收者</label>
                             <div class="col-lg-10">
-                            	<span id="accept_user_name"></span>
+                            	<span id="span_accept_user_name">{old('accept_user_name')|default:$data.acceptUser.realname}</span>
                                 <a class="btn btn-sm btn-warning" data-toggle="modal" href="#acceptUserModal" onclick="acceptUserAssign({$data.id|default:0})"><i class="icon-user"></i> 选择</a>
-                                <input type="hidden" value="" name="accept_user_id" id="accept_user_id" />
+                                <input type="hidden" value="{$data.accept_user_id}" name="accept_user_id" id="accept_user_id" />
+                                <input type="hidden" value="{$data.acceptUser.realname}" name="accept_user_name" id="accept_user_name" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -51,16 +52,15 @@
 	                                <button type="button" class="btn btn-danger removeSelecter">删除</button>
 	                            </div>
 	                            <div id="link_list">
-	                                {if $cate_data}
-	                                    {foreach $cate_data as $key1=>$cate1}
+	                                {if $task_custs}
+	                                    {foreach $task_custs as $item1}
 	                                        <div id="linkSelecter" style="margin-bottom: 10px;">
-	                                            {foreach $cate1 as $key2=>$cate2}
-	                                                <select class="form-control" tabindex="1" style="width: 150px;" name="cust[]">
-	                                                    {foreach $cate2 as $key3=>$cate3}
-	                                                        <option value="{$cate3.id}" {if $cate_id.$key1.$key2 eq $cate3.id}selected{/if}>{$cate3.name}</option>
-	                                                    {/foreach}
-	                                                </select>
-	                                            {/foreach}
+	                                           <select class="form-control" tabindex="1" style="width:30%;display:inline;" name="cust[]">
+                                                    {foreach $cust as $item2}
+                                                        <option value="{$item2.id}" {if $item2.id eq $item1.cust_id}selected{/if}>{$item2.name}</option>
+                                                    {/foreach}
+	                                            </select>
+	                                            <input class="form-control" style="display:inline; width:20%" size="10" type="text" name="times[]" placeholder="拜访数量" value="{$item1.times}" />
 	                                            <button type="button" class="btn btn-primary addSelecter">增加</button>
 	                                            <button type="button" class="btn btn-danger removeSelecter">删除</button>
 	                                        </div>
@@ -252,7 +252,5 @@ function addLinkSelecter()
 }
 
 $("#link_list .addSelecter:not(':last')").hide();
-
-
 </script>
 {/block}

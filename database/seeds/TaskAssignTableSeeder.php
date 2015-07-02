@@ -45,12 +45,15 @@ class TaskAssignTableSeeder extends Seeder
                 for ($j = 0; $j <= 3; $j ++) {
                     // 拜访次数和总拜访次数
                     $times = mt_rand(1, 3);
-                    $all_times += $times;
-                    $task_assign_cust = new TaskAssignCust();
-                    $task_assign_cust->task()->associate($task_assign);
-                    $task_assign_cust->cust();
-                    $task_assign_cust->times = $times;
-                    $task_assign_cust->save();
+                    $cust = Cust::find(mt_rand(1, 20));
+                    if (is_null(TaskAssignCust::whereTaskAssignId($task_assign->id)->whereCustId($cust->id)->first())) {
+                        $all_times += $times;
+                        $task_assign_cust = new TaskAssignCust();
+                        $task_assign_cust->task()->associate($task_assign);
+                        $task_assign_cust->cust()->associate($cust);
+                        $task_assign_cust->times = $times;
+                        $task_assign_cust->save();
+                    }
                 }
                 $task_assign->times = $all_times;
                 $task_assign->save();

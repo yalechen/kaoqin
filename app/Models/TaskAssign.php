@@ -31,8 +31,8 @@ class TaskAssign extends Model
     /**
      * 所拜访的商户门店
      */
-    public function cust()
+    public function custs()
     {
-        return $this->belongsTo('App\Models\Cust');
+        return $this->hasMany('App\Models\TaskAssignCust');
     }
 }
