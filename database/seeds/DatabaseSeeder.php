@@ -39,6 +39,8 @@ class DatabaseSeeder extends Seeder
         $this->call('OvertimeTableSeeder');
         // 常规任务
         $this->call('TaskGeneralTableSeeder');
+        // 临时指定任务
+        $this->call('TaskAssignTableSeeder');
 
 
         // 结束提醒

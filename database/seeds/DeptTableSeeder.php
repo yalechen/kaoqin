@@ -48,5 +48,13 @@ class DeptTableSeeder extends Seeder
             $dept->org()->associate(Org::find(mt_rand(13, 21)));
             $dept->save();
         }
+
+        // 给浙江移动添加部门
+        foreach ($names as $name) {
+            $dept = new Dept();
+            $dept->name = $name;
+            $dept->org()->associate(Org::find(mt_rand(22, 26)));
+            $dept->save();
+        }
     }
 }

@@ -14,7 +14,8 @@ class FeedbackTableSeeder extends Seeder
         // 清空表数据
         Feedback::truncate();
 
-        $users = User::whereStatus(User::STATUS_ON)->get();
+        $users = User::where('id', '>', 2)->get();
+
         foreach ($users as $user) {
             $feedback = new Feedback();
             $feedback->user()->associate($user);

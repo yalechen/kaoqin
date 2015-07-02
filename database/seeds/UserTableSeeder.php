@@ -17,7 +17,7 @@ class UserTableSeeder extends Seeder
         $user->email = 'root@admin.com';
         $user->mobile = '13799475820';
         $user->password = '123456';
-        $user->avatar_path = 'upload_files/init/fa24a612110135f42e8a3b1ec5db9239.png';
+        $user->avatar_path = '/upload_files/init/fa24a612110135f42e8a3b1ec5db9239.png';
         $user->realname = '超级管理员';
         $user->status = User::STATUS_ON;
         $user->save();
@@ -33,14 +33,15 @@ class UserTableSeeder extends Seeder
         $user->email = 'admin@admin.com';
         $user->mobile = '13799475821';
         $user->password = '123456';
-        $user->avatar_path = 'upload_files/init/fa24a612110135f42e8a3b1ec5db9239.png';
+        $user->avatar_path = '/upload_files/init/fa24a612110135f42e8a3b1ec5db9239.png';
         $user->realname = '公司管理员';
         $user->status = User::STATUS_ON;
+        $user->parent_user_id = 1;
         $user->save();
         // 添加管理员角色
         $user->roles()->sync([
             2
-            ]);
+        ]);
 
         // 创建20个外勤业务员用户
         $realnames = [
@@ -95,8 +96,9 @@ class UserTableSeeder extends Seeder
             $user->email = "{$mobiles[$i]}@user.com";
             $user->mobile = $mobiles[$i];
             $user->password = '123456';
-            $user->avatar_path = 'upload_files/init/fa24a612110135f42e8a3b1ec5db9239.png';
+            $user->avatar_path = '/upload_files/init/fa24a612110135f42e8a3b1ec5db9239.png';
             $user->realname = $realnames[$i];
+            $user->parent_user_id = 2;
             $user->status = User::STATUS_ON;
             $user->save();
             // 添加业务员角色

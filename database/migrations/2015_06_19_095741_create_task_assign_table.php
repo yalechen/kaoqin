@@ -31,8 +31,8 @@ class CreateTaskAssignTable extends Migration
             // 描述
             $table->string('remark')->default('');
 
-            // 月份
-            $table->string('ymonth');
+            // 月份，根据开始时间得来，方便查找
+            $table->string('ymonth')->index();
 
             // 开始时间
             $table->timestamp('start_time');
@@ -55,14 +55,11 @@ class CreateTaskAssignTable extends Migration
             // 任务执行参考图片
             $table->string('image5_path')->default('');
 
-            // 所拜访的商户ID
-            $table->unsignedInteger('cust_id');
-
-            // 拜访次数，必须大于0
+            // 总的拜访次数，必须大于0
             $table->tinyInteger('times');
 
             // 总的已拜访次数
-            $table->unsignedInteger('visited_times')->default(0);
+            $table->tinyInteger('visited_times')->default(0);
 
             // 结果:完成-有门店签到即算完成&进行中
             $table->enum('status', [

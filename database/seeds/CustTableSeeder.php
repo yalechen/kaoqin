@@ -168,7 +168,7 @@ class CustTableSeeder extends Seeder
             $cust->custLevel()->associate(CustLevel::find(mt_rand(1, 7)));
             $cust->contacts = $item['contacts'];
             $cust->mobile = $item['mobile'];
-            $cust->logo_path = 'upload_files/init/6335184992d848f341a2aa83cf1fb277.png';
+            $cust->logo_path = '/upload_files/init/6335184992d848f341a2aa83cf1fb277.png';
             $cust->save();
         }
     }
