@@ -34,7 +34,6 @@
 <script type="text/javascript">
 //删除确认
 function assignParentUser(parent_user_id, user_id){
-	alert($(this).text());
 	var obj=$(this);
 	if( parent_user_id > 0 && user_id>0){
 		$.ajax({
