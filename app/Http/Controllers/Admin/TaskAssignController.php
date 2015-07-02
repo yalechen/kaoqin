@@ -21,7 +21,7 @@ class TaskAssignController extends BaseController
     public function index()
     {
         // 所有临时指定任务
-        $data = TaskAssign::with('acceptUser');
+        $data = TaskAssign::with('acceptUser','cust');
         if (Input::has('ymonth')) {
             $data->whereYmonth(Input::get('ymonth'));
         }
@@ -97,7 +97,7 @@ class TaskAssignController extends BaseController
                 $arr[$item] = intval($times[$key]);
             }
         }
-        // $arr=array_unique($arr);
+
         // 验证商户是否存在
         foreach ($arr as $cust_id => $num) {
             if (is_null(Cust::find($cust_id))) {
@@ -109,45 +109,38 @@ class TaskAssignController extends BaseController
             return Redirect::to(URL::previous())->withMessageError('需要拜访的商户未指派')->withInput();
         }
 
-        $id = Input::has('id') ? Input::get('id') : 0;
-        $task_assign = TaskAssign::findOrNew(Input::get('id'));
-        $task_assign->remark = Input::get('remark','');
-        $task_assign->title = trim(Input::get('title'));
-        $task_assign->accept_user_id = Input::get('accept_user_id');
-        $task_assign->publish_user_id = Auth::user()->id;
-        $task_assign->start_time = Input::get('start_time');
-        $task_assign->end_time = Input::get('end_time');
-        $task_assign->times = array_sum($arr);
-        if (Input::has('images')) {
-            $images = explode(',', Input::get('images'));
-            foreach ($images as $key => $image) {
-                if ($key == 0) {
-                    $task_assign->image1 = Storage::find($image)->path;
-                }
-                if ($key == 1) {
-                    $task_assign->image2 = Storage::find($image)->path;
-                }
-                if ($key == 2) {
-                    $task_assign->image3 = Storage::find($image)->path;
-                }
-                if ($key == 3) {
-                    $task_assign->image4 = Storage::find($image)->path;
-                }
-                if ($key == 4) {
-                    $task_assign->image5 = Storage::find($image)->path;
+        foreach ($arr as $key => $value) {
+            $id = Input::has('id') ? Input::get('id') : 0;
+            $task_assign = TaskAssign::findOrNew(Input::get('id'));
+            $task_assign->remark = Input::get('remark', '');
+            $task_assign->title = trim(Input::get('title'));
+            $task_assign->accept_user_id = Input::get('accept_user_id');
+            $task_assign->publish_user_id = Auth::user()->id;
+            $task_assign->start_time = Input::get('start_time');
+            $task_assign->end_time = Input::get('end_time');
+            $task_assign->times = $value;
+            $task_assign->cust_id = $key;
+            if (Input::has('images')) {
+                $images = explode(',', Input::get('images'));
+                foreach ($images as $key => $image) {
+                    if ($key == 0) {
+                        $task_assign->image1_path = Storage::find($image)->path;
+                    }
+                    if ($key == 1) {
+                        $task_assign->image2_path = Storage::find($image)->path;
+                    }
+                    if ($key == 2) {
+                        $task_assign->image3_path = Storage::find($image)->path;
+                    }
+                    if ($key == 3) {
+                        $task_assign->image4_path = Storage::find($image)->path;
+                    }
+                    if ($key == 4) {
+                        $task_assign->image5_path = Storage::find($image)->path;
+                    }
                 }
             }
-        }
-        $task_assign->save();
-
-        // 添加任务拜访记录
-        foreach ($arr as $key => $value) {
-            $task_log = new TaskLog();
-            $task_log->user_id = Input::get('accept_user_id');
-            $task_log->task()->associate($task_assign);
-            $task_log->cust_id = $key;
-            $task_log->times = $value;
-            $task_log->save();
+            $task_assign->save();
         }
 
         return Redirect::route("TaskAssignIndex")->withMessageSuccess($id > 0 ? '修改成功' : '新增成功');

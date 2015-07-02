@@ -27,4 +27,12 @@ class TaskAssign extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
+
+    /**
+     * 所拜访的商户门店
+     */
+    public function cust()
+    {
+        return $this->belongsTo('App\Models\Cust');
+    }
 }

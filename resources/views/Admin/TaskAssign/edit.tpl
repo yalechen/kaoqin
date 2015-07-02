@@ -25,6 +25,7 @@
 							<label for="title" class="control-label col-lg-2">标题</label>
 							<div class="col-lg-10">
                                	<input class="form-control" id="title" name="title" value="{old('title')|default:$data.title}" type="text" required />
+                            	<!-- <span class="help-block">标题一旦添加成就无法更改</span> -->
                             </div>
 						</div>
                         <div class="form-group">
