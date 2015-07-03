@@ -19,7 +19,12 @@ class OvertimeController extends BaseController
     public function index()
     {
         // 根据参数获取用户信息
-        $data = Overtime::with('user', 'auditUser')->latest();
+        $data = Overtime::with('user', 'auditUser');
+        if (Input::has('hours')) {
+            $data->orderBy('hours', Input::get('hours'));
+        } else {
+            $data->latest();
+        }
         if (Input::has('status')) {
             $data->whereStatus(Input::get('status'));
         }
@@ -28,17 +33,11 @@ class OvertimeController extends BaseController
             $data->where('reason', 'like', "%{$key}%");
         }
         if (Input::has('start_time') && Input::has('end_time')) {
-            $data->where('start_time', '<=', Input::get('start_time'))
-                ->where('end_time', '>=', Input::get('start_time'))
-                ->orWhere(function ($q2)
-            {
-                $q2->where('start_time', '<=', Input::get('end_time'))
-                    ->where('end_time', '>=', Input::get('end_time'));
-            });
+            $data->where('start_time', '>=', Input::get('start_time'))->where('end_time', '<=', Input::get('end_time'));
         } elseif (Input::has('start_time')) {
-            $data->where('start_time', '<=', Input::get('start_time'))->where('end_time', '>=', Input::get('start_time'));
+            $data->where('start_time', '>=', Input::get('start_time'));
         } elseif (Input::has('end_time')) {
-            $data->where('start_time', '<=', Input::get('end_time'))->where('end_time', '>=', Input::get('end_time'));
+            $data->where('end_time', '<=', Input::get('end_time'));
         }
 
         $data = $data->paginate(15);

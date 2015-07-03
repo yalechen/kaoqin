@@ -48,6 +48,7 @@
 						<th>标题</th>
 						<th>总门店数/已拜访门店数</th>
 						<th>总拜访数/已拜访数</th>
+						<th>完成度&nbsp;&nbsp;<i data-val="{$smarty.get.rate}" data-sort="rate" class="rate_sort fa {if $smarty.get.rate eq 'desc'}fa-sort-numeric-desc{elseif $smarty.get.rate eq 'asc'}fa-sort-numeric-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
 						<th>状态</th>
 						<th>操作</th>
 					</tr>
@@ -62,6 +63,7 @@
 						<td>{$item.title|truncate:30:"..":true}</td>
 						<td>{$item.custs}/{$item.visited_custs}</td>
 						<td>{$item.times}/{$item.visited_times}</td>
+						<td>{intval($item.visited_times*100/$item.times)}%</td>
 						<td><span class="toggle-status label {if constant('App\Models\TaskGeneral::STATUS_STARTING') eq $item.status}label-danger{else}label-success{/if}">{trans('task_general.status.'|cat:$item.status)}</span></td>
 						<td>
 							<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id})"><i class="icon-trash"></i> 删除</a>
@@ -118,5 +120,18 @@ $('.default-date-picker').datepicker({
     autoclose:true,
     language: "zh-CN",
 })
+
+//排序
+$(".rate_sort").click(function() {
+    var url = "{route('TaskGeneralIndex', ['page' => $smarty.get.page,'key' => $smarty.get.key,'status' => $smarty.get.status,'ymonth' => $smarty.get.ymonth,'cust_level_id' => $smarty.get.cust_level_id])}";
+    var val = $(this).attr('data-val');
+    var sort = $(this).attr('data-sort');
+    if (val != 'desc') {
+        url += '&'+sort+'=desc';
+    } else {
+        url += '&'+sort+'=asc';
+    }
+    window.location.href = url;
+});
 </script>
 {/block}

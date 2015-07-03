@@ -40,11 +40,11 @@
 					<tr>
 						<th>#</th>
 						<th>logo</th>
-						<th>编号</th>
+						<th>编号&nbsp;&nbsp;<i data-val="{$smarty.get.number}" data-sort="number" class="number_sort fa {if $smarty.get.number eq 'desc'}fa-sort-amount-desc{elseif $smarty.get.number eq 'asc'}fa-sort-amount-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
 						<th>名称</th>
 						<th>类型</th>
-						<th>等级</th>
-						<th>巡店者</th>
+						<th>等级&nbsp;&nbsp;<i data-val="{$smarty.get.level}" data-sort="level" class="level_sort fa {if $smarty.get.level eq 'desc'}fa-sort-amount-desc{elseif $smarty.get.level eq 'asc'}fa-sort-amount-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
+						<th>巡店者&nbsp;&nbsp;<i data-val="{$smarty.get.user}" data-sort="user" class="user_sort fa {if $smarty.get.user eq 'desc'}fa-sort-amount-desc{elseif $smarty.get.user eq 'asc'}fa-sort-amount-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
 						<th>联系人</th>
 						<th>联系方式</th>
 						<th>创建日期</th>
@@ -113,5 +113,18 @@ function deleteConfirm(id, name){
 	$("#id").val(id);
 	$("#cust_name").text(name);
 }
+
+//排序
+$(".number_sort,.user_sort,.level_sort").click(function() {
+    var url = "{route('CustIndex', ['page' => $smarty.get.page, 'key' => $smarty.get.key, 'type' => $smarty.get.type, 'level_id' => $smarty.get.level_id])}";
+    var val = $(this).attr('data-val');
+    var sort = $(this).attr('data-sort');
+    if (val != 'desc') {
+        url += '&'+sort+'=desc';
+    } else {
+        url += '&'+sort+'=asc';
+    }
+    window.location.href = url;
+});
 </script>
 {/block}

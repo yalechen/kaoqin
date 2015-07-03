@@ -152,9 +152,31 @@ class LeaveController extends BaseController
      */
     public function index()
     {
-        $data = Leave::latest()->paginate(15);
+        // 所有类型
+        $types = LeaveType::all();
+
+        $data = Leave::latest();
+        if (Input::has('days')) {
+            $data = Leave::orderBy('days', Input::get('days'));
+        }
+        if (Input::has('hours')) {
+            $data = Leave::orderBy('hours', Input::get('hours'));
+        }
+
+        if (Input::has('leave_type_id')) {
+            $data->whereLeaveTypeId(Input::get('leave_type_id'));
+        }
+        if (Input::has('start_time') && Input::has('end_time')) {
+            $data->where('start_time', '>=', Input::get('start_time'))->where('end_time', '<=', Input::get('end_time'));
+        } elseif (Input::has('start_time')) {
+            $data->where('start_time', '>=', Input::get('start_time'));
+        } elseif (Input::has('end_time')) {
+            $data->where('end_time', '<=', Input::get('end_time'));
+        }
+
+        $data = $data->paginate(15);
         // 返回视图
-        return v('index')->with(compact('data'));
+        return v('index')->with(compact('data', 'types'));
     }
 
     /**

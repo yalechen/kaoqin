@@ -11,7 +11,7 @@
 	<div class="col-sm-12">
 		<section class="panel">
 			<div class="panel-body">
-				<form class="form-inline" role="form" action="{Route('UserIndex')}" method="get">
+				<form class="form-inline" role="form" action="{Route('OvertimeIndex')}" method="get">
 					<div class="form-group">
 						<label class="sr-only" for="key">理由</label>
                         <input type="text" class="form-control" id="key" name="key" value="{$smarty.get.key}" placeholder="加班事由">
@@ -39,7 +39,7 @@
 						<th>姓名</th>
 						<th>开始时间</th>
 						<th>结束时间</th>
-						<th>小时数</th>
+						<th>小时数&nbsp;&nbsp;<i data-val="{$smarty.get.hours}" data-sort="hours" class="hours_sort fa {if $smarty.get.hours eq 'desc'}fa-sort-numeric-desc{elseif $smarty.get.hours eq 'asc'}fa-sort-numeric-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
 						<th>原因</th>
 						<th>审核者</th>
 						<th>审核状态</th>
@@ -100,10 +100,31 @@
 {/block} 
 
 {block script} 
+<script type="text/javascript" src="{asset('js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js')}"></script>
+<script type="text/javascript" src="{asset('js/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js')}"></script>
 <script type="text/javascript">
 //删除确认
 function deleteConfirm(id){
 	$("#id").val(id);
 }
+
+$('.form_datetime').datetimepicker({
+    format: 'yyyy-mm-dd hh:ii',
+    autoclose:true,
+    language: "zh-CN",
+})
+
+//排序
+$(".hours_sort").click(function() {
+    var url = "{route('OvertimeIndex', ['page' => $smarty.get.page,'key' => $smarty.get.key,'status' => $smarty.get.status,'start_time' => $smarty.get.start_time,'end_time' => $smarty.get.end_time])}";
+    var val = $(this).attr('data-val');
+    var sort = $(this).attr('data-sort');
+    if (val != 'desc') {
+        url += '&'+sort+'=desc';
+    } else {
+        url += '&'+sort+'=asc';
+    }
+    window.location.href = url;
+});
 </script>
 {/block}

@@ -1,5 +1,4 @@
 <div class="right-bar">
-
             <span class="r-close-btn sb-close"><i class="fa fa-times"></i></span>
 
             <ul class="nav nav-tabs nav-justified-">

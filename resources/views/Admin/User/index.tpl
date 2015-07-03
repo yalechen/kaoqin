@@ -23,10 +23,11 @@
 			<table class="table table-hover">
 				<thead>
 					<tr>
+						<!-- <th style="width: 20px;"><input type="checkbox" class="group-checkable" data-set="#goods_item_list .checkboxes" id="checkAll" /></th> -->
 						<th>#</th>
 						<th>头像</th>
-						<th>编号</th>
-						<th>用户名</th>
+						<th>编号&nbsp;&nbsp;<i data-val="{$smarty.get.number}" data-sort="number" class="number_sort fa {if $smarty.get.number eq 'desc'}fa-sort-amount-desc{elseif $smarty.get.number eq 'asc'}fa-sort-amount-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
+						<th>用户名&nbsp;&nbsp;<i data-val="{$smarty.get.name}" data-sort="name" class="name_sort fa {if $smarty.get.name eq 'desc'}fa-sort-alpha-desc{elseif $smarty.get.name eq 'asc'}fa-sort-alpha-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
 						<th>姓名</th>
 						<th>手机号</th>
 						<!-- <th>email</th> -->
@@ -255,6 +256,19 @@ $(".toggle-status").click(function() {
             }, 'text');
         });
     }
+});
+
+//排序
+$(".number_sort,.name_sort").click(function() {
+    var url = "{route('UserIndex', ['page' => $smarty.get.page, 'key' => $smarty.get.key])}";
+    var val = $(this).attr('data-val');
+    var sort = $(this).attr('data-sort');
+    if (val != 'desc') {
+        url += '&'+sort+'=desc';
+    } else {
+        url += '&'+sort+'=asc';
+    }
+    window.location.href = url;
 });
 </script>
 {/block}

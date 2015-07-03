@@ -36,9 +36,9 @@
 						<th>#</th>
 						<th>名称</th>
 						<th>所属机构</th>
-						<th>排序值</th>
 						<th>状态</th>
-						<th>创建日期</th>
+						<th>排序值 &nbsp;&nbsp;<i data-val="{$smarty.get.sort}" data-sort="sort" class="sort fa {if $smarty.get.sort eq 'desc'}fa-sort-amount-desc{elseif $smarty.get.sort eq 'asc'}fa-sort-amount-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
+						<th>创建日期 &nbsp;&nbsp;<i data-val="{$smarty.get.id}" data-sort="id" class="id_sort fa {if $smarty.get.sort eq 'desc'}fa-sort-amount-desc{elseif $smarty.get.sort eq 'asc'}fa-sort-amount-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -49,8 +49,8 @@
 							<td>{$item.id}</td>
 							<td>{$item.name}</td>
 							<td>{$item->org->name}</td>
-							<td>{$item->sort}</td>
 							<td><span class="toggle-status label {if $item.status eq constant('App\Models\Dept::STATUS_OFF')}label-danger{else}label-success{/if}" data-id="{$item.id}" data-status="{$item.status}">{trans('dept.status.'|cat:$item.status)}</span></td>
+							<td>{$item.sort}</td>
 							<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
 							<td>
 								<a class="btn btn-sm btn-primary" href="{route('DeptEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
@@ -114,6 +114,19 @@ $(".toggle-status").click(function() {
             }, 'text');
         });
     }
+});
+
+//排序
+$(".sort,.id_sort").click(function() {
+    var url = "{route('DeptIndex', ['page' => $smarty.get.page, 'key' => $smarty.get.key, 'org_id' => $smarty.get.org_id])}";
+    var val = $(this).attr('data-val');
+    var sort = $(this).attr('data-sort');
+    if (val != 'desc') {
+        url += '&'+sort+'=desc';
+    } else {
+        url += '&'+sort+'=asc';
+    }
+    window.location.href = url;
 });
 </script>
 {/block}

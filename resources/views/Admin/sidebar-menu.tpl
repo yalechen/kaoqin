@@ -33,7 +33,7 @@
                 	<a href="{route('CustIndex')}"> 商户管理</a>
                 </li>
                 <li {if in_array(Route::currentRouteName(),['CustLevelIndex','CustLevelEdit'])}class="active"{/if}>
-                	<a href="{route('CustLevelIndex')}"> 等级管理</a>
+                	<a href="{route('CustLevelIndex')}"> 商户等级管理</a>
                 </li>
             </ul>
         </li>
@@ -69,6 +69,7 @@
         <li class="menu-list">
             <a href=""><i class="fa fa-laptop"></i>  <span>任务报表</span></a>
             <ul class="child-list">
+                <li><a href="###"> 我的任务表</a></li>
                 <li><a href="###"> 拜访记录表</a></li>
                 <li><a href="###"> 里程统计</a></li>
             </ul>

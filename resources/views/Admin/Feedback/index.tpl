@@ -24,7 +24,7 @@
 						<th>#</th>
 						<th>发布者</th>
 						<th>内容</th>
-						<th>创建日期</th>
+						<th>创建时间</th>
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -34,7 +34,7 @@
 						<td>{$item.id}</td>
 						<td>{$item.user.name}</td>
 						<td>{$item.content|truncate:30:"...":true}</td>
-						<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
+						<td>{$item.created_at|date_format:"%Y-%m-%d %H:%M:%S"}</td>
 						<td>
 							<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id})"><i class="icon-trash"></i> 删除</a>
 						</td>

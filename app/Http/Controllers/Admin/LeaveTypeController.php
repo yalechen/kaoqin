@@ -19,6 +19,9 @@ class LeaveTypeController extends BaseController
     {
         // 所有类型
         $data = LeaveType::paginate(15);
+        if (Input::has('sort')) {
+            $data = LeaveType::orderBy('sort', Input::get('sort'))->paginate(15);
+        }
 
         // 返回视图
         return v('index')->with(compact('data'));

@@ -98,6 +98,22 @@ Route::group([
                     'uses' => 'IndexController@index'
                 ]);
 
+                // 设置管理
+                Route::group([
+                    'prefix' => 'configs'
+                ], function ()
+                {
+                    // 设置页
+                    Route::get('/', [
+                        'as' => 'ConfigsIndex',
+                        'uses' => 'ConfigsController@index'
+                    ]);
+                    // 保存设置
+                    Route::post('/', [
+                        'as' => 'ConfigsSave',
+                        'uses' => 'ConfigsController@save'
+                    ]);
+                });
                 // 机构管理
                 Route::group([
                     'prefix' => 'org'

@@ -24,7 +24,13 @@ class OrgController extends BaseController
         $org = Org::whereParentPath('')->get();
 
         // 根据参数获取机构信息
-        $data = Org::orderBy('sort', 'desc');
+        if (Input::has('sort')) {
+            $data = Org::orderBy('sort', Input::get('sort'));
+        } elseif (Input::has('id')) {
+            $data = Org::orderBy('id', Input::get('id'));
+        } else {
+            $data = Org::latest();
+        }
         if (Input::has('key')) {
             $key = Input::get('key');
             $data->where('name', 'like', "%{$key}%");

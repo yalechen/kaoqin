@@ -35,6 +35,11 @@ class TaskGeneralController extends BaseController
         if (Input::has('status')) {
             $data->whereStatus(Input::get('status'));
         }
+        // 按照完成度排序
+        if (Input::has('rate')) {
+            $data->orderByRaw('`visited_times`/`times` '.Input::get('rate'));
+        }
+
         $data = $data->paginate(15);
         // 返回视图
         return v('index')->with(compact('data', 'cust_level'));

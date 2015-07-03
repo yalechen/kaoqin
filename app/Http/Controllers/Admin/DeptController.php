@@ -23,7 +23,13 @@ class DeptController extends BaseController
         // 获取第一级机构
         $org = Org::whereParentPath('')->get();
 
-        $data = Dept::orderBy('sort', 'desc');
+        if (Input::has('sort')) {
+            $data = Dept::orderBy('sort', Input::get('sort'));
+        } elseif (Input::has('id')) {
+            $data = Dept::orderBy('id', Input::get('id'));
+        } else {
+            $data = Dept::latest();
+        }
         // 根据参数获取部门信息
         if (Input::has('key')) {
             $key = Input::get('key');

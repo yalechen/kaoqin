@@ -25,7 +25,13 @@ class UserController extends BaseController
     {
         // TODO:只可管理部门用户，比如要扣除角色为管理员的用户
         // 根据参数获取用户信息
-        $data = User::orderBy('number', 'desc');
+        if (Input::has('number')) {
+            $data = User::orderBy('number', Input::get('number'));
+        } elseif (Input::has('name')) {
+            $data = User::orderBy('name', Input::get('name'));
+        } else {
+            $data = User::orderBy('number', 'desc');
+        }
         if (Input::has('key')) {
             $key = Input::get('key');
             $data->where('name', 'like', "%{$key}%")

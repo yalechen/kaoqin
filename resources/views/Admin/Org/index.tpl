@@ -36,8 +36,8 @@
 						<th>名称</th>
 						<th>上级机构</th>
 						<th>所属区域</th>
-						<th>排序值</th>
-						<th>创建日期</th>
+						<th>排序值 &nbsp;&nbsp;<i data-val="{$smarty.get.sort}" data-sort="sort" class="sort fa {if $smarty.get.sort eq 'desc'}fa-sort-amount-desc{elseif $smarty.get.sort eq 'asc'}fa-sort-amount-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
+						<th>创建日期 &nbsp;&nbsp;<i data-val="{$smarty.get.id}" data-sort="id" class="id_sort fa {if $smarty.get.sort eq 'desc'}fa-sort-amount-desc{elseif $smarty.get.sort eq 'asc'}fa-sort-amount-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -99,5 +99,18 @@ function deleteConfirm(id, name){
 	$("#id").val(id);
 	$("#org_name").text(name);
 }
+
+//排序
+$(".sort,.id_sort").click(function() {
+    var url = "{route('OrgIndex', ['page' => $smarty.get.page, 'key' => $smarty.get.key, 'org_id' => $smarty.get.org_id])}";
+    var val = $(this).attr('data-val');
+    var sort = $(this).attr('data-sort');
+    if (val != 'desc') {
+        url += '&'+sort+'=desc';
+    } else {
+        url += '&'+sort+'=asc';
+    }
+    window.location.href = url;
+});
 </script>
 {/block}

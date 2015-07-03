@@ -41,6 +41,7 @@
 						<th>结束时间</th>
 						<!-- <th>商户门店</th> -->
 						<th>总拜访数/已拜访数</th>
+						<th>完成度&nbsp;&nbsp;<i data-val="{$smarty.get.rate}" data-sort="rate" class="rate_sort fa {if $smarty.get.rate eq 'desc'}fa-sort-numeric-desc{elseif $smarty.get.rate eq 'asc'}fa-sort-numeric-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
 						<th>状态</th>
 						<th>操作</th>
 					</tr>
@@ -60,6 +61,7 @@
 							{/foreach}
 						</td>*}
 						<td>{$item.times}/{$item.visited_times}</td>
+						<td>{intval($item.visited_times*100/$item.times)}%</td>
 						<td><span class="toggle-status label {if constant('App\Models\TaskAssign::STATUS_STARTING') eq $item.status}label-danger{else}label-success{/if}">{trans('task_assign.status.'|cat:$item.status)}</span></td>
 						<td>
 							<a class="btn btn-sm btn-primary" href="{route('TaskAssignEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
@@ -116,6 +118,19 @@ $('.default-date-picker').datepicker({
     format: 'yyyy-mm',
     autoclose:true,
     language: "zh-CN",
-})
+});
+
+//排序
+$(".rate_sort").click(function() {
+    var url = "{route('TaskAssignIndex', ['page' => $smarty.get.page,'key' => $smarty.get.key,'status' => $smarty.get.status,'ymonth' => $smarty.get.ymonth])}";
+    var val = $(this).attr('data-val');
+    var sort = $(this).attr('data-sort');
+    if (val != 'desc') {
+        url += '&'+sort+'=desc';
+    } else {
+        url += '&'+sort+'=asc';
+    }
+    window.location.href = url;
+});
 </script>
 {/block}

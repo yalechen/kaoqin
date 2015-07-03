@@ -27,7 +27,16 @@ class CustController extends BaseController
         $level = CustLevel::all();
 
         // 根据参数获取用户信息
-        $data = Cust::with('custLevel', 'user')->orderBy('number', 'desc');
+        $data = Cust::with('custLevel', 'user');
+        if (Input::has('number')) {
+            $data->orderBy('number', Input::get('number'));
+        } elseif (Input::has('level')) {
+            $data->orderBy('cust_level_id', Input::get('cust_level_id'));
+        } elseif (Input::has('user')) {
+            $data->orderBy('user_id', Input::get('user_id'));
+        } else {
+            $data->orderBy('number', 'desc');
+        }
         if (Input::has('type')) {
             $data->whereType(Input::get('type'));
         }

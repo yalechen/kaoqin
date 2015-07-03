@@ -58,9 +58,9 @@
             2015 &copy; kaoqin by Robote-Jois.
         </footer>
 
-        <div class="sb-slidebar sb-right sb-style-overlay">
+        <!-- <div class="sb-slidebar sb-right sb-style-overlay">
         {include 'Admin/sidebar-right.tpl'}
-        </div>
+        </div> -->
     </div>
 </section>
 
