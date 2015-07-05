@@ -177,11 +177,6 @@ function iconfirm(msg, func)
     //    $("#confirmAction").unbind('click');
     //})
 }
-
-$(window).on("resize",function(){
-    var owl = $("#news-feed").data("owlCarousel");
-    owl.reinit();
-});
 </script>
 </body>
 </html>

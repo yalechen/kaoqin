@@ -26,7 +26,7 @@ class CustController extends BaseController
         // 所有等级
         $level = CustLevel::all();
 
-        // 根据参数获取用户信息
+        // 根据参数获取商户信息
         $data = Cust::with('custLevel', 'user');
         if (Input::has('number')) {
             $data->orderBy('number', Input::get('number'));

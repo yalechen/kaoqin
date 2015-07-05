@@ -71,7 +71,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function leader()
     {
-        return $this->hasMany('App\Models\User', 'id','parent_user_id');
+        return $this->belongsTo('App\Models\User', 'parent_user_id', 'id');
     }
 
     /**
@@ -87,6 +87,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function getAvatarPathAttribute()
     {
-        return config('app.url').str_replace('\\', '/', $this->attributes['avatar_path']);
+        return config('app.url') . str_replace('\\', '/', $this->attributes['avatar_path']);
     }
 }

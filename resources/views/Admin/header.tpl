@@ -240,6 +240,8 @@
                 <ul class="dropdown-menu dropdown-usermenu purple pull-right">
                     <li><a href="{route('UserEdit',['id'=>Auth::user()->id])}">  个人资料</a></li>
                     <li><a href="{route('ConfigsIndex')}"><span class="label bg-info pull-right">new</span>  系统设置</a></li>
+                    <li><a href="{route('ArticleIndex')}">  文章管理</a></li>
+                    <li><a href="{route('FeedbackIndex')}">  意见反馈</a></li>
                     <li><a href="{route('AdminLogout')}"><i class="fa fa-sign-out pull-right"></i> 退出</a></li>
                     <!-- <li>
                         <a href="javascript:;">

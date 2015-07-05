@@ -18,7 +18,7 @@ class OvertimeController extends BaseController
      */
     public function index()
     {
-        // 根据参数获取用户信息
+        // 根据参数获取加班信息
         $data = Overtime::with('user', 'auditUser');
         if (Input::has('hours')) {
             $data->orderBy('hours', Input::get('hours'));

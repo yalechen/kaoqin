@@ -49,6 +49,7 @@ class UserController extends BaseController
      */
     public function edit()
     {
+        // TODO:点击个人资料进来时修改id是否看会改到别人的资料，要权限判定
         // 获取第一级机构
         $org = Org::whereParentPath('')->get();
 
@@ -143,6 +144,9 @@ class UserController extends BaseController
         $user->org_id = $org_id;
         $user->dept_id = Input::get('dept_id');
         $user->status = Input::get('status');
+        if (Input::has('avatar_path')) {
+            $user->avatar_path = Input::get('avatar_path');
+        }
         $user->save();
 
         return Redirect::route("UserIndex")->withMessageSuccess($id > 0 ? '修改成功' : '新增成功');
@@ -319,8 +323,9 @@ class UserController extends BaseController
                 ->orWhere('mobile', 'like', "%{$key}%")
                 ->orWhere('realname', 'like', "%{$key}%");
         }
-        // 返回单页数据。
-        $data = $data->paginate(Input::get('limit', 6));
+        // 返回数据。
+        //$data = $data->paginate(Input::get('limit', 6));
+        $data = $data->get();
 
         return v('parent_users_list')->with(compact('data', 'user_id'));
     }

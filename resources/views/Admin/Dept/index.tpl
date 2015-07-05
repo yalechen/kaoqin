@@ -8,6 +8,7 @@
 {block main}
 <style>
 .toggle-status { cursor:pointer; }
+.auto_height { height: 350px; OVERFLOW-Y: auto; SCROLLBAR-FACE-COLOR: #ffffff; }
 </style>
 <div class="row">
 	<div class="col-sm-12">
@@ -53,6 +54,7 @@
 							<td>{$item.sort}</td>
 							<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
 							<td>
+								<a class="btn btn-sm btn-info" data-toggle="modal" href="#UserModal" onclick="setUser({$item.id}, '{$item.name}')"><i class="icon-emoticon-user"></i> 指派员工</a>
 								<a class="btn btn-sm btn-primary" href="{route('DeptEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
 								<a class="btn btn-danger btn-sm" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id}, '{$item.name}')"><i class="icon-trash"></i> 删除</a>
 							</td>
@@ -84,6 +86,46 @@
 	            	<input type="hidden" id="id" name="id" value="" >
 	                <button class="btn btn-danger" type="submit"> 确认</button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="UserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">给“<STRONG id="assign_dept_name"></STRONG>”部门指派员工</h4>
+            </div>
+            <div class="modal-body">
+            	接下来您将给“<STRONG id="parent_user_objname"></STRONG>”指派上级领导，请使用关键字搜索
+            	<div class="row">
+	                <div class="col-sm-12">
+						<section class="panel">
+							<div class="panel-body">
+								<form class="form-inline" role="form" id="user_search_form">
+									<div class="form-group">
+										<label class="sr-only" for="key">关键字</label>
+				                        <input type="text" class="form-control" id="modal_key" name="modal_key" value="{$smarty.get.modal_key}" placeholder="用户名\姓名\手机号">
+				                    </div>
+				                    <INPUT type="hidden" value="" name="dept_id" id="dept_id" />
+									<button type="button" class="btn btn-info" id="UserFind"><i class="fa fa-search"></i> 查询</button>
+								</form>
+							</div>
+							<div id="UsersList">
+							
+							</div>
+						</section>
+					</div>
+				</div>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-success" type="button" id="closeAvatarModal">确认指派</button>
+                <input type="hidden" value="" id="dept_id" />
+                <input type="hidden" value="" id="target_user_id" />
             </div>
         </div>
     </div>
@@ -127,6 +169,20 @@ $(".sort,.id_sort").click(function() {
         url += '&'+sort+'=asc';
     }
     window.location.href = url;
+});
+
+//指派用户
+function setUser(id, name){
+	$("#dept_id").val(id);
+	$("#assign_dept_name").text(name);
+} 
+
+//指派用户模态框的搜索
+$("#UserFind").click(function() {
+    $.get('{route("SearchUsers")}', $("#user_search_form").serialize(), function(data) {
+        $("#UsersList").html(data);
+    },'html');
+    $("#UsersList").addClass("auto_height");
 });
 </script>
 {/block}

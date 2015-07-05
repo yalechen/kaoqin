@@ -1,6 +1,7 @@
 <table class="table table-hover">
 	<thead>
 		<tr>
+			<th><input type="checkbox" data-set=".checkboxes" id="checkAll" /></th>
 			<th>#</th>
 			<th>编号</th>
 			<th>用户名</th>
@@ -12,13 +13,14 @@
 	<tbody>
 		{foreach $data as $item}
 		<tr>
+			<td><input type="checkbox" class="checkboxes" value="{$item.id}" /></td>
 			<td>{$item.id}</td>
 			<td>{$item.number}</td>
 			<td>{$item.name}</td>
 			<td>{$item.realname}</td>
 			<td>{$item.mobile}</td>
 			<td>
-				<a class="btn btn-sm btn-warning" href="javascript:void(0)" onclick="assignParentUser({$item.id}, {$user_id})"><i class="icon-login"></i> 指派</a>
+				<a class="btn btn-sm btn-warning" href="javascript:void(0)" onclick="assignUser({$item.id}, {$dept_id})"><i class="icon-login"></i> 指派</a>
 			</td>
 		</tr>
 		{foreachelse}
@@ -27,14 +29,24 @@
 	</tbody>
 </table>
 <script type="text/javascript">
+//批量选中
+$("#checkAll").click(function()
+{
+    if ($(this).parent().hasClass('checked')) {
+        $(".checkboxes").parent().removeClass('checked');
+    } else {
+        $(".checkboxes").parent().addClass('checked');
+    }
+});
+
 //指派确认
-function assignParentUser(parent_user_id, user_id){
+function assignUser(user_id, dept_id){
 	var obj=$(this);
-	if( parent_user_id > 0 && user_id>0){
+	if( user_id > 0 && dept_id>0){
 		$.ajax({
 			type: 'POST',
-	        url: '{route("AssignParentUsers")}',
-	        data: { parent_user_id : parent_user_id, user_id : user_id },
+	        url: '{route("AssignUsers")}',
+	        data: { user_id : user_id, dept_id : dept_id },
 	        dataType: 'json',
 	        success: function(data) {
 	        	//更改本行事件为取消指派
@@ -45,7 +57,7 @@ function assignParentUser(parent_user_id, user_id){
 	        }
 	    });
 	}else{
-		alert("参数错误！上级用户ID和被指派用户ID不能为空");
+		alert("参数错误！用户ID和被指派部门ID不能为空");
 	}
 }
 </script>

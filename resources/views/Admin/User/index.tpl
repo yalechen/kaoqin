@@ -7,6 +7,9 @@
 
 {block main}
 <link rel="stylesheet" type="text/css" href="{asset('js/bootstrap-fileinput-master/css/fileinput.css')}" />
+<style>
+.auto_height { height: 350px; OVERFLOW-Y: auto; SCROLLBAR-FACE-COLOR: #ffffff; }
+</style>
 <div class="row">
 	<div class="col-sm-12">
 		<section class="panel">
@@ -30,7 +33,7 @@
 						<th>用户名&nbsp;&nbsp;<i data-val="{$smarty.get.name}" data-sort="name" class="name_sort fa {if $smarty.get.name eq 'desc'}fa-sort-alpha-desc{elseif $smarty.get.name eq 'asc'}fa-sort-alpha-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
 						<th>姓名</th>
 						<th>手机号</th>
-						<!-- <th>email</th> -->
+						<th>上级</th>
 						<th>所属部门</th>
 						<th>状态</th>
 						<th>创建日期</th>
@@ -46,12 +49,12 @@
 						<td>{$item.name}</td>
 						<td>{$item.realname}</td>
 						<td>{$item.mobile}</td>
-						<!-- <td>{$item.email}</td> -->
+						<td>{$item.leader.realname}</td>
 						<td>{if $item.dept_id gt 0}{$item->dept->name}{else}<span class="toggle-status label label-danger">未指派</span>{/if}</td>
 						<td><span class="toggle-status label {if $item.status eq constant('App\Models\User::STATUS_OFF')}label-danger{else}label-success{/if}" data-id="{$item.id}" data-status="{$item.status}">{trans('user.status.'|cat:$item.status)}</span></td>
 						<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
 						<td>
-							<a class="btn btn-sm btn-info" data-toggle="modal" href="#UserAvatarModal" onclick="setAvatar({$item.id}, '{$item.name}')"><i class="icon-emoticon-smile"></i> 头像</a>
+							<!-- <a class="btn btn-sm btn-info" data-toggle="modal" href="#UserAvatarModal" onclick="setAvatar({$item.id}, '{$item.name}')"><i class="icon-emoticon-smile"></i> 头像</a> -->
 							<a class="btn btn-sm btn-warning" data-toggle="modal" href="#parentUserModal" onclick="parentUserAssign({$item.id}, '{$item.name}')"><i class="icon-user"></i> 上级</a>
 							<a class="btn btn-sm btn-success" href="{route('UserAssignCust', ['user_id'=>$item.id])}"><i class="icon-star"></i> 巡店</a>
 							<a class="btn btn-sm btn-primary" href="{route('UserEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
@@ -132,7 +135,7 @@
 <!-- modal -->
 
 <!-- Modal -->
-<div class="modal fade" id="UserAvatarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="UserAvatarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -158,19 +161,18 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <!-- modal -->
 {/block} 
 
 {block script} 
 <script type="text/javascript" src="{asset('js/bootstrap-fileinput-master/js/fileinput.js')}"></script>
-<script type="text/javascript" src="{asset('js/file-input-init.js')}"></script>
 <script type="text/javascript">
 //设置头像
-function setAvatar(id, name){
+/* function setAvatar(id, name){
 	$("#target_user_id").val(id);
 	$("#user_name_avatar").text(name);
-}
+} 
 //约束上传条件
 $("#file_avatar").fileinput({
     allowedFileExtensions : ['jpg', 'png','gif'],
@@ -220,7 +222,7 @@ $("#closeAvatarModal").click(function(){
 		});
 	}
 	
-});
+});*/
 
 //删除确认
 function deleteConfirm(id, name){
@@ -239,6 +241,7 @@ $("#ParentUserFind").click(function() {
     $.get('{route("SearchParentUsers")}', $("#parent_user_search_form").serialize(), function(data) {
         $("#UsersList").html(data);
     },'html');
+    $("#UsersList").addClass("auto_height");
 });
 
 //更换状态

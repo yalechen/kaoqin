@@ -2,15 +2,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Dept;
-use App\Models\Province;
 use Validator;
 use Input;
 use Auth;
 use Redirect;
 use Response;
 use URL;
-use App\Models\City;
 use App\Models\Org;
+use App\Models\User;
 
 class DeptController extends BaseController
 {
@@ -151,5 +150,63 @@ class DeptController extends BaseController
         $dept->save();
 
         return 'success';
+    }
+
+    /**
+     * 用户搜索
+     */
+    public function searchUser()
+    {
+        $validator = Validator::make(Input::all(), [
+            'dept_id' => 'required|exists:depts,id'
+        ], [
+            'dept_id.required' => '部门不能为空',
+            'dept_id.exists' => '部门不存在'
+        ]);
+        if ($validator->fails()) {
+            return v('users_list')->withMessageError($validator->messages()
+                ->first());
+        }
+
+        // 取得数据模型。
+        $dept_id = Input::get('dept_id');
+        $data = User::latest('id')->where('status', User::STATUS_ON);
+
+        // 处理筛选条件。
+        if (Input::has('modal_key')) {
+            $key = Input::get('modal_key');
+            $data->where('name', 'like', "%{$key}%")
+                ->orWhere('mobile', 'like', "%{$key}%")
+                ->orWhere('realname', 'like', "%{$key}%");
+        }
+        // 返回数据。
+        $data = $data->get();
+
+        return v('users_list')->with(compact('data', 'dept_id'));
+    }
+
+    /**
+     * 给某部门指派用户
+     */
+    public function assignUser()
+    {
+        $validator = Validator::make(Input::all(), [
+            'user_id' => 'required|exists:users,id,status,' . User::STATUS_ON,
+            'dept_id' => 'required|exists:depts,id'
+        ], [
+            'user_id.required' => '用户不能为空',
+            'user_id.exists' => '用户不存在或已离职',
+            'dept_id.required' => '被指派部门不能为空',
+            'dept_id.exists' => '被指派部门不存在或已离职'
+        ]);
+        if ($validator->fails()) {
+            return Response::make($validator->messages()->first(), 402);
+        }
+
+        $user = User::find(Input::get('user_id'));
+        $user->dept_id = Input::get('dept_id');
+        $user->save();
+
+        return $user;
     }
 }

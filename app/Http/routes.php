@@ -181,6 +181,16 @@ Route::group([
                         'as' => 'DeptStatusChange',
                         'uses' => 'DeptController@postToggleStatus'
                     ]);
+                    // 搜索即将指派的用户列表
+                    Route::get('search-users', [
+                        'as' => 'SearchUsers',
+                        'uses' => 'DeptController@searchUser'
+                    ]);
+                    // 指派用户
+                    Route::post('assign-users', [
+                        'as' => 'AssignUsers',
+                        'uses' => 'DeptController@assignUser'
+                    ]);
                 });
 
                 // 用户管理
@@ -393,7 +403,7 @@ Route::group([
                     ]);
                 });
 
-                // 考勤管理
+                // 任务管理
                 Route::group([
                     'prefix' => 'task'
                 ], function ()
@@ -443,6 +453,33 @@ Route::group([
                     Route::get('search-users', [
                         'as' => 'SearchAcceptUsers',
                         'uses' => 'TaskAssignController@searchAcceptUser'
+                    ]);
+                });
+
+                // 文章管理
+                Route::group([
+                    'prefix' => 'artile'
+                ], function ()
+                {
+                    // 列表页
+                    Route::get('/', [
+                        'as' => 'ArticleIndex',
+                        'uses' => 'ArticleController@index'
+                    ]);
+                    // 添加或编辑文章
+                    Route::get('edit', [
+                        'as' => 'ArticleEdit',
+                        'uses' => 'ArticleController@edit'
+                    ]);
+                    // 保存文章
+                    Route::post('save', [
+                        'as' => 'ArticleSave',
+                        'uses' => 'ArticleController@save'
+                    ]);
+                    // 删除文章
+                    Route::post('delete', [
+                        'as' => 'ArticleDelete',
+                        'uses' => 'ArticleController@delete'
                     ]);
                 });
             });

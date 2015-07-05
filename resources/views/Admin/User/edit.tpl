@@ -9,6 +9,9 @@
 {block main}
 <link rel="stylesheet" type="text/css" href="{asset('js/bootstrap-fileinput-master/css/fileinput.css')}" />
 <link rel="stylesheet" type="text/css" href="{asset('js/bootstrap-datepicker/css/datepicker.css')}"/>
+<style>
+.show_upload { display:none; }
+</style>
 <div class="row">
 	<div class="col-sm-12">
 		<section class="panel">
@@ -25,6 +28,36 @@
                             <label for="number" class="control-label col-lg-2">编号</label>
                             <div class="col-lg-10">
                                 <input class="form-control" id="number" type="text" value="{old('number')|default:$data.number}" minlength="5" name="number" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="number" class="control-label col-lg-2">头像</label>
+                            <div class="col-lg-10">
+                            	{if $data.avatar_path}
+	                            	<span class="file-input">
+	                            		<div class="file-preview">
+	                            			<div class="close fileinput-remove">×</div>
+	                            			<div class="">
+	                            				<div class="file-preview-thumbnails">
+													<div data-fileindex="0" class="file-preview-frame">
+	   													<img style="width:auto;height:160px;" alt="{$data.realname}" title="{$data.realname}" class="file-preview-image" src="{$data.avatar_path}">
+	   													<div class="file-thumbnail-footer">
+	    													<div style="width: 170px;" class="file-caption-name" title="{$data.realname}">{$data.realname}</div>
+														</div>
+													</div>
+												</div>
+												<div class="clearfix"></div>
+											</div>
+										</div>
+									</span>
+									<div class="show_upload">
+										<input id="file_avatar" class="file" type="file" name="file" multiple=true>
+			                        	<span class="help-block">请上传[jpg、png、gif]格式的图片，建议规格为500*500,不大于1M </span>
+									</div>
+                            	{else}
+                            		<input id="file_avatar" class="file" type="file" name="file" multiple=true>
+		                        	<span class="help-block">请上传[jpg、png、gif]格式的图片，不大于1M </span>
+		                        {/if}
                             </div>
                         </div>
                         {*if !$data*}
@@ -59,7 +92,10 @@
                             <label for="org_id" class="control-label col-lg-2">所属部门</label>
                             <div class="col-lg-10">
                                 <p class="form-control-static">
-                                	{if $data->dept->name}{$data->dept->name} [<a href="javascript:;" id="editBelongCategory" data-id="{$data.id}">修改</a>]
+                                	{if $data->dept->name}
+                                		<INPUT type="hidden" value="{$data.dept_id}" name="dept_id" />
+                                		{$data->dept->name} 
+                                		[<a href="javascript:;" id="editBelongCategory" data-id="{$data.id}">修改</a>]
                                 	{else}[<a href="javascript:;" id="editBelongCategory" data-id="{$data.id}">添加</a>]{/if}
                                 </p>
                             </div>
@@ -132,6 +168,7 @@
                         <div class="form-group">
                             <div class="col-lg-offset-2 col-lg-10">
         						{if $data.id gt 0}<input type="hidden" name="id" value="{$data.id}" />{/if}
+        						<input type="hidden" value="{$data.avatar_path}" id="avatar_path" name="avatar_path" />
                                 <button class="btn btn-success" type="submit"> 保存</button>
                                 <button class="btn btn-default" type="button"> 取消</button>
                             </div>
@@ -145,6 +182,7 @@
 {/block} 
 
 {block script} 
+<script type="text/javascript" src="{asset('js/bootstrap-fileinput-master/js/fileinput.js')}"></script>
 <script type="text/javascript" src="{asset('js/bootstrap-datepicker/js/bootstrap-datepicker.js')}"></script>
 <script type="text/javascript" src="{asset('js/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js')}"></script>
 <script type="text/javascript">
@@ -152,7 +190,48 @@ $('.default-date-picker').datepicker({
     format: 'yyyy-mm-dd',
     autoclose:true,
     language: "zh-CN",
-})
+});
+
+//约束上传条件
+$("#file_avatar").fileinput({
+    allowedFileExtensions : ['jpg', 'png','gif'],
+    showPreview : true,
+    maxFileSize: 1000,
+    minImageWidth: 500,
+    minImageHeight: 500,
+    showUpload:false,
+    //maxFilesNum: 1,
+    //uploadUrl: '{route("UploadFile")}', // server upload action 配合showPreview : false,
+    //uploadAsync: true,  enctype="multipart/form-data" method="post" action="{route('FormUploadFile')}"
+});
+$(function() {
+	//开始上传
+    $(document).on('change', "#file_avatar", function() {
+    	//$(".old_avatar_span").hide();
+    	//$("#avatar_path").val("");
+        $.ajaxFileUpload({
+            url : '{route('FormUploadFile')}',
+            secureuri : false,
+            fileElementId : 'file_avatar',
+            dataType : 'json',
+            data : {  },
+            success : function (data, status) {
+                $("#avatar_path").val(data.path);
+            },
+            error : function (data, status, e) {
+                alert(e);
+            }
+        });
+    });
+});
+
+//修改头像时，关闭图片显示改为上传
+$(".fileinput-remove").click(function(){
+	$(".file-input").toggle();
+	$("#avatar_path").val("");
+	$(".show_upload").show();
+	$(".file-input-new").show();
+});
 
 //点击修改
 $(document).ready(function(){
