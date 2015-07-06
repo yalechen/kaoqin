@@ -181,8 +181,9 @@ class DeptController extends BaseController
         }
         // 返回数据。
         $data = $data->get();
+        $ids = $data->lists('id')->all();
 
-        return v('users_list')->with(compact('data', 'dept_id'));
+        return v('users_list')->with(compact('data', 'ids', 'dept_id'));
     }
 
     /**
@@ -202,11 +203,13 @@ class DeptController extends BaseController
         if ($validator->fails()) {
             return Response::make($validator->messages()->first(), 402);
         }
+        $ids=explode(',', Input::get('user_id'));
+        $users = User::whereIn('id',$ids)->get();
+        foreach ($users as $user){
+            $user->dept_id = Input::get('dept_id');
+            $user->save();
+        }
 
-        $user = User::find(Input::get('user_id'));
-        $user->dept_id = Input::get('dept_id');
-        $user->save();
-
-        return $user;
+        return 'success';
     }
 }

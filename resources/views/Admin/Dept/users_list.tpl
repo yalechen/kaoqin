@@ -11,7 +11,13 @@
 		</tr>
 	</thead>
 	<tbody>
-		{foreach $data as $item}
+		<script type="text/javascript">
+		var ids = new Array();
+		</script>
+		{foreach $data as $key=>$item}
+		<script type="text/javascript">
+		ids.push({$ids.$key});
+		</script>
 		<tr>
 			<td><input type="checkbox" class="checkboxes" value="{$item.id}" /></td>
 			<td>{$item.id}</td>
@@ -28,15 +34,35 @@
 		{/foreach}
 	</tbody>
 </table>
+<input type="hidden" name="ids" id="ids" value=""/>
 <script type="text/javascript">
 //批量选中
+var ids_clone=ids;
 $("#checkAll").click(function()
 {
-    if ($(this).parent().hasClass('checked')) {
-        $(".checkboxes").parent().removeClass('checked');
+    if ($(this).attr("checked")) {
+    	$(this).prop('checked',true);
+        $(".checkboxes").prop('checked',true);
+        
+        $("#ids").val(ids_clone);
     } else {
-        $(".checkboxes").parent().addClass('checked');
+    	$(this).prop('checked',false);
+        $(".checkboxes").prop('checked',false);
+        //清空ids
+        var ids=new Array();
+        $("#ids").val(ids);
     }
+});
+
+//单个复选框选择时，移除和添加元素
+$(".checkboxes").click(function(){
+	nids=new Array();
+	$(".checkboxes").each(function(){
+		if($(this).attr("checked")){
+			nids.push($(this).val());
+			$("#ids").val(nids);
+		}
+	});
 });
 
 //指派确认
@@ -47,17 +73,20 @@ function assignUser(user_id, dept_id){
 			type: 'POST',
 	        url: '{route("AssignUsers")}',
 	        data: { user_id : user_id, dept_id : dept_id },
-	        dataType: 'json',
+	        dataType: 'text',
 	        success: function(data) {
-	        	//更改本行事件为取消指派
-	        	//obj.attr("onclick","javascript:void(0);");
-	        	//obj.html('<i class="icon-login"></i> 已指派');
-	        	//alert(obj.parent().html());
 	        	alert("指派成功");
+	        },
+	        error:function(xhq){
+	        	alert("指派失败");
 	        }
 	    });
 	}else{
 		alert("参数错误！用户ID和被指派部门ID不能为空");
 	}
+}
+
+if(ids){
+	
 }
 </script>
