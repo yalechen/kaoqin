@@ -49,9 +49,11 @@ class IndexController extends BaseController
             return R::make($validator->messages()->first(), 402);
         }
 
+        $is_mobile = (boolean) preg_match('/^1[3-8][0-9]{9}$/', Input::get('username'));
+        $is_email = (boolean) preg_match('/^[_.0-9a-z-]+@([0-9a-z][0-9a-z-]+.)+[a-z]{2,3}$/i', Input::get('username'));
         // 登录验证。
         if (! Auth::attempt([
-            'name' => Input::get('username'),
+            $is_mobile ? 'mobile' : ($is_email ? 'email' : 'name') => Input::get('username'),
             'password' => Input::get('password')
         ], Input::get('remember_me', 'false') == 'true')) {
             return R::make('用户名与密码不匹配。', 402);
