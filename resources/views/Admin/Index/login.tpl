@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Admin Template">
-    <meta name="keywords" content="admin dashboard, admin, flat, flat ui, ui kit, app, web app, responsive">
+    <meta name="description" content="考勤管理系统">
+    <meta name="keywords" content="移动, 考勤, 商户, 位置, 里程">
     <link rel="shortcut icon" href="{asset('img/ico/favicon.png')}">
     <title>管理员登录</title>
     <!-- Base Styles -->
@@ -29,51 +29,51 @@
                   <input type="password" name="password" id="password" class="form-control" placeholder="密码">
                   <button class="btn btn-lg btn-success btn-block" id="login_user" type="button">登录</button>
                   <label class="checkbox-custom check-success">
-                      <input type="checkbox" value="1" id="checkbox1" name="remember_me"> <label for="checkbox1">Remember me</label>
+                      <input type="checkbox" value="1" id="checkbox1" name="remember_me"> <label for="checkbox1">记住我</label>
                       <a class="pull-right" data-toggle="modal" href="#forgotPass"> 忘记密码?</a>
                   </label>
                   <!-- <div class="registration"> 还没有注册账户?<a class="" href="registration.html">立即注册</a></div> -->
               </div>
 
               <!-- Modal -->
-              <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="forgotPass" class="modal fade">
-                  <div class="modal-dialog">
-                      <div class="modal-content">
-                          <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                              <h4 class="modal-title">忘记密码 ?</h4>
-                          </div>
-                          <div class="modal-body">
-                              <p>请输入你的Email地址以便重置密码.</p>
-                              <input type="text" name="email" placeholder="Email" autocomplete="off" class="form-control placeholder-no-fix">
-
-                          </div>
-                          <div class="modal-footer">
-                              <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
-                              <button class="btn btn-success" type="button">提交</button>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <!-- modal -->
-              
-              <!-- Modal -->
 			  <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			    <div class="modal-dialog">
 			        <div class="modal-content">
-			            <div class="modal-header">
-			                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			                <h4 class="modal-title">提示</h4>
-			            </div>
-			            <div class="modal-body" id="alertMessage"></div>
-			            <div class="modal-footer">
-			                <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
-			            </div>
+				            <div class="modal-header">
+				                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				                <h4 class="modal-title">提示</h4>
+				            </div>
+				            <div class="modal-body" id="alertMessage"></div>
+				            <div class="modal-footer">
+				                <button data-dismiss="modal" class="btn btn-success" type="button">确定</button>
+				            </div>
 			        </div>
 			    </div>
 			  </div>
 			  <!-- modal -->
           </form>
+          <!-- Modal -->
+		<div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="forgotPass" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<form role="form" method="POST" action="{Route('AdminPostMail')}">
+                       	<div class="modal-header">
+                           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                           <h4 class="modal-title">忘记密码 ?</h4>
+                       	</div>
+                       	<div class="modal-body">
+                           <p>请输入你的Email地址以便重置密码.</p>
+                           <input type="text" name="email" id="email" placeholder="邮箱地址" autocomplete="off" class="form-control placeholder-no-fix" autofocus required />
+                       	</div>
+                       	<div class="modal-footer">
+                           <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+                           <button class="btn btn-success" type="submit" id="forgotPwBtn">提交</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+          <!-- modal -->
       </div>
       <!--jquery-1.10.2.min-->
       <script src="{asset('js/jquery-1.11.1.min.js')}"></script>
@@ -95,11 +95,12 @@ $('#password,#username').keydown(function(e) {
     }
 });
 
+//登录
 function login() {
     var username = $.trim($("#username").val());
     var password = $.trim($("#password").val());
 
-    if (username || password) {
+    if (username && password) {
         $.ajax({
             type: 'POST',
             url: '{route('AdminPostLogin')}',
@@ -114,5 +115,22 @@ function login() {
             }
         });
     }
+}
+
+//忘记密码的提示框
+var status="{Session::get('status')}";
+if(status!=''){
+	$("#alertMessage").html(status);
+    $("#alertModal").modal('show');
+}
+var errors="{Session::has('errors')}";
+if(errors){
+	var content='';
+	{foreach $errors->all() as $k=>$error}
+		content+='{$error}'+'<br>';
+	{/foreach}
+	console.log('pa:'+content);
+	$("#alertMessage").html(content);
+    $("#alertModal").modal('show');
 }
 </script>

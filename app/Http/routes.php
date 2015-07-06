@@ -64,7 +64,6 @@ Route::group([
             'as' => 'CityPull',
             'uses' => 'BaseController@getCity'
         ]);
-
         // 获取区县列表
         Route::get('district', [
             'as' => 'DistrictPull',
@@ -85,6 +84,21 @@ Route::group([
         Route::post('login', [
             'as' => 'AdminPostLogin',
             'uses' => 'IndexController@postLogin'
+        ]);
+        // 发送找回密码邮件
+        Route::post('mail', [
+            'as' => 'AdminPostMail',
+            'uses' => 'PasswordController@postEmail'
+        ]);
+        // 重置密码页
+        Route::get('reset/{token}', [
+            'as' => 'AdminGetReset',
+            'uses' => 'PasswordController@getReset'
+        ]);
+        // 重置密码处理
+        Route::post('reset', [
+            'as' => 'AdminPostReset',
+            'uses' => 'PasswordController@postReset'
         ]);
 
         Route::group([
@@ -109,7 +123,7 @@ Route::group([
                         'uses' => 'ConfigsController@index'
                     ]);
                     // 保存设置
-                    Route::post('/', [
+                    Route::post('save', [
                         'as' => 'ConfigsSave',
                         'uses' => 'ConfigsController@save'
                     ]);
