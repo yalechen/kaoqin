@@ -13,6 +13,8 @@
 <link rel="stylesheet" type="text/css" href="{asset('css/slidebars.css')}">
 <link rel="stylesheet" type="text/css" href="{asset('js/switchery/switchery.min.css')}" media="screen" />
 <link rel="stylesheet" type="text/css" href="{asset('js/jquery-ui/jquery-ui-1.10.1.custom.min.css')}" />
+<!-- 请放在这个位置，有些必须要放在style.css之前的css -->
+{block css}{/block}
 <link rel="stylesheet" type="text/css" href="{asset('js/icheck/skins/all.css')}">
 <link rel="stylesheet" type="text/css" href="{asset('css/owl.carousel.css')}">
 <link rel="stylesheet" type="text/css" href="{asset('css/style.css')}">
