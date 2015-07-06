@@ -101,7 +101,6 @@
                 <h4 class="modal-title">给“<STRONG id="assign_dept_name"></STRONG>”部门指派员工</h4>
             </div>
             <div class="modal-body">
-            	接下来您将给“<STRONG id="parent_user_objname"></STRONG>”指派上级领导，请使用关键字搜索
             	<div class="row">
 	                <div class="col-sm-12">
 						<section class="panel">
@@ -123,9 +122,8 @@
 				</div>
             </div>
             <div class="modal-footer">
-                <button data-dismiss="modal" class="btn btn-success" type="button" id="closeAvatarModal">确认指派</button>
-                <input type="hidden" value="" id="dept_id" />
-                <input type="hidden" value="" id="target_user_id" />
+                <button data-dismiss="modal" class="btn btn-default" type="button" id="closeModal">取消指派</button>
+                <button data-dismiss="modal" class="btn btn-success" type="button" id="confirmAssign">批量指派</button>
             </div>
         </div>
     </div>
@@ -183,6 +181,31 @@ $("#UserFind").click(function() {
         $("#UsersList").html(data);
     },'html');
     $("#UsersList").addClass("auto_height");
+});
+
+//批量指派
+$("#confirmAssign").click(function() {
+	var ids=$("#ids").val();
+	var dept_id=$("#dept_id").val();
+	var dept_name=$("#assign_dept_name").text();
+	if(dept_id>0 && ids){
+		iconfirm('确认要给'+dept_name+'部门指派以上选择的用户吗？', function() {
+			$.ajax({
+				type: 'POST',
+		        url: '{route("AssignUsers")}',
+		        data: { dept_id : dept_id, user_id : ids },
+		        dataType: 'text',
+		        success: function(data) {
+		        	alert("指派成功");
+		        },
+		        error: function(){
+		        	alert("指派失败");
+		        }
+		    });
+        });
+	}else{
+		alert("批量指派失败，请选择用户");
+	}
 });
 </script>
 {/block}

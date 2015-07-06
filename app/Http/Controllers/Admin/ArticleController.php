@@ -57,7 +57,7 @@ class ArticleController extends BaseController
     {
         // 验证输入。
         $validator = Validator::make(Input::all(), [
-            'title' => 'required|unique:article,title,' . Input::get('id'),
+            'title' => 'required|unique:articles,title,' . Input::get('id'),
             'type' => 'required|in:' . Article::TYPE_ABOUT . ',' . Article::TYPE_ACTION,
             'content' => 'required',
             'sort' => 'required|integer|min:1'

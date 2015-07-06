@@ -84,7 +84,6 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->with('message_error', $validator->messages()
                 ->first());
-            ;
         }
         // 登录验证。
         if (! Auth::attempt([
