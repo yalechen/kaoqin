@@ -25,7 +25,7 @@
       <div class="container log-row">
           <form class="form-signin" action="" method="post">
               <div class="login-wrap">
-                  <input type="text" name="username" id="username" class="form-control" placeholder="用户名" autofocus>
+                  <input type="text" name="username" id="username" value="{old('email')}" class="form-control" placeholder="用户名\邮箱\手机号" autofocus>
                   <input type="password" name="password" id="password" class="form-control" placeholder="密码">
                   <button class="btn btn-lg btn-success btn-block" id="login_user" type="button">登录</button>
                   <label class="checkbox-custom check-success">
@@ -117,7 +117,7 @@ function login() {
     }
 }
 
-//忘记密码的提示框
+//忘记密码之发送邮件的提示框
 var status="{Session::get('status')}";
 if(status!=''){
 	$("#alertMessage").html(status);
@@ -131,6 +131,18 @@ if(errors){
 	{/foreach}
 	console.log('pa:'+content);
 	$("#alertMessage").html(content);
+    $("#alertModal").modal('show');
+}
+
+//忘记密码之重置页的提示框
+var message_error="{Session::get('message_error')}";
+var message_success="{Session::get('message_success')}";
+if(message_error!=''){
+	$("#alertMessage").html(message_error);
+    $("#alertModal").modal('show');
+}
+if(message_success!=''){
+	$("#alertMessage").html(message_success);
     $("#alertModal").modal('show');
 }
 </script>

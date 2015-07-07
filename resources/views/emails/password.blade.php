@@ -11,7 +11,7 @@
 			<p>为了确保您的账号安全该链接仅60分钟内访问有效.</p>
 			<br></br>
 			<p><b>如果你无法点击按钮，可以将如下链接复制后粘贴（或键入）到你的浏览器：</b></p>
-			<p>{{ url('password/reset/'.$token) }}</p>
+			<p>{{ route('AdminGetReset',['token'=>$token]) }}</p>
 		</div>
 	</body>
 </html>
