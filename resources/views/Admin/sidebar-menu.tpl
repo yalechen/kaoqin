@@ -1,7 +1,7 @@
 <!--responsive view logo start-->
 <div class="logo dark-logo-bg visible-xs-* visible-sm-*">
     <a href="index.html">
-        <img src="img/logo-icon.png" alt="">
+        <img src="{asset('upload_files/init/logo20x20.png')}" alt="">
         <!--<i class="fa fa-maxcdn"></i>-->
         <span class="brand-name">考勤系统后台</span>
     </a>

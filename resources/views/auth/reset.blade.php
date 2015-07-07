@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="考勤管理系统">
     <meta name="keywords" content="移动, 考勤, 商户, 位置, 里程">
-    <link rel="shortcut icon" href="{{ asset('upload_files/init/logo-icon.png') }}" type="image/png">
+    <link rel="shortcut icon" href="{{ asset('upload_files/init/logo16x16.ico') }}" type="image/png">
     <title>重置密码</title>
     <!-- Base Styles -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
@@ -17,7 +17,7 @@
     <![endif]-->
 </head>
 <body class="login-body">
-    <div class="login-logo"><img src="{{ asset('img/login_logo.png') }}" alt=""/></div>
+    <div class="login-logo"><img src="{{ asset('upload_files/init/logo76x76.png') }}" alt=""/></div>
     <h2 class="form-heading">重置密码</h2>
     <div class="container log-row">
         <form class="form-signin" action="{{ route('AdminPostReset') }}" method="post">

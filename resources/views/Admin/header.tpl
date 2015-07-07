@@ -2,7 +2,7 @@
     <!--logo and logo icon start-->
     <div class="logo dark-logo-bg hidden-xs hidden-sm">
         <a href="{route('AdminIndex')}">
-            <img src="{asset('upload_files/init/logo-icon.png')}" alt="">
+            <img src="{asset('upload_files/init/logo20x20.png')}" alt="">
             <!--<i class="fa fa-maxcdn"></i>-->
             <span class="brand-name">考勤OS</span>
         </a>
@@ -10,7 +10,7 @@
 
     <div class="icon-logo dark-logo-bg hidden-xs hidden-sm">
         <a href="index.html">
-            <img src="img/logo-icon.png" alt="">
+            <img src="{asset('upload_files/init/logo20x20.png')}" alt="">
             <!--<i class="fa fa-maxcdn"></i>-->
         </a>
     </div>

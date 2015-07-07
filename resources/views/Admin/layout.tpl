@@ -6,7 +6,7 @@
 <meta name="author" content="jois" />
 <meta name="keyword" content="移动, 考勤, 商户, 位置, 里程" />
 <meta name="description" content="考勤管理系统" />
-<link rel="shortcut icon" href="{asset('upload_files/init/logo-icon.png')}" type="image/png">
+<link rel="shortcut icon" href="{asset('upload_files/init/logo16x16.ico')}" type="image/ico">
 <title>{block title}{{$smarty.block.child}|strip_tags|default:'管理中心'} - {/block}考勤管理系统</title>
 <link rel="stylesheet" type="text/css" href="{asset('js/jquery-easy-pie-chart/jquery.easy-pie-chart.css')}" media="screen" />
 <link rel="stylesheet" type="text/css" href="{asset('js/vector-map/jquery-jvectormap-1.1.1.css')}">
