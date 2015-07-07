@@ -53,7 +53,7 @@ class OvertimeController extends BaseController
     {
         // 获取编辑信息
         if (Input::has('id')) {
-            $data = Overtime::find(Input::input('id'));
+            $data = Overtime::find(Input::get('id'));
             return v('edit')->with(compact('data'));
         }
 

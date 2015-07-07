@@ -34,7 +34,7 @@ class LeaveTypeController extends BaseController
     {
         // 获取编辑信息
         if (Input::has('id')) {
-            $data = LeaveType::find(Input::input('id'));
+            $data = LeaveType::find(Input::get('id'));
         }
 
         return v('edit', compact('data'));

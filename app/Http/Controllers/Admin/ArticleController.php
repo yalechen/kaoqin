@@ -44,7 +44,7 @@ class ArticleController extends BaseController
     {
         // 获取编辑信息
         if (Input::has('id')) {
-            $data = Article::find(Input::input('id'));
+            $data = Article::find(Input::get('id'));
         }
 
         return v('edit', compact('data'));

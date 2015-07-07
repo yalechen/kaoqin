@@ -60,7 +60,7 @@ class OrgController extends BaseController
 
         // 获取编辑信息
         if (Input::has('id')) {
-            $data = Org::find(Input::input('id'));
+            $data = Org::find(Input::get('id'));
             $parent_node = $data->parentNode()->first();
             if ($data->province_id > 0) {
                 $city = City::whereProvinceId($data->province_id)->get();

@@ -128,6 +128,34 @@ Route::group([
                         'uses' => 'ConfigsController@save'
                     ]);
                 });
+
+                // 角色管理
+                Route::group([
+                    'prefix' => 'role'
+                ], function ()
+                {
+                    // 管理页
+                    Route::get('/', [
+                        'as' => 'RoleIndex',
+                        'uses' => 'RoleController@index'
+                    ]);
+                    // 角色编辑
+                    Route::get('edit', [
+                        'as' => 'RoleEdit',
+                        'uses' => 'RoleController@edit'
+                    ]);
+                    // 保存角色
+                    Route::post('save', [
+                        'as' => 'RoleSave',
+                        'uses' => 'RoleController@save'
+                    ]);
+                    // 删除角色
+                    Route::post('delete', [
+                        'as' => 'RoleDelete',
+                        'uses' => 'RoleController@delete'
+                    ]);
+                });
+
                 // 机构管理
                 Route::group([
                     'prefix' => 'org'

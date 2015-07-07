@@ -53,7 +53,7 @@ class TaskGeneralController extends BaseController
 
         // 获取编辑信息
         if (Input::has('id')) {
-            $data = TaskGeneral::find(Input::input('id'));
+            $data = TaskGeneral::find(Input::get('id'));
             return v('edit', compact('data'));
         }
         return v('edit')->withMessageError('参数错误，常规任务为系统自动生成，只能修改');
