@@ -41,7 +41,6 @@
                                     <li><a href="{route('UserIndex')}"> 用户管理</a></li>
                                     <li><a href="{route('CustIndex')}"> 商户管理</a></li>
                                     <li><a href="{route('CustLevelIndex')}"> 商户等级管理</a></li>
-                                    <li><a href="{route('FeedbackIndex')}"> 意见反馈</a></li>
                                 </ul>
                                 <ul class="col-sm-2 list-unstyled">
                                     <li><p class="title">考勤管理</p></li>
@@ -50,12 +49,12 @@
                                     <li><a href="{route('LeaveIndex')}"><i class="fa fa-laptop text-muted"></i> 请假列表</a></li>
                                     <li><a href="{route('OvertimeIndex')}"><i class="fa fa-laptop text-muted"></i> 加班管理</a></li>
                                 </ul>
-                                <ul class="col-sm-3 list-unstyled">
+                                <ul class="col-sm-2 list-unstyled">
                                     <li><p class="title">任务管理</p></li>
                                     <li><a href="{route('TaskGeneralIndex')}"> 常规任务</a></li>
                                     <li><a href="{route('TaskAssignIndex')}"> 临时任务</a></li>
                                 </ul>
-                                <ul class="col-sm-3 list-unstyled custom-nav-img">
+                                <ul class="col-sm-2 list-unstyled">
                                     <li><p class="title">报表统计</p></li>
                                     <li><a href="javascript:;"> 我的任务表</a></li>
                                     <li><a href="javascript:;"> 拜访记录表</a></li>
@@ -65,7 +64,14 @@
                                     <li><a href="javascript:;"> 请假报表</a></li>
                                     <li><a href="javascript:;"> 总体考勤报表</a></li>
                                 </ul>
-
+								<ul class="col-sm-2 list-unstyled">
+                                    <li><p class="title">系统设置</p></li>
+                                    <li><a href="javascript:;"> 角色管理</a></li>
+                                    <li><a href="javascript:;"> 权限管理</a></li>
+                                    <li><a href="javascript:;"> 角色权限指派</a></li>
+                                    <li><a href="javascript:;"> 角色成员指派</a></li>
+                                    <li><a href="javascript:;"> 操作日志</a></li>
+                                </ul>
                             </div>
                         </div>
                     </li>

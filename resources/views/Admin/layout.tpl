@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="author" content="Mosaddek" />
-<meta name="keyword" content="slick, flat, dashboard, bootstrap, admin, template, theme, responsive, fluid, retina" />
-<meta name="description" content="" />
-<link rel="shortcut icon" href="javascript:;" type="image/png">
+<meta name="author" content="jois" />
+<meta name="keyword" content="移动, 考勤, 商户, 位置, 里程" />
+<meta name="description" content="考勤管理系统" />
+<link rel="shortcut icon" href="{asset('upload_files/init/logo-icon.png')}" type="image/png">
 <title>{block title}{{$smarty.block.child}|strip_tags|default:'管理中心'} - {/block}考勤管理系统</title>
 <link rel="stylesheet" type="text/css" href="{asset('js/jquery-easy-pie-chart/jquery.easy-pie-chart.css')}" media="screen" />
 <link rel="stylesheet" type="text/css" href="{asset('js/vector-map/jquery-jvectormap-1.1.1.css')}">

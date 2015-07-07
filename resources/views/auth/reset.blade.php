@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="考勤管理系统">
     <meta name="keywords" content="移动, 考勤, 商户, 位置, 里程">
-    <link rel="shortcut icon" href="{{ asset('img/ico/favicon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('upload_files/init/logo-icon.png') }}" type="image/png">
     <title>重置密码</title>
     <!-- Base Styles -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
