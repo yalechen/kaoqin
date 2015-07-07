@@ -28,7 +28,7 @@ class CreateTaskLogsTable extends Migration
             $table->unsignedInteger('cust_id')->default(0);
 
             // 拜访次数
-            $table->tinyInteger('times');
+            //$table->tinyInteger('times');
 
             // 拜访时间
             $table->timestamp('visit_time');

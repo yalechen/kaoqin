@@ -23,7 +23,6 @@ class TaskAssignController extends BaseController
     {
         // 所有临时指定任务
         $data = TaskAssign::with('acceptUser', 'custs');
-        // dd(TaskAssign::find(1)->custs()->get()->toArray());
         if (Input::has('ymonth')) {
             $data->whereYmonth(Input::get('ymonth'));
         }
@@ -58,8 +57,20 @@ class TaskAssignController extends BaseController
 
             // 已分配的商户门店
             $task_custs = TaskAssignCust::whereTaskAssignId(Input::get('id'))->get();
+
+            // 参考图
+            $images_str = $data->image1_path . $data->image2_path . $data->image3_path . $data->image4_path . $data->image5_path;
+            $arr = explode('.', $images_str);
+            $hashs = [];
+            foreach ($arr as $k => $v) {
+                if (strlen($v) > 32) {
+                    $hashs[] = substr($v, - 32);
+                }
+            }
+            $hashs = array_unique($hashs);
+            $pictures = Storage::findMany($hashs);
         }
-        return v('edit', compact('data', 'cust', 'task_custs'));
+        return v('edit', compact('data', 'cust', 'task_custs', 'pictures'));
     }
 
     /**
@@ -69,7 +80,7 @@ class TaskAssignController extends BaseController
     {
         // 验证输入。
         $validator = Validator::make(Input::all(), [
-            'title' => 'required|unique:task_assign,title,' . Input::get('id'),
+            'title' => 'required',
             'accept_user_id' => 'required|exists:users,id,status,' . User::STATUS_ON,
             'start_time' => 'required|date_format:Y-m-d H:i',
             'end_time' => 'required|date_format:Y-m-d H:i|after:' . Input::get('start_time'),
@@ -77,12 +88,8 @@ class TaskAssignController extends BaseController
             'cust' => 'required'
         ], [
             'title.required' => '任务标题不能为空',
-            'title.unique' => '任务标题已经存在',
             'accept_user_id.required' => '任务接收者不能为空',
             'accept_user_id.exists' => '任务接收者不存在',
-            'id.required' => '参数错误，只能修改常规任务，不能新增',
-            'id.exists' => '所选常规任务不存在',
-            'remark.required' => '任务备注不能为空',
             'start_time.required' => '开始时间不能为空',
             'start_time.date_format' => '开始时间格式错误',
             'end_time.required' => '结束时间不能为空',
@@ -91,6 +98,10 @@ class TaskAssignController extends BaseController
             'times.required' => '客户拜访次数不能为空',
             'cust.required' => '客户不能为空'
         ]);
+        if (Input::has('images')) {
+            $old_images = explode(',', Input::get('images'));
+            $old_images = Storage::findMany($old_images);
+        }
         if ($validator->fails()) {
             return Redirect::to(URL::previous())->withMessageError($validator->messages()
                 ->all())
@@ -115,34 +126,42 @@ class TaskAssignController extends BaseController
             }
         }
         if (empty($arr)) {
-            return Redirect::to(URL::previous())->withMessageError('需要拜访的商户未指派')->withInput();
+            return Redirect::to(URL::previous())->withMessageError('需要拜访的商户未指派')
+                ->withInput()
+                ->withOldImages($old_images);
         }
 
         $task_assign = TaskAssign::findOrNew(Input::get('id'));
         if (Input::has('id')) {
-            // 旧商户门店ID
-            $old_custs = TaskAssignCust::whereTaskAssignId($task_assign->id)->get();
             // 已被执行的门店IDS
-            $logs_cust_ids = TaskLog::whereTaskID(Input::get('id'))->whereTaskType($task_assign->getModel())
+            $logs_cust_ids = TaskLog::whereTaskId(Input::get('id'))->whereTaskType($task_assign->getMorphClass())
                 ->lists('cust_id')
                 ->all();
             if (! empty($logs_cust_ids)) {
                 $logs_cust_ids = array_unique($logs_cust_ids);
                 // key和value互换
-                array_flip($logs_cust_ids);
+                $logs_cust_ids = array_flip($logs_cust_ids);
                 // 求得差集，新的商户数组应该都有包含已被执行的商户门店ID
+                $arr_temp = $arr;
+                $arr_temp = array_flip($arr_temp);
                 foreach ($logs_cust_ids as $k => $v) {
-                    if (! isset($arr[$k])) {
+                    $temp = Cust::find($k);
+                    if (in_array($k, $arr_temp)) {
                         // 查询旧的门店是否已经被执行了任务了，被执行了就不能删除了
-                        return Redirect::to(URL::previous())->withMessageError('原先的***门店已经有被接收者执行了任务，不能移除它')->withInput();
-                    }
-                    // 判断旧的拜访数被改成已经拜访的数量了
-                    $count = TaskLog::whereTaskID(Input::get('id'))->whereTaskType($task_assign->getModel())
-                        ->whereCustId($k)
-                        ->count();
-                    if ($count > $arr[$k]) {
-                        $temp = Cust::find($k);
-                        return Redirect::to(URL::previous())->withMessageError($temp->name . '已经有被接收者执行了任务' . $count . '次，大于你修改的' . $arr[$k])->withInput();
+                        // 判断旧的拜访数被改成已经拜访的数量了
+                        $count = TaskLog::whereTaskId(Input::get('id'))->whereTaskType($task_assign->getMorphClass())
+                            ->whereCustId($k)
+                            ->count();
+                        if ($count > $arr[$k]) {
+                            return Redirect::to(URL::previous())->withMessageError('"' . $temp->name . '"已经有被接收者执行了任务' . $count . '次，大于你修改的' . $arr[$v])
+                                ->withInput()
+                                ->withOldImages($old_images);
+                        }
+                    } else {
+                        // 原先有指派并被执行了任务，这次修改被删除了，要提示无法删除
+                        return Redirect::to(URL::previous())->withMessageError('"' . $temp->name . '"已经有被接收者执行了拜访任务，无法删除这家门店，请保留')
+                            ->withInput()
+                            ->withOldImages($old_images);
                     }
                 }
             }
@@ -178,10 +197,10 @@ class TaskAssignController extends BaseController
         }
         $task_assign->save();
 
-        // 先删除就的商户门店(这边保证新商户门店都是正确的了)
+        // 先删除旧的商户门店(这边保证新商户门店都是正确的了)
         TaskAssignCust::whereTaskAssignId($task_assign->id)->delete();
         foreach ($arr as $key => $value) {
-            $task_assign_cust = TaskAssignCust::whereTaskID(Input::get('id'))->whereCustID($key)->first();
+            $task_assign_cust = TaskAssignCust::whereTaskAssignId(Input::get('id'))->whereCustId($key)->first();
             if (is_null($task_assign_cust)) {
                 $task_assign_cust = new TaskAssignCust();
             }
@@ -232,7 +251,7 @@ class TaskAssignController extends BaseController
                 ->orWhere('realname', 'like', "%{$key}%");
         }
         // 返回单页数据。
-        $data = $data->paginate(Input::get('limit', 6));
+        $data = $data->get();
 
         return v('accept_users_list')->with(compact('data'));
     }

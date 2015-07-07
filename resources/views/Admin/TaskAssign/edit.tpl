@@ -9,11 +9,15 @@
 {block main}
 <link rel="stylesheet" type="text/css" href="{asset('js/bootstrap-datetimepicker/css/datetimepicker.css')}"/>
 <link rel="stylesheet" type="text/css" href="{asset('css/dropzone.css')}">
+<style>
+.auto_height { height: 350px; OVERFLOW-Y: auto; SCROLLBAR-FACE-COLOR: #ffffff; }
+.dz-image img { height: 120px; width:120px; }
+</style>
 <div class="row">
 	<div class="col-sm-12">
 		<section class="panel">
             <div class="panel-body">
-                <form id="my-awesome-dropzone" action="{route('FormUploadFile')}" class="dropzone"></form>
+            	<form id="my-awesome-dropzone" action="{route('FormUploadFile')}" class="dropzone"></form>
             </div>
         </section>
         
@@ -98,13 +102,14 @@
                         <div class="form-group">
                             <label for="remark" class="control-label col-lg-2">备注</label>
                             <div class="col-lg-10">
-                                <textarea class="form-control " id="remark" name="remark" required>{old('remark')|default:$data.remark}</textarea>
+                                <textarea class="form-control " id="remark" name="remark">{old('remark')|default:$data.remark}</textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-lg-offset-2 col-lg-10">
         						<input type="hidden" name="id" value="{$data.id}" />
         						<input type="hidden" name="images" id="images" value="" />
+        						<input type="hidden" name="old_images" id="old_images" value="{Session::get('old_images')}" />
                                 <button class="btn btn-success" type="submit"> 保存</button>
                                 <button class="btn btn-default" type="button"> 取消</button>
                             </div>
@@ -125,7 +130,6 @@
                 <h4 class="modal-title">指派临时指定任务接收者</h4>
             </div>
             <div class="modal-body">
-            	请使用关键字搜索
             	<div class="row">
 	                <div class="col-sm-12">
 						<section class="panel">
@@ -171,13 +175,15 @@ $("#AcceptUserFind").click(function() {
     $.get('{route("SearchAcceptUsers")}', $("#accept_user_search_form").serialize(), function(data) {
         $("#UsersList").html(data);
     },'html');
+    $("#UsersList").addClass("auto_height");
 });
 
 //多张图片上传
 $(function() {
 	var images = new Array();
 	// 此控件请参考 http://www.dropzonejs.com文档
-	$("#my-awesome-dropzone").dropzone({
+	//$("#my-awesome-dropzone").dropzone({
+	var myDropzone = new Dropzone("#my-awesome-dropzone",{
 		paramName: 'file',
 		parallelUploads: 1,
 		maxFiles: 5,
@@ -204,16 +210,58 @@ $(function() {
                 $("#images").val(images);
 			}); 
 			this.on("removedfile", function(file,data) {
-				var res = eval('(' + file.xhr.responseText + ')');
-                for(i in images){
-                	if(images[i]==res.hash){
-                		images.splice(i,1);
-                	}
-                }
+				if(file.hash){
+					for(i in images){
+	                	if(images[i]==file.hash){
+	                		images.splice(i,1);
+	                	}
+	                }
+				}else{
+					var res = eval('(' + file.xhr.responseText + ')');
+	                for(i in images){
+	                	if(images[i]==res.hash){
+	                		images.splice(i,1);
+	                	}
+	                }
+				}
                 $("#images").val(images);
 	        });
 		  }
 	});
+	
+	if($("#old_images").val()!=''){
+		{foreach Session::get('old_images') as $picture}
+		    file = {
+		        url	: '{$picture.url}',
+		        hash	: '{$picture.hash}',
+		        path	: '{$picture.path}',
+		        name : '{$picture.filename}',
+		        size	: '{$picture.size}',
+		        type	: '{$picture.storage.mime|replace:'/':'.'}'
+		    };
+		    images.push('{$picture.hash}');
+		    $("#images").val(images);
+		    
+		    myDropzone.emit('addedfile', file);
+		    myDropzone.emit('thumbnail', file, file.url);
+	    {/foreach}
+	}else{
+    	{foreach $pictures as $picture}
+		    file = {
+		        url	: '{$picture.url}',
+		        hash	: '{$picture.hash}',
+		        path	: '{$picture.path}',
+		        name : '{$picture.filename}',
+		        size	: '{$picture.size}',
+		        type	: '{$picture.storage.mime|replace:'/':'.'}'
+		    };
+		    images.push('{$picture.hash}');
+		    $("#images").val(images);
+		    
+		    myDropzone.emit('addedfile', file);
+		    myDropzone.emit('thumbnail', file, file.url);
+	    {/foreach}
+	}
 });
 	
 //增加一行

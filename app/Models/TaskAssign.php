@@ -35,4 +35,12 @@ class TaskAssign extends Model
     {
         return $this->hasMany('App\Models\TaskAssignCust');
     }
+
+/**
+ * 参考图片1
+ */
+    // public function getImage1PathAttribute()
+    // {
+    // return config('app.url') . str_replace('\\', '/', $this->attributes['image1_path']);
+    // }
 }

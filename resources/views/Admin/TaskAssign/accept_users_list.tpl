@@ -26,11 +26,6 @@
 		{/foreach}
 	</tbody>
 </table>
-{if $data}
-<div class="text-center">
-	{$data->render()}
-</div>
-{/if}
 <script type="text/javascript">
 //指派临时任务接收者确认
 function assignAcceptUser(user_id,user_name){
