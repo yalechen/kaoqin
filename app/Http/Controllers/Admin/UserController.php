@@ -58,7 +58,7 @@ class UserController extends BaseController
 
         // 获取编辑信息
         if (Input::has('id')) {
-            $data = User::find(Input::input('id'));
+            $data = User::find(Input::get('id'));
             if ($data->province_id > 0) {
                 $city = City::whereProvinceId($data->province_id)->get();
             }

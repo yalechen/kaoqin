@@ -85,6 +85,15 @@
             </ul>
         </li>
         <li><a href="###"><i class="fa fa-delicious"></i> <span>门店统计</span></a></li>
+        
+        <li>
+            <h3 class="navigation-title">系统设置</h3>
+        </li>
+        <li {if Route::currentRouteName() eq 'RoleIndex'}class="active"{/if}><a href="{route('RoleIndex')}"><i class="fa fa-delicious"></i> <span>角色管理</span></a></li>
+        <li><a href="###"><i class="fa fa-delicious"></i> <span>权限管理</span></a></li>
+        <li><a href="###"><i class="fa fa-delicious"></i> <span>角色权限指派</span></a></li>
+        <li><a href="###"><i class="fa fa-delicious"></i> <span>角色成员指派</span></a></li>
+        <li><a href="###"><i class="fa fa-delicious"></i> <span>操作日志</span></a></li>
     </ul>
     <!--sidebar nav end-->
 

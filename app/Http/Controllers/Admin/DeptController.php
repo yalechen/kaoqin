@@ -58,7 +58,7 @@ class DeptController extends BaseController
 
         // 获取编辑信息
         if (Input::has('id')) {
-            $data = Dept::find(Input::input('id'));
+            $data = Dept::find(Input::get('id'));
         }
 
         return v('edit', compact('data', 'org'));

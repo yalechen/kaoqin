@@ -53,7 +53,7 @@ class TaskAssignController extends BaseController
 
         // 获取编辑信息
         if (Input::has('id')) {
-            $data = TaskAssign::with('acceptUser')->find(Input::input('id'));
+            $data = TaskAssign::with('acceptUser')->find(Input::get('id'));
 
             // 已分配的商户门店
             $task_custs = TaskAssignCust::whereTaskAssignId(Input::get('id'))->get();

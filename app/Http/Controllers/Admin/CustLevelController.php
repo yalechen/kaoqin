@@ -31,7 +31,7 @@ class CustLevelController extends BaseController
     {
         // 获取编辑信息
         if (Input::has('id')) {
-            $data = CustLevel::find(Input::input('id'));
+            $data = CustLevel::find(Input::get('id'));
         }
 
         return v('edit', compact('data'));

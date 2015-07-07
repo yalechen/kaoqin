@@ -66,7 +66,7 @@
                                 </ul>
 								<ul class="col-sm-2 list-unstyled">
                                     <li><p class="title">系统设置</p></li>
-                                    <li><a href="javascript:;"> 角色管理</a></li>
+                                    <li><a href="{route('RoleIndex')}"> 角色管理</a></li>
                                     <li><a href="javascript:;"> 权限管理</a></li>
                                     <li><a href="javascript:;"> 角色权限指派</a></li>
                                     <li><a href="javascript:;"> 角色成员指派</a></li>
