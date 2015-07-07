@@ -165,6 +165,13 @@ class TaskAssignController extends BaseController
                     }
                 }
             }
+            // 先删除原来的参考图
+            $task_assign->image1_path = '';
+            $task_assign->image2_path = '';
+            $task_assign->image3_path = '';
+            $task_assign->image4_path = '';
+            $task_assign->image5_path = '';
+            $task_assign->save();
         }
 
         $id = Input::has('id') ? Input::get('id') : 0;
@@ -178,21 +185,8 @@ class TaskAssignController extends BaseController
         if (Input::has('images')) {
             $images = explode(',', Input::get('images'));
             foreach ($images as $key => $image) {
-                if ($key == 0) {
-                    $task_assign->image1_path = Storage::find($image)->path;
-                }
-                if ($key == 1) {
-                    $task_assign->image2_path = Storage::find($image)->path;
-                }
-                if ($key == 2) {
-                    $task_assign->image3_path = Storage::find($image)->path;
-                }
-                if ($key == 3) {
-                    $task_assign->image4_path = Storage::find($image)->path;
-                }
-                if ($key == 4) {
-                    $task_assign->image5_path = Storage::find($image)->path;
-                }
+                $field = 'image' . ($key + 1) . '_path';
+                $task_assign->$field = Storage::find($image)->path;
             }
         }
         $task_assign->save();
