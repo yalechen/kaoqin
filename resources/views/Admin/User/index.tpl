@@ -210,7 +210,7 @@ $("#closeAvatarModal").click(function(){
 	if(avatar_hash && user_id>0){
 		$.ajax({
 			type:'POST',
-			url:'{route('UserAvatarSave')}',
+			url:'{*{route('UserAvatarSave')}*}',
 			data:{ hash:avatar_hash, user_id:user_id },
 			dataType:'json',
 			success:function(data){

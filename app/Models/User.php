@@ -89,4 +89,18 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     {
         return config('app.url') . str_replace('\\', '/', $this->attributes['avatar_path']);
     }
+
+    /*
+     * 省份
+     */
+    public function province(){
+        return $this->belongsTo('App\Models\Province');
+    }
+
+    /*
+    * 城市
+    */
+    public function city(){
+        return $this->belongsTo('App\Models\City');
+    }
 }

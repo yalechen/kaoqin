@@ -1,6 +1,7 @@
 <?php
+
 return array(
-	'enable' => config('app.debug'),
+	'enable' => config('app.debug',true),
 
 	'prefix' => 'api-docs',
 	'paths' => base_path('app'),
