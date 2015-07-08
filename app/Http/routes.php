@@ -716,3 +716,19 @@ Route::group([
                 });
             });
     });
+
+
+
+// 接口
+Route::group([
+    'prefix' => 'api',
+    'namespace' => 'Api'
+],
+    function () {
+        // 全局模块
+        require __DIR__ . '/ApiRoutes/global.php';
+
+        // 用户模块
+        require __DIR__ . '/ApiRoutes/user.php';
+    }
+);

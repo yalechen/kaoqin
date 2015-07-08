@@ -190,4 +190,64 @@ abstract class Controller extends BaseController
         }
         return false;
     }
+
+
+    /*
+     * 发送短信验证码
+     */
+    public function sendSmsVcode($mobile){
+        // 短信验证码数据不使用数据库存储而存放在缓存中。
+        // 定义一个key。
+        $key = 'captcha/' . $mobile;
+
+        // 检查是否在60秒内进行了重复获取。
+        if (Cache::has($key) && array_get(Cache::get($key), 'expired') > time()) {
+            return $this->apiReturn(402, '不能在60内重复获取');
+        }
+
+        // 生成一个4位的数字验证码。
+        $vcode = sprintf('%04d', mt_rand(0, 9999));
+
+        tpl_send_sms(2,$mobile, "#company#=外勤系统&#code#=".$vcode);
+
+
+        // 将验证码写入缓存中，并设置10分钟的过期时间，1分钟可重设。
+        Cache::put($key, [
+            'vcode' => $vcode,
+            'expired' => time() + 60
+        ], 10);
+
+        // 返回成功信息。
+        return $this->apiReturn(200, '短信验证码发送成功');
+    }
+
+    /*
+     * api数据返回
+     */
+
+    public function apiReturn($code = "", $msg = "", $data = "", $count = "")
+    {
+
+        $rtn = array(
+            "code" => $code,
+            "msg" => $msg,
+        );
+
+        //data 有值且对对象
+        if ($data && is_object($data)) {
+            //对象转为数组不空，则返回data
+            if($data->toArray()){
+                $rtn = array_merge($rtn, array("data" => $data));
+            }
+        }elseif($data){
+            //如果直接是有值得数组，返回，[]不会进入这里
+            $rtn = array_merge($rtn, array("data" => $data));
+        }
+
+        if ($count) {
+            $rtn = array_merge($rtn, array("count" => $count));
+        }
+
+        return $rtn;
+    }
 }
