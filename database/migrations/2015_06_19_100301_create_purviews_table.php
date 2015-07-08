@@ -41,7 +41,7 @@ class CreatePurviewsTable extends Migration
             $table->enum('type', [
                 Purview::TYPE_MENU,
                 Purview::TYPE_ACTION
-            ])->default(Purview::TYPE_ACTION);
+            ])->default(Purview::TYPE_MENU);
 
             // 使用来源
             $table->enum('useon', [

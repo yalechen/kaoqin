@@ -58,13 +58,13 @@ class RoleController extends BaseController
     {
         // 验证输入。
         $validator = Validator::make(Input::all(), [
-            'key' => 'required|min:3|max:30|alpha_dash|exists:roles,key,' . Input::get('key'),
+            'key' => 'required|min:3|max:30|alpha_dash|unique:roles,key,' . Input::get('id'),
             'name' => 'required|min:3|max:30',
             'status' => 'required|in:' . Role::STATUS_OFF . ',' . Role::STATUS_ON
         ], [
             'key.required' => '标识key不能为空',
             'key.alpha_dash' => '标识key仅允许字母、数字、破折号（-）以及底线（_）',
-            'key.exists' => '标识key不存在',
+            'key.unique' => '标识key已存在',
             'key.min' => '标识key不能少于3个字符',
             'key.max' => '标识key不能多余30个字符',
             'name.required' => '角色名称不能为空',
@@ -109,10 +109,10 @@ class RoleController extends BaseController
 
         // 查看是否有指派了权限或者角色
         $role = Role::find(Input::get('id'));
-        if ($role->users) {
+        if (empty($role->users) !== true) {
             return Redirect::route("RoleIndex")->withMessageError('角色已经被指派了用户，请先取消指派，在进行删除');
         }
-        if ($role->purviews) {
+        if (empty($role->purviews) !== true) {
             return Redirect::route("RoleIndex")->withMessageError('角色已经被指派了权限，请先取消指派，在进行删除');
         }
 
