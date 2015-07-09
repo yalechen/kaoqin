@@ -1,13 +1,13 @@
 <?php
+
 return array(
-	'enable' => config('app.debug'),
+	'enable' => config('app.debug',true),
 
 	'prefix' => 'api-docs',
-
 	'paths' => base_path('app'),
 	'output' => storage_path('swagger/docs'),
 	'exclude' => null,
-	'default-base-path' => null,
+	'default-base-path' => '/api',
 	'default-api-version' => null,
 	'default-swagger-version' => null,
 	'api-doc-template' => null,

@@ -54,9 +54,8 @@
 						<td><span class="toggle-status label {if $item.status eq constant('App\Models\User::STATUS_OFF')}label-danger{else}label-success{/if}" data-id="{$item.id}" data-status="{$item.status}">{trans('user.status.'|cat:$item.status)}</span></td>
 						<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
 						<td>
-							<!-- <a class="btn btn-sm btn-info" data-toggle="modal" href="#UserAvatarModal" onclick="setAvatar({$item.id}, '{$item.name}')"><i class="icon-emoticon-smile"></i> 头像</a> -->
 							<a class="btn btn-sm btn-warning" data-toggle="modal" href="#parentUserModal" onclick="parentUserAssign({$item.id}, '{$item.name}')"><i class="icon-user"></i> 上级</a>
-							<a class="btn btn-sm btn-success" href="{route('UserAssignCust', ['user_id'=>$item.id])}"><i class="icon-star"></i> 巡店</a>
+							<a class="btn btn-sm btn-success" data-toggle="modal" href="#custModal" onclick="custAssign({$item.id}, '{$item.name}')"><i class="icon-star"></i> 巡店</a>
 							<a class="btn btn-sm btn-primary" href="{route('UserEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
 							<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id}, '{$item.name}')"><i class="icon-trash"></i> 删除</a>
 						</td>
@@ -101,7 +100,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">指派<span id="user_name"></span>上级领导</h4>
+                <h4 class="modal-title">指派上级领导</h4>
             </div>
             <div class="modal-body">
             	接下来您将给“<STRONG id="parent_user_objname"></STRONG>”指派上级领导，请使用关键字搜索
@@ -135,95 +134,55 @@
 <!-- modal -->
 
 <!-- Modal -->
-<!-- <div class="modal fade" id="UserAvatarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="custModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">设置“<STRONG id="user_name_avatar"></STRONG>”头像</h4>
+                <h4 class="modal-title">指派用户所巡商户</h4>
             </div>
             <div class="modal-body">
+            	接下来您将给“<STRONG id="user_objname"></STRONG>”指派ta所巡的商户门店，可使用搜索查找
             	<div class="row">
-            		<form role="form">
-		                <div class="form-group ">
-		                    <div class="col-md-12">
-		                        <input id="file_avatar" class="file" type="file" name="file" multiple=true>
-		                        <span class="help-block">请上传[jpg、png、gif]格式的图片，不大于1M </span>
-		                    </div>
-		                </div>
-	                </form>
-	            </div>
+	                <div class="col-sm-12">
+						<section class="panel">
+							<div class="panel-body">
+								<form class="form-inline" role="form" id="user_search_form">
+									<div class="form-group">
+										<label class="sr-only" for="key">关键字</label>
+				                        <input type="text" class="form-control" id="modal_key" name="modal_key" value="{$smarty.get.modal_key}" placeholder="用户名\姓名\手机号">
+				                    </div>
+				                    <div class="form-group">
+				                    	<select class="form-control" name="type">
+											<option value="" {if !$smarty.get.org_id}selected{/if}>--所有类型--</option>
+											<option value="{constant('App\Models\Cust::TYPE_STORE')}" {if constant('App\Models\Cust::TYPE_STORE') eq $smarty.get.type}selected{/if}>{trans('cust.type.'|cat:constant('App\Models\Cust::TYPE_STORE'))}</option>
+											<option value="{constant('App\Models\Cust::TYPE_GROUP')}" {if constant('App\Models\Cust::TYPE_GROUP') eq $smarty.get.type}selected{/if}>{trans('cust.type.'|cat:constant('App\Models\Cust::TYPE_GROUP'))}</option>
+				                    	</select>
+				                    </div>
+				                    <INPUT type="hidden" value="" name="user_objid" id="user_objid" />
+									<button type="button" class="btn btn-info" id="UserFind"><i class="fa fa-search"></i> 查询</button>
+								</form>
+							</div>
+							<div id="UsersList2">
+							
+							</div>
+						</section>
+					</div>
+				</div>
             </div>
             <div class="modal-footer">
-                <button data-dismiss="modal" class="btn btn-success" type="button" id="closeAvatarModal">保存头像</button>
-                <input type="hidden" value="" id="avatar_hash" />
-                <input type="hidden" value="" id="target_user_id" />
+                <button data-dismiss="modal" class="btn btn-default" type="button" id="closeModal">取消指派</button>
+                <button data-dismiss="modal" class="btn btn-success" type="button" id="confirmAssign">批量指派</button>
             </div>
         </div>
     </div>
-</div> -->
+</div>
 <!-- modal -->
 {/block} 
 
 {block script} 
 <script type="text/javascript" src="{asset('js/bootstrap-fileinput-master/js/fileinput.js')}"></script>
 <script type="text/javascript">
-//设置头像
-/* function setAvatar(id, name){
-	$("#target_user_id").val(id);
-	$("#user_name_avatar").text(name);
-} 
-//约束上传条件
-$("#file_avatar").fileinput({
-    allowedFileExtensions : ['jpg', 'png','gif'],
-    showPreview : true,
-    maxFileSize: 1000,
-    minImageWidth: 500,
-    minImageHeight: 500,
-    showUpload:false,
-    //maxFilesNum: 1,
-    //uploadUrl: '{route("UploadFile")}', // server upload action 配合showPreview : false,
-    //uploadAsync: true,  enctype="multipart/form-data" method="post" action="{route('FormUploadFile')}"
-});
-$(function() {
-	//开始上传
-    $(document).on('change', "#file_avatar", function() {
-        $.ajaxFileUpload({
-            url : '{route('FormUploadFile')}',
-            secureuri : false,
-            fileElementId : 'file_avatar',
-            dataType : 'json',
-            data : {  },
-            success : function (data, status) {
-                $("#avatar_hash").val(data.hash);
-            },
-            error : function (data, status, e) {
-                alert(e);
-            }
-        });
-    });
-});
-//保存头像
-$("#closeAvatarModal").click(function(){
-	var avatar_hash=$("#avatar_hash").val();
-	var user_id=$("#target_user_id").val();
-	if(avatar_hash && user_id>0){
-		$.ajax({
-			type:'POST',
-			url:'{route('UserAvatarSave')}',
-			data:{ hash:avatar_hash, user_id:user_id },
-			dataType:'json',
-			success:function(data){
-				window.location.reload();
-			},
-			error:function(xhq){
-				alert(xhq.responseText);
-			}
-		});
-	}
-	
-});*/
-
 //删除确认
 function deleteConfirm(id, name){
 	$("#id").val(id);
@@ -243,6 +202,75 @@ $("#ParentUserFind").click(function() {
     },'html');
     $("#UsersList").addClass("auto_height");
 });
+
+//巡店指派
+function custAssign(id, name){
+	$("#user_objid").val(id);
+	$("#user_objname").text(name);
+}
+
+//巡店模态框的搜索
+$("#UserFind").click(function() {
+    $.get('{route("SearchCust")}', $("#user_search_form").serialize(), function(data) {
+        $("#UsersList2").html(data);
+    },'html');
+    $("#UsersList2").addClass("auto_height"); 
+});
+
+//批量指派所巡店的商户
+$("#confirmAssign").click(function() {
+	var ids=$("#ids").val();
+	var user_id=$("#user_objid").val();
+	var user_name=$("#user_objname").text();
+	if(user_id>0 && ids){
+		iconfirm('确认要给'+user_name+'用户指派以上选择的商户门店吗？', function() {
+			$.ajax({
+				type: 'POST',
+		        url: '{route("UserAssignCustSave")}',
+		        data: { user_id : user_id, cust_id : ids },
+		        dataType: 'text',
+		        success: function(data) {
+		        	alert("指派成功");
+		        },
+		        error: function(){
+		        	alert("指派失败");
+		        }
+		    });
+        });
+	}else{
+		alert("批量指派失败，请选择商户门店");
+	}
+});
+
+//省市区下拉
+$("#province").change(function() {
+    getCity($(this));
+});
+
+function getCity(obj) {
+    var province_id = $("#province").val();
+    var city_id = "{$data.city_id}";
+    obj.nextAll().remove();
+	if( province_id > 0){
+		$.ajax({
+	        url: '{route("CityPull")}',
+	        data: { province_id : province_id },
+	        success: function(data) {
+	            var html = '<select class="form-control" name="city_id" id="city"><option value="0">--所有城市--</option>';
+	            for (var i in data) {
+	            	if(data[i]['id'] == city_id){
+	            		html += "<option value='"+data[i]['id']+"' selected >"+data[i]['name']+"</option>"
+	            	}else{
+	            		html += "<option value='"+data[i]['id']+"'>"+data[i]['name']+"</option>"
+	            	}
+	                
+	            }
+	            html +='</select>';
+	            obj.parent().append(html);
+	        }
+	    });
+	}
+}
 
 //更换状态
 $(".toggle-status").click(function() {

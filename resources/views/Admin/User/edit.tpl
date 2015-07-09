@@ -170,7 +170,7 @@
         						{if $data.id gt 0}<input type="hidden" name="id" value="{$data.id}" />{/if}
         						<input type="hidden" value="{$data.avatar_path}" id="avatar_path" name="avatar_path" />
                                 <button class="btn btn-success" type="submit"> 保存</button>
-                                <button class="btn btn-default" type="button"> 取消</button>
+                                <button class="btn btn-default" type="button" onclick="javascript:history.go(-1)"> 取消</button>
                             </div>
                         </div>
                     </form>

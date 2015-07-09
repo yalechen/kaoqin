@@ -6,7 +6,9 @@
 {/block} 
 
 {block main}
-<!-- <link rel="stylesheet" type="text/css" href="{asset('js/bootstrap-fileinput-master/css/fileinput.css')}" /> -->
+<style>
+.auto_height { height: 350px; OVERFLOW-Y: auto; SCROLLBAR-FACE-COLOR: #ffffff; }
+</style>
 <div class="row">
 	<div class="col-sm-12">
 		<section class="panel">
@@ -65,6 +67,7 @@
 						<td>{$item.mobile}</td>
 						<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
 						<td>
+							<a class="btn btn-sm btn-success" data-toggle="modal" href="#userModal" onclick="userAssign({$item.id}, '{$item.name}')"><i class="icon-user"></i> 巡店者</a>
 							<a class="btn btn-sm btn-primary" href="{route('CustEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
 							<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id}, '{$item.name}')"><i class="icon-trash"></i> 删除</a>
 						</td>
@@ -102,11 +105,48 @@
     </div>
 </div>
 <!-- modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">指派巡店者</h4>
+            </div>
+            <div class="modal-body">
+            	接下来您将给“<STRONG id="cust_objname"></STRONG>”商户指派巡店者，请使用关键字搜索
+            	<div class="row">
+	                <div class="col-sm-12">
+						<section class="panel">
+							<div class="panel-body">
+								<form class="form-inline" role="form" id="user_search_form">
+									<div class="form-group">
+										<label class="sr-only" for="key">关键字</label>
+				                        <input type="text" class="form-control" id="modal_key" name="modal_key" value="{$smarty.get.modal_key}" placeholder="用户名\姓名\手机号">
+				                    </div>
+				                    <INPUT type="hidden" value="" name="cust_objid" id="cust_objid" />
+									<button type="button" class="btn btn-info" id="UserFind"><i class="fa fa-search"></i> 查询</button>
+								</form>
+							</div>
+							<div id="UsersList">
+							
+							</div>
+						</section>
+					</div>
+				</div>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+                <!-- <button class="btn btn-success" type="button">关闭</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal -->
 {/block} 
 
 {block script} 
-<!-- <script type="text/javascript" src="{asset('js/bootstrap-fileinput-master/js/fileinput.js')}"></script>
-<script type="text/javascript" src="{asset('js/file-input-init.js')}"></script> -->
 <script type="text/javascript">
 //删除确认
 function deleteConfirm(id, name){
@@ -125,6 +165,20 @@ $(".number_sort,.user_sort,.level_sort").click(function() {
         url += '&'+sort+'=asc';
     }
     window.location.href = url;
+});
+
+//巡店者指派
+function userAssign(id, name){
+	$("#cust_objid").val(id);
+	$("#cust_objname").text(name);
+}
+
+//巡店者模态框的搜索
+$("#UserFind").click(function() {
+    $.get('{route("SearchCustUsers")}', $("#user_search_form").serialize(), function(data) {
+        $("#UsersList").html(data);
+    },'html');
+    $("#UsersList").addClass("auto_height");
 });
 </script>
 {/block}

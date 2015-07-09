@@ -47,8 +47,8 @@ class CreateOvertimeTable extends Migration
                 Overtime::STATUS_WAIT
             ])->default(Overtime::STATUS_WAIT);
 
-            // 驳回理由
-            $table->string('reject_reason')->default('');
+            // 审核备注，当驳回时不能为空
+            $table->string('remark')->default('');
 
             $table->timestamps();
         });

@@ -60,6 +60,9 @@
 						<td>{trans('overtime.status.'|cat:$item.status)}</td>
 						<td>{$item.created_at}</td>
 						<td>
+							{if $item.status eq constant('App\Models\Overtime::STATUS_WAIT')}
+							<a class="btn btn-sm btn-success" data-toggle="modal" href="#AuditConfirmModal" onclick="audit({$item.id},'{$item.user.realname}')"><i class="icon-pin"></i> 加班审核</a>
+							{/if}
 							<a class="btn btn-sm btn-primary" href="{route('OvertimeEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
 							<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id})"><i class="icon-trash"></i> 删除</a>
 						</td>
@@ -97,6 +100,48 @@
     </div>
 </div>
 <!-- modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="AuditConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">加班审核</h4>
+            </div>
+            <div class="modal-body">
+            	接下来您将对“<STRONG id="user_name"></STRONG>”用户进行加班审核
+            	<div class="row">
+	                <div class="col-sm-12">
+						<section class="panel">
+							<div class="panel-body">
+								<div class="form-group">
+                                    <label for="status">审核结果</label>
+                                    <div class="radio-custom radio-success">
+			                            <input type="radio" value="{constant('App\Models\Overtime::STATUS_PASS')}" {if constant('App\Models\Overtime::STATUS_PASS') eq old('status')|default:$data.status}checked{/if} name="overtime_status" id="pass">
+			                            <label for="pass">{trans('overtime.status.'|cat:constant('App\Models\Overtime::STATUS_PASS'))}</label>
+			                            <input type="radio" value="{constant('App\Models\Overtime::STATUS_REJECT')}" {if constant('App\Models\Overtime::STATUS_REJECT') eq old('status')|default:$data.status}checked{/if} name="overtime_status" id="reject">
+			                            <label for="reject">{trans('overtime.status.'|cat:constant('App\Models\Overtime::STATUS_REJECT'))}</label>
+		                        	</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">备注</label>
+                                    <textarea class="form-control " id="remark" name="remark" required></textarea>
+                                </div>
+							</div>
+						</section>
+					</div>
+				</div>
+            </div>
+            <div class="modal-footer">
+            	<input type="hidden" id="overtime_id" name="overtime_id" value="" >
+            	<button data-dismiss="modal" class="btn btn-default" type="button" id="closeModal">取消审核</button>
+                <button class="btn btn-danger" type="button" id="confirmAuditBtn"> 确认审核</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal -->
 {/block} 
 
 {block script} 
@@ -108,6 +153,39 @@ function deleteConfirm(id){
 	$("#id").val(id);
 }
 
+//加班审核
+function audit(id,user_name){
+	$("#overtime_id").val(id);
+	$("#user_name").text(user_name);
+}
+//审核处理
+$("#confirmAuditBtn").click(function() {
+	var overtime_id=$("#overtime_id").val();
+	var status=$("input[name='overtime_status']:checked").val();
+	var remark=$("#remark").val();
+	if(overtime_id>0 && status){
+		//iconfirm('确认要开始审核吗？', function() {
+			$.ajax({
+				type: 'POST',
+		        url: '{route("OvertimeAudit")}',
+		        data: { overtime_id : overtime_id, status : status, remark : remark },
+		        dataType: 'text',
+		        success: function(data) {
+		        	//alert("审核成功");
+		        	$("#closeModal").trigger('click');
+		        	window.location.reload();
+		        },
+		        error: function(xhq){
+		        	alert(xhq.responseText);
+		        }
+		    });
+        //});
+	}else{
+		alert("批量指派失败，请选择用户");
+	}
+});
+
+//时间控件
 $('.form_datetime').datetimepicker({
     format: 'yyyy-mm-dd hh:ii',
     autoclose:true,

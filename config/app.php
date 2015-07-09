@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'url' => 'http://kaoqin',
+    'url' => 'http://'.$_SERVER['HTTP_HOST'].'/kaoqin/public',
     //'url' => 'http://localhost:8080/kaoqin/public',
 
     /*

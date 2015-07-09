@@ -54,7 +54,7 @@
                             <div class="col-lg-offset-2 col-lg-10">
         						{if $data.id gt 0}<input type="hidden" name="id" value="{$data.id}" />{/if}
                                 <button class="btn btn-success" type="submit"> 保存</button>
-                                <button class="btn btn-default" type="button"> 取消</button>
+                                <button class="btn btn-default" type="button" onclick="javascript:history.go(-1)"> 取消</button>
                             </div>
                         </div>
                     </form>

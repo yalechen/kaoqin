@@ -9,7 +9,7 @@
 			<th>操作</th>
 		</tr>
 	</thead>
-	<tbody id="UsersList">
+	<tbody>
 		{foreach $data as $item}
 		<tr>
 			<td>{$item.id}</td>
@@ -18,7 +18,7 @@
 			<td>{$item.realname}</td>
 			<td>{$item.mobile}</td>
 			<td>
-				<a class="btn btn-sm btn-warning" href="javascript:void(0)" onclick="assignParentUser({$item.id}, {$user_id})"><i class="icon-login"></i> 指派</a>
+				<a class="btn btn-sm btn-warning" href="javascript:void(0)" onclick="assignUser({$item.id}, {$cust_id})"><i class="icon-login"></i> 指派</a>
 			</td>
 		</tr>
 		{foreachelse}
@@ -26,27 +26,17 @@
 		{/foreach}
 	</tbody>
 </table>
-{if $data}
-<div class="text-center">
-	{$data->render()}
-</div>
-{/if}
 <script type="text/javascript">
-//删除确认
-function assignParentUser(parent_user_id, user_id){
-	alert($(this).text());
+//指派巡店者
+function assignUser(user_id, cust_id){
 	var obj=$(this);
-	if( parent_user_id > 0 && user_id>0){
+	if( user_id > 0 && cust_id>0){
 		$.ajax({
 			type: 'POST',
-	        url: '{route("AssignParentUsers")}',
-	        data: { parent_user_id : parent_user_id, user_id : user_id },
+	        url: '{route("AssignCustUser")}',
+	        data: { cust_id : cust_id, user_id : user_id },
 	        dataType: 'json',
 	        success: function(data) {
-	        	//更改本行事件为取消指派
-	        	//obj.attr("onclick","javascript:void(0);");
-	        	//obj.html('<i class="icon-login"></i> 已指派');
-	        	//alert(obj.parent().html());
 	        	alert("指派成功");
 	        }
 	    });

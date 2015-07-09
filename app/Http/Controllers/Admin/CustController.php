@@ -184,18 +184,18 @@ class CustController extends BaseController
     public function searchCustUser()
     {
         $validator = Validator::make(Input::all(), [
-            'user_id' => 'required|exists:users,id,status,' . User::STATUS_ON
+            'cust_objid' => 'required|exists:custs,id'
         ], [
-            'user_id.required' => '用户不能为空',
-            'user_id.exists' => '用户不存在或已离职'
+            'cust_objid.required' => '商户不能为空',
+            'cust_objid.exists' => '商户不存在'
         ]);
         if ($validator->fails()) {
-            return v('parent_users_list')->withMessageError($validator->messages()
+            return Redirect::to(URL::previous())->withMessageError($validator->messages()
                 ->first());
         }
 
         // 取得数据模型。
-        $user_id = Input::get('user_id');
+        $cust_id = Input::get('cust_objid');
         $data = User::latest('id')->where('status', User::STATUS_ON);
 
         // 处理筛选条件。
@@ -206,9 +206,9 @@ class CustController extends BaseController
                 ->orWhere('realname', 'like', "%{$key}%");
         }
         // 返回单页数据。
-        $data = $data->paginate(Input::get('limit', 6));
+        $data = $data->get();
 
-        return v('cust_users_list')->with(compact('data', 'user_id'));
+        return v('cust_users_list')->with(compact('data', 'cust_id'));
     }
 
     /**
