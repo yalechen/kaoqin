@@ -26,8 +26,8 @@ return [
     |
     */
 
-    //'url' => 'http://kaoqin',
-    'url' => 'http://localhost:8080/kaoqin/public',
+    'url' => 'http://kaoqin',
+    //'url' => 'http://localhost:8080/kaoqin/public',
 
     /*
     |--------------------------------------------------------------------------
