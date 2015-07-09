@@ -1,5 +1,9 @@
 <?php
 
+Route::get('/',function(){
+
+});
+
 // 通用上传文件
 Route::post('upload-file', [
     'as' => 'UploadFile',
@@ -718,6 +722,15 @@ Route::group([
     });
 
 
+/**
+ * @SWG\Info(
+ *  title="外勤管理系统接口",
+ *  description="易哲慧外勤管理系统",
+ *  termsOfServiceUrl = "",
+ *  license= "Apache 2.0",
+ *  licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.html"
+ * )
+ */
 
 // 接口
 Route::group([

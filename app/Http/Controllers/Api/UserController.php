@@ -117,15 +117,7 @@ class UserController extends Controller
                 $user->save();
             }
 
-            //返回用户信息
-            $user_info = Auth::user();
-            $info['mobile'] = $user_info->mobile;
-            $info['realname'] = $user_info->realname;
-            $info['gender'] = $user_info->gender;
-            $info['birthday'] = $user_info->birthday;
-            $info['device_info'] = $user_info->device_info;
-            $info['first_login'] = $first_login;
-            $info['last_login_time'] = $user_info->last_login_time;
+            $info = $this->getUserInfo($first_login);
 
             return $this->apiReturn(200,"登录成功",$info);
 
@@ -155,22 +147,10 @@ class UserController extends Controller
         if (Auth::guest()) {
             return $this->apiReturn(401,"未登陆");
         } else {
-            return $this->apiReturn(200,"已登录",Auth::user());
+            return $this->apiReturn(200,"已登录",$this->getUserInfo());
         }
     }
 
-    /**
-     * 获取信息
-     */
-    public function info()
-    {
-        $user = User::find(Input::get('user_id'));
-        if (is_null($user)) {
-            return $this->apiReturn(402,"用户不存在");
-        }
-        return $this->apiReturn(200,"获取用户信息成功",$user);
-
-    }
 
     /**
      * 修改密码保存
@@ -305,6 +285,42 @@ class UserController extends Controller
         $users->save();
 
         return $this->apiReturn(200,"修改信息成功",User::find($users->id));
+    }
+
+
+    /*
+     * 获取用户信息
+     */
+    public function getUserInfo( $first_login = 'N'){
+        //返回用户信息
+        $user_info = Auth::user();
+
+        //用户角色
+        $role = "";
+        $roles = $user_info->roles;
+        if(! is_null($roles)){
+            foreach($roles as $item){
+                $role .= $item->name." ";
+            }
+        }
+
+        $info['mobile'] = $user_info->mobile;
+        $info['realname'] = $user_info->realname;
+        $info['gender'] = $user_info->gender;
+        $info['avatar'] = $user_info->avatar_path;
+        $info['birthday'] = $user_info->birthday;
+        $info['number'] = $user_info->number;
+        $info['department'] = $user_info->dept ? $user_info->dept->name : "";
+        $info['role'] = $role;
+        $info['province'] = $user_info->province ? $user_info->province->name : "";
+        $info['city'] = $user_info->city ? $user_info->city->name : "";
+        $info['address'] = $user_info->address ;
+        $info['status'] = $user_info->status ;
+        $info['device_info'] = $user_info->device_info;
+        $info['first_login'] = $first_login;
+        $info['last_login_time'] = $user_info->last_login_time;
+
+        return $info;
     }
 
 }

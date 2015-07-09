@@ -1,4 +1,5 @@
 <?php
+
 return array(
 	'enable' => config('app.debug',true),
 

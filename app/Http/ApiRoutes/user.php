@@ -71,7 +71,7 @@
  * )
  */
 Route::post('login', [
-    'as' => 'UserLogin',
+    'as' => 'ApiUserLogin',
     'uses' => 'UserController@postLogin'
 ]);
 
@@ -92,7 +92,7 @@ Route::post('login', [
  * )
  */
 Route::post('logout', [
-    'as' => 'UserLogout',
+    'as' => 'ApiUserLogout',
     'before'=>'auth',
     'uses' => 'UserController@logout'
 ]);
@@ -116,41 +116,10 @@ Route::post('logout', [
  * )
  */
 Route::get('auth', [
-    'as' => 'UserAuth',
+    'as' => 'ApiUserAuth',
     'uses' => 'UserController@auth'
 ]);
 
-/**
- *
- * @SWG\Api(
- *   path="/user/info",
- *   @SWG\Operation(
- *      method="GET",
- *      nickname="UserInfo",
- *      summary="获取信息",
- *      notes="根据user_id获取用户的详细信息。",
- *      type="Staff",
- *      @SWG\Parameters(
- *          @SWG\Parameter(
- *              name="user_id",
- *              description="用户ID",
- *              paramType="query",
- *              required=true,
- *              type="integer"
- *          )
- *      ),
- *      @SWG\ResponseMessages(
- *          @SWG\ResponseMessage(code=402, message="表单验证失败。"),
- *          @SWG\ResponseMessage(code=200, message="成功。")
- *      )
- *   )
- * )
- */
-Route::get('user/info', [
-    'as' => 'UserInfo',
-    'before'=>'auth',
-    'uses' => 'UserController@info'
-]);
 
 
 /**
@@ -185,7 +154,7 @@ Route::get('user/info', [
  */
 Route::post('user/password', [
     'before' => 'auth',
-    'as' => 'ModifyPassword',
+    'as' => 'ApiModifyPassword',
     'uses' => 'UserController@postPasswordSave'
 ]);
 
@@ -221,7 +190,7 @@ Route::post('user/password', [
  * )
  */
 Route::post('user/reset_password', [
-    'as' => 'resetPassword',
+    'as' => 'ApiresetPassword',
     'uses' => 'UserController@resetPassword'
 ]);
 
@@ -259,6 +228,6 @@ Route::post('user/reset_password', [
  * )
  */
 Route::post('user/edit', [
-    'as' => 'UserEdit',
+    'as' => 'ApiUserEdit',
     'uses' => 'UserController@edit'
 ]);
