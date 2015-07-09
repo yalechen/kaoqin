@@ -9,6 +9,7 @@ use Auth;
 use Redirect;
 use Response;
 use URL;
+use Carbon\Carbon;
 
 class OvertimeController extends BaseController
 {
@@ -122,5 +123,38 @@ class OvertimeController extends BaseController
         $overtime = Overtime::find(Input::get('id'));
         $overtime->delete();
         return Redirect::to(URL::previous())->withMessageSuccess('删除成功');
+    }
+
+    /**
+     * 加班审核
+     */
+    public function audit()
+    {
+        // 验证数据。
+        $validator = Validator::make(Input::all(), [
+            'overtime_id' => 'required|exists:overtime,id',
+            'status' => 'required|in:' . Overtime::STATUS_REJECT . ',' . Overtime::STATUS_PASS,
+            'remark' => 'required_if:status,' . Overtime::STATUS_REJECT
+        ], [
+            'overtime_id.required' => '所选加班记录不能为空',
+            'overtime_id.exists' => '所选加班记录不存在',
+            'status.required' => '审核状态不能为空',
+            'status.exists' => '审核状态只能为审核通过或者审核驳回',
+            'remark.required_if' => '当审核驳回，审核备注不能为空'
+        ]);
+        if ($validator->fails()) {
+            return Response::make($validator->messages()->first(), 402);
+        }
+
+        $overtime = Overtime::find(Input::get('overtime_id'));
+        if ($overtime->status != Overtime::STATUS_WAIT) {
+            return Response::make('已经审核完毕，不能重复审核', 402);
+        }
+        $overtime->auditUser()->associate(Auth::user());
+        $overtime->audit_time = new Carbon();
+        $overtime->status = Input::get('status');
+        $overtime->remark = Input::get('remark', '');
+        $overtime->save();
+        return 'success';
     }
 }

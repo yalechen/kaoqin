@@ -57,7 +57,7 @@
         </div>
 
         <footer>
-            2015 &copy; kaoqin by Robote-Jois.
+            Copyright 2015 &copy; 厦门哲慧有限公司.
         </footer>
 
         <!-- <div class="sb-slidebar sb-right sb-style-overlay">
