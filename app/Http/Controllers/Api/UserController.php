@@ -245,29 +245,18 @@ class UserController extends Controller
     public function edit()
     {
         // 取得允许修改的属性列表输入值。
-        $inputs = Input::only('avatar_pic_id', 'realmobile');
+        $inputs = Input::only('avatar_path', 'realname', 'gender', 'realname', 'email', 'birthday', 'province_id', 'city_id', 'address');
 
         // 验证输入。
         $validator = Validator::make($inputs, [
-            'avatar_pic_id' => [
-                'exists:storages,id'
+            'gender' => [
+                'in:Female,Male'
             ]
         ], [
-            'avatar_id.exists' => '头像不存在',
-            'sex.in' => '性别必须是在男或女',
+            'gender.in' => '性别必须是在男或女',
         ]);
         if ($validator->fails()) {
             return Response::make($validator->messages()->first(), 402);
-        }
-
-        // 检查头像是否为图片。
-        if (! is_null($inputs['avatar_pic_id'])) {
-            $file = Storage::find($inputs['avatar_pic_id']);
-            if (is_null($file)) {
-                $inputs['avatar_pic_id'] = null;
-            } elseif (substr($file->mime, 0, 6) != 'image/') {
-                return $this->apiReturn(402,"不支持的图片格式");
-            }
         }
 
         // 取得当前登录用户。
@@ -284,7 +273,7 @@ class UserController extends Controller
         // 保存修改。
         $users->save();
 
-        return $this->apiReturn(200,"修改信息成功",User::find($users->id));
+        return $this->apiReturn(200,"修改信息成功",$this->getUserInfo());
     }
 
 

@@ -732,16 +732,30 @@ Route::group([
  * )
  */
 
+
 // 接口
 Route::group([
-    'prefix' => 'api',
-    'namespace' => 'Api'
-],
+        'prefix' => 'api',
+    ],
     function () {
         // 全局模块
-        require __DIR__ . '/ApiRoutes/global.php';
+        require __DIR__ . '/ApiRoutes/file.php';
+    },
 
-        // 用户模块
-        require __DIR__ . '/ApiRoutes/user.php';
-    }
+
+    //Api 控制器里
+    Route::group([
+            'prefix' => 'api',
+            'namespace' => 'Api'
+        ],
+        function () {
+            // 全局模块
+            require __DIR__ . '/ApiRoutes/global.php';
+
+            // 用户模块
+            require __DIR__ . '/ApiRoutes/user.php';
+        }
+    )
 );
+
+

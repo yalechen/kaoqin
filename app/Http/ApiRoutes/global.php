@@ -7,90 +7,14 @@
  * )
  */
 
-/**
- *
- * @SWG\Api(
- *   path="/file",
- *   @SWG\Operation(
- *      method="POST",
- *      nickname="FileUpload",
- *      summary="上传文件",
- *      notes="在所有接口中使用到文件ID，都由此接口得到。（注意使用文件上传方式 enctype=&quot;multipart/form-data&quot; ）",
- *      type="Storage",
- *      @SWG\Parameters(
- *          @SWG\Parameter(
- *              name="file",
- *              description="文件",
- *              paramType="form",
- *              required=true,
- *              type="file"
- *          )
- *      ),
- *      @SWG\ResponseMessages(
- *          @SWG\ResponseMessage(code=401, message="尚未登录。"),
- *          @SWG\ResponseMessage(code=402, message="表单验证失败。"),
- *          @SWG\ResponseMessage(code=200, message="成功。")
- *      )
- *   )
- * )
- */
-
-Route::post('file', [
-    'as' => 'FileUpload',
-   // 'before' => 'auth',
-    'uses' => 'StorageController@postFile'
-]);
-
-/**
- *
- * @SWG\Api(
- *   path="/file",
- *   @SWG\Operation(
- *      method="GET",
- *      nickname="FilePull",
- *      summary="获取文件",
- *      notes="根据文件ID取得指定文件。如果文件是图片，支持获取指定宽高的缩略图。",
- *      @SWG\Parameters(
- *          @SWG\Parameter(
- *              name="id",
- *              description="文件ID",
- *              paramType="query",
- *              required=true,
- *              type="integer"
- *          ),
- *          @SWG\Parameter(
- *              name="width",
- *              description="宽度",
- *              paramType="query",
- *              type="integer"
- *          ),
- *          @SWG\Parameter(
- *              name="height",
- *              description="高度",
- *              paramType="query",
- *              type="integer"
- *          )
- *      ),
- *      @SWG\ResponseMessages(
- *          @SWG\ResponseMessage(code=404, message="文件不存在。"),
- *          @SWG\ResponseMessage(code=200, message="成功。")
- *      )
- *   )
- * )
- */
-Route::get('file', [
-    'as' => 'FilePull',
-    'uses' => 'StorageController@getFile'
-]);
-
 
 /**
  *
  * @SWG\Api(
  *   path="/captcha/send_sms_vcode",
  *   @SWG\Operation(
- *      method="POST",
- *      nickname="CaptchaSMSVcode",
+ *      method="GET",
+ *      nickname="SendSMSVcode",
  *      summary="获取短信验证码",
  *      notes="所有需要提供短信验证码的地方，都是通过此接口获取。",
  *      @SWG\Parameters(
@@ -119,10 +43,11 @@ Route::get('file', [
  *   )
  * )
  */
-Route::post('captcha/send_sms_vcode', [
-    'as' => 'CaptchaSMS',
+Route::GET('captcha/send_sms_vcode', [
+    'as' => 'ApiCaptchaSMS',
     'uses' => 'CaptchaController@getSmsVcode'
 ]);
+
 
 
 /**
@@ -155,10 +80,11 @@ Route::post('captcha/send_sms_vcode', [
  *  )
  * )
  */
-Route::post('captcha/check_sms_vcode', [
-    'as' => 'CheckSmsVcode',
+Route::POST('captcha/check_sms_vcode', [
+    'as' => 'ApiCheckSmsVcode',
     'uses' => 'CaptchaController@checkSmsVcode'
 ]);
+
 
 
 

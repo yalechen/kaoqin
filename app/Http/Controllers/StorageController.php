@@ -50,7 +50,7 @@ class StorageController extends Controller
             return R::make($validator->messages()->first(), 402);
         }
 
-        $storage = \App\Storage::find(I::input('hash'));
+        $storage = Storage::find(I::input('hash'));
 
         // 取得文件名与拓展名。
         $filename = $storage->hash;
