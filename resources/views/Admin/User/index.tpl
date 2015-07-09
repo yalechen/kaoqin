@@ -168,62 +168,6 @@
 {block script} 
 <script type="text/javascript" src="{asset('js/bootstrap-fileinput-master/js/fileinput.js')}"></script>
 <script type="text/javascript">
-//设置头像
-/* function setAvatar(id, name){
-	$("#target_user_id").val(id);
-	$("#user_name_avatar").text(name);
-} 
-//约束上传条件
-$("#file_avatar").fileinput({
-    allowedFileExtensions : ['jpg', 'png','gif'],
-    showPreview : true,
-    maxFileSize: 1000,
-    minImageWidth: 500,
-    minImageHeight: 500,
-    showUpload:false,
-    //maxFilesNum: 1,
-    //uploadUrl: '{route("UploadFile")}', // server upload action 配合showPreview : false,
-    //uploadAsync: true,  enctype="multipart/form-data" method="post" action="{route('FormUploadFile')}"
-});
-$(function() {
-	//开始上传
-    $(document).on('change', "#file_avatar", function() {
-        $.ajaxFileUpload({
-            url : '{route('FormUploadFile')}',
-            secureuri : false,
-            fileElementId : 'file_avatar',
-            dataType : 'json',
-            data : {  },
-            success : function (data, status) {
-                $("#avatar_hash").val(data.hash);
-            },
-            error : function (data, status, e) {
-                alert(e);
-            }
-        });
-    });
-});
-//保存头像
-$("#closeAvatarModal").click(function(){
-	var avatar_hash=$("#avatar_hash").val();
-	var user_id=$("#target_user_id").val();
-	if(avatar_hash && user_id>0){
-		$.ajax({
-			type:'POST',
-			url:'{route('UserAvatarSave')}',
-			data:{ hash:avatar_hash, user_id:user_id },
-			dataType:'json',
-			success:function(data){
-				window.location.reload();
-			},
-			error:function(xhq){
-				alert(xhq.responseText);
-			}
-		});
-	}
-	
-});*/
-
 //删除确认
 function deleteConfirm(id, name){
 	$("#id").val(id);
