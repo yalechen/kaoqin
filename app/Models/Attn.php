@@ -10,7 +10,7 @@ class Attn extends Model
     // 状态：异常
     const STATUS_NG = 'Ng';
 
-    protected $table = 'orgs';
+    protected $table = 'attn';
 
     public static function boot()
     {
