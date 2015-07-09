@@ -50,7 +50,7 @@ class StorageController extends Controller
             return R::make($validator->messages()->first(), 402);
         }
 
-        $storage = \App\Storage::find(I::input('hash'));
+        $storage = Storage::find(I::input('hash'));
 
         // 取得文件名与拓展名。
         $filename = $storage->hash;
@@ -237,7 +237,8 @@ class StorageController extends Controller
 
             $arr_tmp = str_split(md5(microtime(true)), 2);
             $filename = "{$hash}." . $file->getClientOriginalExtension();
-            $file_path = $arr_tmp[0] . '/' . $arr_tmp[1] . '/' . $arr_tmp[2] . '/';
+            //$file_path = $arr_tmp[0] . '/' . $arr_tmp[1] . '/' . $arr_tmp[2] . '/';
+            $file_path = date('Y') . date('m') . DIRECTORY_SEPARATOR ;
 
             $storage = new Storage();
             $storage->hash = $hash;

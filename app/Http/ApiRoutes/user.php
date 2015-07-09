@@ -207,14 +207,50 @@ Route::post('user/reset_password', [
  *      type="Staff",
  *      @SWG\Parameters(
  *          @SWG\Parameter(
- *              name="avatar_pic_id",
- *              description="头像图片id",
+ *              name="avatar_path",
+ *              description="头像图片路径（用 file 接口上传图片获取返回的path）",
  *              paramType="query",
  *              type="integer"
  *          ),
  *          @SWG\Parameter(
  *              name="realname",
  *              description="真实姓名",
+ *              type="string",
+ *              paramType="query"
+ *          ),
+ *          @SWG\Parameter(
+ *              name="gender",
+ *              description="性别[Male | Female]",
+ *              type="string",
+ *              paramType="query"
+ *          ),
+ *          @SWG\Parameter(
+ *              name="birthday",
+ *              description="生日，格式：1998-03-01",
+ *              type="string",
+ *              paramType="query"
+ *          ),
+ *          @SWG\Parameter(
+ *              name="email",
+ *              description="邮箱",
+ *              type="string",
+ *              paramType="query"
+ *          ),
+ *          @SWG\Parameter(
+ *              name="province_id",
+ *              description="省份id",
+ *              type="string",
+ *              paramType="query"
+ *          ),
+ *          @SWG\Parameter(
+ *              name="city_id",
+ *              description="城市id",
+ *              type="string",
+ *              paramType="query"
+ *          ),
+ *          @SWG\Parameter(
+ *              name="address",
+ *              description="通讯地址",
  *              type="string",
  *              paramType="query"
  *          )
