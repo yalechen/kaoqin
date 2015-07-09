@@ -150,6 +150,11 @@ class OvertimeController extends BaseController
         if ($overtime->status != Overtime::STATUS_WAIT) {
             return Response::make('已经审核完毕，不能重复审核', 402);
         }
+        // 只有该用户的上级才能审核
+        if (User::find($overtime->user_id)->parent_user_id != Auth::user()->id) {
+            return Response::make('只有该用户的上级领导才有审核的权限', 402);
+        }
+
         $overtime->auditUser()->associate(Auth::user());
         $overtime->audit_time = new Carbon();
         $overtime->status = Input::get('status');
