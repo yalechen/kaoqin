@@ -27,7 +27,7 @@
 					<tr>
 						<td>{$item.id}</td>
 						<td>{$item.name}</td>
-						<td>{$item.sort}</td>
+						<td><span class="badge bg-success">{$item.sort}</span></td>
 						<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
 						<td>
 							<a class="btn btn-sm btn-primary" href="{route('LeaveTypeEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
