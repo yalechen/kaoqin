@@ -200,103 +200,6 @@ class UserController extends BaseController
     }
 
     /**
-     * 查询指派所巡店商户
-     */
-    public function assignCust()
-    {
-        $validator = Validator::make(Input::all(), [
-            'user_id' => 'required|exists:users,id,status,' . User::STATUS_ON
-        ], [
-            'user_id.required' => '所指派门店用户不能为空',
-            'user_id.exists' => '用户不存在或已离职'
-        ]);
-        if ($validator->fails()) {
-            return Redirect::route("UserIndex")->withMessageError($validator->messages()
-                ->all());
-        }
-        $user = User::find(Input::get('user_id'));
-        // 省份
-        $province = Province::all();
-
-        // 获取编辑信息
-        $data = Cust::with('user', 'custLevel', 'province', 'city', 'district')->latest();
-        if (Input::has('key')) {
-            $key = Input::get('key');
-            $data->where(function ($q) use($key)
-            {
-                $q->where('name', 'like', "%{$key}%")
-                    ->orWhere('mobile', 'like', "%{$key}%")
-                    ->orWhere('number', 'like', "%{$key}%");
-            });
-        }
-        if (Input::has('type')) {
-            $data->whereType(Input::get('type'));
-        }
-        if (Input::has('district_id')) {
-            $data->whereDistrictId(Input::get('district_id'));
-        } elseif (Input::has('city_id')) {
-            $data->whereCityId(Input::get('city_id'));
-        } elseif (Input::has('province_id')) {
-            $data->whereProvinceId(Input::get('province_id'));
-        }
-        $data = $data->paginate(15);
-
-        if (is_null(Input::all())) {
-            // 如果没有参数查询，获取前20个商户门店
-            $data = Cust::with('user', 'custLevel', 'province', 'city', 'district')->latest()
-                ->take(20)
-                ->paginate(15);
-        }
-
-        // 旧的巡查门店
-        ! is_null(Cust::whereUserId($user->id)->first()) ? $cust = Cust::whereUserId($user->id)->first() : $cust = null;
-
-        return v('assignCust', compact('user', 'data', 'cust', 'province'));
-    }
-
-    /**
-     * 指派所巡店商户
-     */
-    public function saveAssignCust()
-    {
-        $validator = Validator::make(Input::all(), [
-            'cust_id' => 'required|exists:users,id',
-            'user_id' => 'required|exists:users,id,status,' . User::STATUS_ON
-        ], [
-            'cust_id.required' => '商户门店不能为空',
-            'cust_id.exists' => '商户门店不存',
-            'user_id.required' => '用户不能为空',
-            'user_id.exists' => '用户不存在或已离职'
-        ]);
-        if ($validator->fails()) {
-            return Redirect::route("UserAssignCust", [
-                'user_id' => Input::get('user_id')
-            ])->withMessageError($validator->messages()
-                ->all());
-        }
-
-        $user = User::find(Input::get('user_id'));
-        $cust = Cust::whereUserId($user->id)->first();
-        if (! is_null($cust)) {
-            if ($cust->id == Input::get('cust_id')) {
-                return Redirect::route("UserAssignCust", [
-                    'user_id' => Input::get('user_id')
-                ])->withMessageError('无需重复指派');
-            }
-            // 移除旧门店的巡店员
-            $cust->user_id = 0;
-            $cust->save();
-        }
-
-        // 添加新门店的巡店员
-        $cust = Cust::find(Input::get('cust_id'));
-        $cust->user_id = Input::get('user_id');
-        $cust->save();
-
-        return Redirect::route("UserIndex")->withMessageSuccess($user->name . '被成功指派的门店为' . $cust->name);
-    }
-
-    /**
      * 上级搜索
      */
     public function searchParentUser()
@@ -308,7 +211,7 @@ class UserController extends BaseController
             'user_id.exists' => '用户不存在或已离职'
         ]);
         if ($validator->fails()) {
-            return v('parent_users_list')->withMessageError($validator->messages()
+            return Redirect::to(URL::previous())->withMessageError($validator->messages()
                 ->first());
         }
 
@@ -324,7 +227,7 @@ class UserController extends BaseController
                 ->orWhere('realname', 'like', "%{$key}%");
         }
         // 返回数据。
-        //$data = $data->paginate(Input::get('limit', 6));
+        // $data = $data->paginate(Input::get('limit', 6));
         $data = $data->get();
 
         return v('parent_users_list')->with(compact('data', 'user_id'));
@@ -356,32 +259,6 @@ class UserController extends BaseController
     }
 
     /**
-     * 保存头像
-     */
-    public function avatarSave()
-    {
-        $validator = Validator::make(Input::all(), [
-            'hash' => 'required|exists:storages,hash',
-            'user_id' => 'required|exists:users,id,status,' . User::STATUS_ON
-        ], [
-            'hash.required' => '图片不能为空',
-            'hash.exists' => '图片上传不成功',
-            'user_id.required' => '用户不能为空',
-            'user_id.exists' => '用户不存在或已离职'
-        ]);
-        if ($validator->fails()) {
-            return Response::make($validator->messages()->first(), 402);
-        }
-
-        $storage = Storage::find(Input::get('hash'));
-        $user = User::find(Input::get('user_id'));
-        $user->avatar_path = $storage->path;
-        $user->save();
-
-        return $user;
-    }
-
-    /**
      * 异步获取上级领导
      */
     public function parentUser()
@@ -401,5 +278,72 @@ class UserController extends BaseController
             return $user->leader;
         }
         return null;
+    }
+
+    /**
+     * 商户搜索
+     */
+    public function searchCust()
+    {
+        $validator = Validator::make(Input::all(), [
+            'user_objid' => 'required|exists:users,id'
+        ], [
+            'user_objid.required' => '用户不能为空',
+            'user_objid.exists' => '用户不存在'
+        ]);
+        if ($validator->fails()) {
+            return Redirect::to(URL::previous())->withMessageError($validator->messages()
+                ->first());
+        }
+
+        // 取得数据模型。
+        $user_id = Input::get('user_objid');
+        $data = Cust::latest('id');
+
+        // 处理筛选条件。
+        if (Input::has('type')) {
+            $data->whereType(Input::get('type'));
+        }
+        if (Input::has('modal_key')) {
+            $key = Input::get('modal_key');
+            $data->where(function ($q) use($key)
+            {
+                $q->where('name', 'like', "%{$key}%")
+                    ->orWhere('mobile', 'like', "%{$key}%")
+                    ->orWhere('number', 'like', "%{$key}%");
+            });
+        }
+        // 返回数据。
+        $data = $data->get();
+        $ids = $data->lists('id')->all();
+
+        return v('custs_list')->with(compact('data', 'ids', 'user_id'));
+    }
+
+    /**
+     * 指派所巡店商户
+     */
+    public function saveAssignCust()
+    {
+        $validator = Validator::make(Input::all(), [
+            'cust_id' => 'required|exists:custs,id',
+            'user_id' => 'required|exists:users,id,status,' . User::STATUS_ON
+        ], [
+            'user_id.required' => '用户不能为空',
+            'user_id.exists' => '用户不存在或已离职',
+            'cust_id.required' => '被指派商户不能为空',
+            'cust_id.exists' => '被指派商户不存在'
+        ]);
+        if ($validator->fails()) {
+            return Response::make($validator->messages()->first(), 402);
+        }
+        $ids = explode(',', Input::get('cust_id'));
+        $custs = Cust::whereIn('id', $ids)->get();
+        foreach ($custs as $cust) {
+            $cust->user_id = Input::get('user_id');
+            $cust->save();
+        }
+
+        return 'success';
     }
 }

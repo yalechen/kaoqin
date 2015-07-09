@@ -111,7 +111,7 @@
         						<input type="hidden" name="images" id="images" value="" />
         						<input type="hidden" name="old_images" id="old_images" value="{Session::get('old_images')}" />
                                 <button class="btn btn-success" type="submit"> 保存</button>
-                                <button class="btn btn-default" type="button"> 取消</button>
+                                <button class="btn btn-default" type="button" onclick="javascript:history.go(-1)"> 取消</button>
                             </div>
                         </div>
                     </form>

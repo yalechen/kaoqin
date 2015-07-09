@@ -49,7 +49,7 @@
         						{if $data.id gt 0}<input type="hidden" name="id" value="{$data.id}" />{/if}
         						<input type="hidden" name="content" id="content" value="" />
                                 <button class="btn btn-success" type="submit" id="savebtn"> 保存</button>
-                                <button class="btn btn-default" type="button"> 取消</button>
+                                <button class="btn btn-default" type="button" onclick="javascript:history.go(-1)"> 取消</button>
                             </div>
                         </div>
                     </form>

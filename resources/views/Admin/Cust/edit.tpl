@@ -129,7 +129,7 @@
         						<input type="hidden" name="latitude"  id="latitude"  value="{$data.lat|default:old('latitude')|default:'24.478839'}"/>
         						<input type="hidden" name="logo_path"  id="logo_path"  value="{$data.logo_path}"/>
                                 <button class="btn btn-success" type="submit"> 保存</button>
-                                <button class="btn btn-default" type="button"> 取消</button>
+                                <button class="btn btn-default" type="button" onclick="javascript:history.go(-1)"> 取消</button>
                             </div>
                         </div>
                     </form>

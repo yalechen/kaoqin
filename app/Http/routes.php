@@ -1,8 +1,6 @@
 <?php
-
-Route::get('/',function(){
-
-});
+Route::get('/', function ()
+{});
 
 // 通用上传文件
 Route::post('upload-file', [
@@ -381,13 +379,6 @@ Route::group([
                         'parent' => 'UserIndex',
                         'uses' => 'UserController@parentUser'
                     ]);
-                    // 指派所巡店的商户
-                    Route::get('cust', [
-                        'as' => 'UserAssignCust',
-                        'name' => '搜索指派给用户的商户列表',
-                        'parent' => 'UserIndex',
-                        'uses' => 'UserController@assignCust'
-                    ]);
                     // 保存指派所巡店的商户
                     Route::post('cust', [
                         'as' => 'UserAssignCustSave',
@@ -408,6 +399,13 @@ Route::group([
                         'name' => '用户上级指派',
                         'parent' => 'UserIndex',
                         'uses' => 'UserController@assignParentUser'
+                    ]);
+                    // 指派巡店时搜索商户
+                    Route::get('search-custs', [
+                        'as' => 'SearchCust',
+                        'name' => '指派巡店时搜索商户',
+                        'parent' => 'UserIndex',
+                        'uses' => 'UserController@searchCust'
                     ]);
                 });
 
@@ -453,7 +451,7 @@ Route::group([
                     ]);
                     // 指派巡店者
                     Route::post('assign-cust-users', [
-                        'as' => 'AssignCustUsers',
+                        'as' => 'AssignCustUser',
                         'name' => '商户巡店者指派',
                         'parent' => 'CustIndex',
                         'uses' => 'CustController@assignCustUser'
@@ -612,6 +610,13 @@ Route::group([
                         'parent' => 'OvertimeIndex',
                         'uses' => 'OvertimeController@delete'
                     ]);
+                    // 加班审核
+                    Route::post('overtime/audit', [
+                        'as' => 'OvertimeAudit',
+                        'name' => '加班审核',
+                        'parent' => 'OvertimeAudit',
+                        'uses' => 'OvertimeController@audit'
+                    ]);
                 });
 
                 // 任务管理
@@ -721,17 +726,15 @@ Route::group([
             });
     });
 
-
 /**
  * @SWG\Info(
- *  title="外勤管理系统接口",
- *  description="易哲慧外勤管理系统",
- *  termsOfServiceUrl = "",
- *  license= "Apache 2.0",
- *  licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.html"
+ * title="外勤管理系统接口",
+ * description="易哲慧外勤管理系统",
+ * termsOfServiceUrl = "",
+ * license= "Apache 2.0",
+ * licenseUrl="http://www.apache.org/licenses/LICENSE-2.0.html"
  * )
  */
-
 
 // 接口
 Route::group([
@@ -757,5 +760,3 @@ Route::group([
         }
     )
 );
-
-

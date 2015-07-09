@@ -4,9 +4,11 @@
 			<th><input type="checkbox" data-set=".checkboxes" id="checkAll" /></th>
 			<th>#</th>
 			<th>编号</th>
-			<th>用户名</th>
-			<th>姓名</th>
+			<th>名称</th>
+			<!-- <th>类型</th> -->
+			<th>联系人</th>
 			<th>手机号</th>
+			<th>巡店者</th>
 			<th>操作</th>
 		</tr>
 	</thead>
@@ -23,10 +25,12 @@
 			<td>{$item.id}</td>
 			<td>{$item.number}</td>
 			<td>{$item.name}</td>
-			<td>{$item.realname}</td>
+			<!-- <td>{trans('cust.type.'|cat:$item.type)}</td> -->
+			<td>{$item.contacts}</td>
 			<td>{$item.mobile}</td>
+			<td>{$item.user.name}</td>
 			<td>
-				<a class="btn btn-sm btn-warning" href="javascript:void(0)" onclick="assignUser({$item.id}, {$dept_id})"><i class="icon-login"></i> 指派</a>
+				<a class="btn btn-sm btn-warning" href="javascript:void(0)" onclick="assignCust({$item.id}, {$cust_id})"><i class="icon-login"></i> 指派</a>
 			</td>
 		</tr>
 		{foreachelse}
@@ -66,13 +70,13 @@ $(".checkboxes").click(function(){
 });
 
 //指派确认
-function assignUser(user_id, dept_id){
+function assignCust(user_id, cust_id){
 	var obj=$(this);
-	if( user_id > 0 && dept_id>0){
+	if( user_id > 0 && cust_id>0){
 		$.ajax({
 			type: 'POST',
-	        url: '{route("AssignUsers")}',
-	        data: { user_id : user_id, dept_id : dept_id },
+	        url: '{route("UserAssignCustSave")}',
+	        data: { user_id : user_id, cust_id : cust_id },
 	        dataType: 'text',
 	        success: function(data) {
 	        	alert("指派成功");
