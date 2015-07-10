@@ -22,11 +22,17 @@ class CreateTaskCustsTable extends Migration
             // 所属任务
             $table->morphs('task');
 
+            // 年月份，针对常规任务，临时任务为空
+            $table->string('ymonth')->default('');
+
             // 拜访者
             $table->unsignedInteger('user_id', false);
 
             // 商户ID
             $table->unsignedInteger('cust_id', false);
+
+            // 商户门店等级
+            $table->unsignedInteger('cust_level_id', false);
 
             // 拜访次数
             $table->tinyInteger('times')->default(0);

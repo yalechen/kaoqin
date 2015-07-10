@@ -53,8 +53,10 @@ class TaskGeneralTableSeeder extends Seeder
                     // 拜访明细
                     $task_cust = new TaskCust();
                     $task_cust->task()->associate($task_general);
+                    $task_cust->ymonth = date('Y-m');
                     $task_cust->user()->associate($cust->user);
                     $task_cust->cust()->associate($cust);
+                    $task_cust->custLevel()->associate($item);
                     $task_cust->times = $item->times;
                     $task_cust->save();
 
@@ -82,8 +84,10 @@ class TaskGeneralTableSeeder extends Seeder
                     // 拜访明细
                     $task_cust = new TaskCust();
                     $task_cust->task()->associate($task_general);
+                    $task_cust->ymonth = date('Y-m', strtotime('+1 month'));
                     $task_cust->user()->associate($cust->user);
                     $task_cust->cust()->associate($cust);
+                    $task_cust->custLevel()->associate($item);
                     $task_cust->times = $item->times;
                     $task_cust->save();
                 }

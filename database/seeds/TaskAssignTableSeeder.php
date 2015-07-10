@@ -54,6 +54,7 @@ class TaskAssignTableSeeder extends Seeder
                         $task_cust->task()->associate($task_assign);
                         $task_cust->user()->associate($user);
                         $task_cust->cust()->associate($cust);
+                        $task_cust->custLevel()->associate($cust->custLevel);
                         $task_cust->times = $times;
                         $task_cust->save();
                     }

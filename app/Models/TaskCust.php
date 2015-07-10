@@ -35,4 +35,12 @@ class TaskCust extends Model
     {
         return $this->belongsTo('App\Models\Cust');
     }
+
+    /**
+     * 所属商户等级
+     */
+    public function custLevel()
+    {
+        return $this->belongsTo('App\Models\CustLevel');
+    }
 }
