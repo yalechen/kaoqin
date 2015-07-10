@@ -18,17 +18,25 @@ class CreateTaskCustsTable extends Migration
             // 主键ID
             $table->increments('id');
 
-            //所属任务
+            // 所属任务
             $table->morphs('task');
 
-            //商户ID
-            $table->unsignedInteger('cust_id',false);
+            // 拜访者
+            $table->unsignedInteger('user_id', false);
 
-            //拜访次数
+            // 商户ID
+            $table->unsignedInteger('cust_id', false);
+
+            // 拜访次数
             $table->tinyInteger('times')->default(0);
 
-            //已拜访次数
+            // 已拜访次数
             $table->tinyInteger('visited_times')->default(0);
+
+            $table->unique([
+                'task_id',
+                'cust_id'
+            ]);
 
             $table->timestamps();
         });
