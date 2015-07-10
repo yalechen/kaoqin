@@ -757,6 +757,9 @@ Route::group([
 
             // 用户模块
             require __DIR__ . '/ApiRoutes/user.php';
+
+            // 任务模块
+            require __DIR__ . '/ApiRoutes/task.php';
         }
     )
 );

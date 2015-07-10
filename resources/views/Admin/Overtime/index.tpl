@@ -43,7 +43,7 @@
 						<th>原因</th>
 						<th>审核者</th>
 						<th>审核状态</th>
-						<th>创建日期</th>
+						<!-- <th>创建日期</th> -->
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -54,11 +54,13 @@
 						<td>{$item.user.realname}</td>
 						<td>{$item.start_time|date_format:"%Y-%m-%d %H:%M"}</td>
 						<td>{$item.end_time|date_format:"%Y-%m-%d %H:%M"}</td>
-						<td>{$item.hours}</td>
+						<td><span class="badge bg-success">{$item.hours}</span></td>
 						<td>{$item.reason|truncate:20:"...":true}</td>
-						<td>{$item.auditUser.name}</td>
-						<td>{trans('overtime.status.'|cat:$item.status)}</td>
-						<td>{$item.created_at}</td>
+						<td>{$item.auditUser.realname}</td>
+						<td>
+						<span class="label {if $item.status eq constant('App\Models\Overtime::STATUS_WAIT')}label-primary{elseif $item.status eq constant('App\Models\Overtime::STATUS_PASS')}label-success{else}label-danger{/if}">{trans('overtime.status.'|cat:$item.status)}</span>
+						</td>
+						<!-- <td>{$item.created_at}</td> -->
 						<td>
 							{if $item.status eq constant('App\Models\Overtime::STATUS_WAIT')}
 							<a class="btn btn-sm btn-success" data-toggle="modal" href="#AuditConfirmModal" onclick="audit({$item.id},'{$item.user.realname}')"><i class="icon-pin"></i> 加班审核</a>

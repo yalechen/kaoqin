@@ -27,6 +27,21 @@ class CreateTaskLogsTable extends Migration
             // 拜访的客户ID(只有常规任务，或者是指定任务)
             $table->unsignedInteger('cust_id')->default(0);
 
+            // 经度
+            $table->string('lng');
+
+            // 纬度
+            $table->string('lat');
+
+            //位置
+            $table->string('location');
+
+            //标题
+            $table->string('title');
+
+            //里程
+            $table->string('mileage');
+
             // 拜访次数
             //$table->tinyInteger('times');
 
