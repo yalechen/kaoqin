@@ -207,7 +207,7 @@ Route::group([
                     // 权限填充页
                     Route::get('seed', [
                         'as' => 'PurviewSeed',
-                        'name' => '权限填充页',
+                        'name' => '权限填充',
                         'parent' => 'SystemModule',
                         'uses' => 'PurviewController@getSeed'
                     ]);

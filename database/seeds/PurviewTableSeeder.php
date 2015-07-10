@@ -70,6 +70,12 @@ class PurviewTableSeeder extends Seeder
                         'sub_categorys' => array()
                     )
                 )
+            ),
+            array(
+                'name' => 'APP权限模块',
+                'key' => 'AppModule',
+                'useon' => Purview::USEON_APP,
+                'sub_categorys' => array()
             )
         );
 

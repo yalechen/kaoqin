@@ -308,13 +308,13 @@ class PurviewController extends BaseController
         $html = "";
         $sub = array_filter(array_fetch($list, 'sub_node'));
         if (empty($sub)) {
-            $html .= '<div style="margin-left: 10px;margin-top: 0px;">';
+            //$html .= '<div style="margin-left: 10px;margin-top: 0px;">';
             foreach ($list as $item) {
                 $html .= <<<HTML
 <span data-id='{$item['id']}' class='node' style='width: 220px; margin:10px 10px 10px 0px; font-size:13px;display: inline-block;cursor: pointer;' data-toggle='popover' data-placement='top'>{$item['name']}</span>
 HTML;
             }
-            $html .= '</div>';
+            //$html .= '</div>';
         } else {
             foreach ($list as $item) {
                 $level = count(array_filter(explode(':', $item['path']))) - 1;
@@ -329,7 +329,7 @@ HTML;
                     $sub_html = $this->returnTreeView($item['sub_node']);
                 }
                 $html .= <<<HTML
-<section class="panel"><header class="panel-heading" data-id='{$item['id']}'>{$item['name']}</header><div class="panel-body"><div style="margin-left: 10px;margin-top: 0px;{$style}">{$sub_html}</div></div></section>
+<section class="panel"><header class="panel-heading" data-id='{$item['id']}'><span data-id='{$item['id']}' class='node' data-toggle='popover' data-placement='top'>{$item['name']}</span></header><div class="panel-body"><div style="margin-left: 10px;margin-top: 0px;{$style}">{$sub_html}</div></div></section>
 HTML;
             }
         }
