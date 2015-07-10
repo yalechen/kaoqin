@@ -32,12 +32,12 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>编号</th>
+						<th>编号&nbsp;&nbsp;<i data-val="{$smarty.get.number}" data-sort="number" class="number_sort fa {if $smarty.get.number eq 'desc'}fa-sort-amount-desc{elseif $smarty.get.number eq 'asc'}fa-sort-amount-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
 						<th>名称</th>
 						<th>上级机构</th>
 						<th>所属区域</th>
 						<th>排序值 &nbsp;&nbsp;<i data-val="{$smarty.get.sort}" data-sort="sort" class="sort fa {if $smarty.get.sort eq 'desc'}fa-sort-amount-desc{elseif $smarty.get.sort eq 'asc'}fa-sort-amount-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
-						<th>创建日期 &nbsp;&nbsp;<i data-val="{$smarty.get.id}" data-sort="id" class="id_sort fa {if $smarty.get.sort eq 'desc'}fa-sort-amount-desc{elseif $smarty.get.sort eq 'asc'}fa-sort-amount-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
+						<th>创建日期 &nbsp;&nbsp;<i data-val="{$smarty.get.id}" data-sort="id" class="id_sort fa {if $smarty.get.id eq 'desc'}fa-sort-amount-desc{elseif $smarty.get.id eq 'asc'}fa-sort-amount-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -50,7 +50,7 @@
 							<td>{$item.name}</td>
 							<td>{$item->parentNode()->first()->name}</td>
 							<td>{$item->area}</td>
-							<td>{$item->sort}</td>
+							<td><span class="badge bg-success">{$item->sort}</span></td>
 							<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
 							<td>
 								<a class="btn btn-sm btn-primary" href="{route('OrgEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
@@ -101,7 +101,7 @@ function deleteConfirm(id, name){
 }
 
 //排序
-$(".sort,.id_sort").click(function() {
+$(".sort,.id_sort,.number_sort").click(function() {
     var url = "{route('OrgIndex', ['page' => $smarty.get.page, 'key' => $smarty.get.key, 'org_id' => $smarty.get.org_id])}";
     var val = $(this).attr('data-val');
     var sort = $(this).attr('data-sort');

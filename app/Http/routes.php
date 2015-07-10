@@ -631,6 +631,13 @@ Route::group([
                         'parent' => 'TaskModule',
                         'uses' => 'TaskGeneralController@index'
                     ]);
+                    // 常规任务详情
+                    Route::get('general/detail', [
+                        'as' => 'TaskGeneralDetail',
+                        'name' => '常规任务详情',
+                        'parent' => 'TaskGeneralIndex',
+                        'uses' => 'TaskGeneralController@detail'
+                    ]);
                     // 修改常规任务
                     Route::get('general/edit', [
                         'as' => 'TaskGeneralEdit',
@@ -738,28 +745,25 @@ Route::group([
 
 // 接口
 Route::group([
-        'prefix' => 'api',
-    ],
-    function () {
-        // 全局模块
-        require __DIR__ . '/ApiRoutes/file.php';
-    },
+    'prefix' => 'api'
+], function ()
+{
+    // 全局模块
+    require __DIR__ . '/ApiRoutes/file.php';
+},
 
-
-    //Api 控制器里
+    // Api 控制器里
     Route::group([
-            'prefix' => 'api',
-            'namespace' => 'Api'
-        ],
-        function () {
-            // 全局模块
-            require __DIR__ . '/ApiRoutes/global.php';
+        'prefix' => 'api',
+        'namespace' => 'Api'
+    ], function ()
+    {
+        // 全局模块
+        require __DIR__ . '/ApiRoutes/global.php';
 
-            // 用户模块
-            require __DIR__ . '/ApiRoutes/user.php';
+        // 用户模块
+        require __DIR__ . '/ApiRoutes/user.php';
 
-            // 任务模块
-            require __DIR__ . '/ApiRoutes/task.php';
-        }
-    )
-);
+        // 任务模块
+        require __DIR__ . '/ApiRoutes/task.php';
+    }));

@@ -51,7 +51,7 @@
 							<td>{$item.name}</td>
 							<td>{$item->org->name}</td>
 							<td><span class="toggle-status label {if $item.status eq constant('App\Models\Dept::STATUS_OFF')}label-danger{else}label-success{/if}" data-id="{$item.id}" data-status="{$item.status}">{trans('dept.status.'|cat:$item.status)}</span></td>
-							<td>{$item.sort}</td>
+							<td><span class="badge bg-success">{$item.sort}</span></td>
 							<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
 							<td>
 								<a class="btn btn-sm btn-info" data-toggle="modal" href="#UserModal" onclick="setUser({$item.id}, '{$item.name}')"><i class="icon-emoticon-user"></i> 指派员工</a>

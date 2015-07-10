@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\URL;
 use App\Models\Storage;
 use App\Models\Cust;
 use App\Models\TaskLog;
-use App\Models\TaskAssignCust;
+use App\Models\TaskCust;
 
 class TaskAssignController extends BaseController
 {
@@ -56,7 +56,8 @@ class TaskAssignController extends BaseController
             $data = TaskAssign::with('acceptUser')->find(Input::get('id'));
 
             // 已分配的商户门店
-            $task_custs = TaskAssignCust::whereTaskAssignId(Input::get('id'))->get();
+            $task_custs = TaskCust::whereTaskId(Input::get('id'))->whereTaskType($data->getMorphClass())
+                ->get();
 
             // 参考图
             $images_str = $data->image1_path . $data->image2_path . $data->image3_path . $data->image4_path . $data->image5_path;
@@ -192,16 +193,21 @@ class TaskAssignController extends BaseController
         $task_assign->save();
 
         // 先删除旧的商户门店(这边保证新商户门店都是正确的了)
-        TaskAssignCust::whereTaskAssignId($task_assign->id)->delete();
+        TaskCust::whereTaskId($task_assign->id)->whereTaskType($task_assign->getMorphClass())
+            ->delete();
         foreach ($arr as $key => $value) {
-            $task_assign_cust = TaskAssignCust::whereTaskAssignId(Input::get('id'))->whereCustId($key)->first();
-            if (is_null($task_assign_cust)) {
-                $task_assign_cust = new TaskAssignCust();
+            $task_cust = TaskCust::whereTaskId(Input::get('id'))->whereTaskType($task_assign->getMorphClass())
+                ->whereCustId($key)
+                ->first();
+            if (is_null($task_cust)) {
+                $task_cust = new TaskCust();
             }
-            $task_assign_cust->task()->associate($task_assign);
-            $task_assign_cust->cust_id = $key;
-            $task_assign_cust->times = $value;
-            $task_assign_cust->save();
+            $task_cust->task()->associate($task_assign);
+            $task_cust->user()->associate($task_assign->acceptUser);
+            $task_cust->cust_id = $key;
+            $task_cust->custLevel()->associate(Cust::find($key)->custLevel);
+            $task_cust->times = $value;
+            $task_cust->save();
         }
 
         return Redirect::route("TaskAssignIndex")->withMessageSuccess($id > 0 ? '修改成功' : '新增成功');

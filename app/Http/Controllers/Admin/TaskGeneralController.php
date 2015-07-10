@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\TaskGeneral;
+use App\Models\TaskCust;
 use Validator;
 use Input;
 use Auth;
@@ -37,12 +38,33 @@ class TaskGeneralController extends BaseController
         }
         // 按照完成度排序
         if (Input::has('rate')) {
-            $data->orderByRaw('`visited_times`/`times` '.Input::get('rate'));
+            $data->orderByRaw('`visited_times`/`times` ' . Input::get('rate'));
         }
 
         $data = $data->paginate(15);
         // 返回视图
         return v('index')->with(compact('data', 'cust_level'));
+    }
+
+    /**
+     * 查看详情
+     */
+    public function detail()
+    {
+        // 获取编辑信息
+        if (Input::has('id')) {
+            $task = TaskGeneral::find(Input::get('id'));
+            // 按照完成度排序
+            $data = TaskCust::with('user', 'custLevel')->whereTaskId(Input::get('id'))
+                ->whereTaskType($task->getMorphClass())
+                ->whereUserId($task->accept_user_id);
+            if (Input::has('rate')) {
+                $data->orderByRaw('`visited_times`/`times` ' . Input::get('rate'));
+            }
+            $data = $data->paginate(15);
+            return v('detail', compact('data', 'task'));
+        }
+        return Redirect::to(URL::previous())->withMessageError('任务不存在，请选择查看哪个常规任务');
     }
 
     /**

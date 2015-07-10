@@ -28,6 +28,8 @@ class OrgController extends BaseController
             $data = Org::orderBy('sort', Input::get('sort'));
         } elseif (Input::has('id')) {
             $data = Org::orderBy('id', Input::get('id'));
+        } elseif (Input::has('number')) {
+            $data = Org::orderBy('number', Input::get('number'));
         } else {
             $data = Org::latest();
         }

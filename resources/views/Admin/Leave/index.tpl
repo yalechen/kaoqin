@@ -33,7 +33,7 @@
 					<tr>
 						<th>#</th>
 						<th>姓名</th>
-						<th>假别</th>
+						<th>假别&nbsp;&nbsp;<i data-val="{$smarty.get.type}" data-sort="type" class="type_sort fa {if $smarty.get.type eq 'desc'}fa-sort-amount-desc{elseif $smarty.get.type eq 'asc'}fa-sort-amount-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
 						<th>开始时间</th>
 						<th>结束时间</th>
 						<th>请假天数&nbsp;&nbsp;<i data-val="{$smarty.get.days}" data-sort="days" class="days_sort fa {if $smarty.get.days eq 'desc'}fa-sort-numeric-desc{elseif $smarty.get.days eq 'asc'}fa-sort-numeric-asc{else}fa-arrows-v{/if}" style="cursor: pointer;"></i></th>
@@ -50,8 +50,8 @@
 						<td>{$item.leave_type_name}</td>
 						<td>{$item.start_time|date_format:"%Y-%m-%d %H:%M"}</td>
 						<td>{$item.end_time|date_format:"%Y-%m-%d %H:%M"}</td>
-						<td>{$item.days}</td>
-						<td>{$item.hours}</td>
+						<td><span class="badge bg-success">{$item.days}</span></td>
+						<td><span class="badge bg-success">{$item.hours}</span></td>
 						<td>{$item.created_at}</td>
 						<td>
 							<a class="btn btn-sm btn-primary" href="{route('LeaveEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
@@ -109,7 +109,7 @@ $('.form_datetime').datetimepicker({
 })
 
 //排序
-$(".sort,.days_sort,.hours_sort").click(function() {
+$(".sort,.days_sort,.hours_sort,.type_sort").click(function() {
     var url = "{route('LeaveIndex', ['page' => $smarty.get.page,'leave_type_id' => $smarty.get.leave_type_id,'start_time' => $smarty.get.start_time,'end_time' => $smarty.get.end_time])}";
     var val = $(this).attr('data-val');
     var sort = $(this).attr('data-sort');

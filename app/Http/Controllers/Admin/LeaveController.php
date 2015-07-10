@@ -162,6 +162,9 @@ class LeaveController extends BaseController
         if (Input::has('hours')) {
             $data = Leave::orderBy('hours', Input::get('hours'));
         }
+        if (Input::has('type')) {
+            $data = Leave::orderBy('leave_type_id', Input::get('type'));
+        }
 
         if (Input::has('leave_type_id')) {
             $data->whereLeaveTypeId(Input::get('leave_type_id'));

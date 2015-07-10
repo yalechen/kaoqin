@@ -27,9 +27,9 @@
 					{foreach $data as $item}
 					<tr>
 						<td>{$item.id}</td>
-						<td>{$item.name}</td>
-						<td>{$item.times}</td>
-						<td>{$item.sort}</td>
+						<td><span class="badge bg-warning">{$item.name}</span></td>
+						<td><span class="badge bg-inverse">{$item.times}</span></td>
+						<td><span class="badge bg-success">{$item.sort}</span></td>
 						<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
 						<td>
 							<a class="btn btn-sm btn-primary" href="{route('CustLevelEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
@@ -60,7 +60,7 @@
                 <p>您确定要删除“<strong id="cust_level_name"></strong>”商户等级吗？</p>
             </div>
             <div class="modal-footer">
-            	<form method="post" action="{route('CustDelete')}">
+            	<form method="post" action="{route('CustLevelDelete')}">
 	            	<input type="hidden" id="id" name="id" value="" >
 	                <button class="btn btn-danger" type="submit"> 确认</button>
                 </form>

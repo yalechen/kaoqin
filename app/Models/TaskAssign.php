@@ -31,10 +31,10 @@ class TaskAssign extends Model
     /**
      * 所拜访的商户门店
      */
-//     public function custs()
-//     {
-//         return $this->hasMany('App\Models\TaskAssignCust');
-//     }
+    public function custs()
+    {
+        return $this->morphMany('App\Models\TaskCust', 'task');
+    }
 
 /**
  * 参考图片1

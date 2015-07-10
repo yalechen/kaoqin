@@ -61,8 +61,8 @@
 						<td>{$item.number}</td>
 						<td>{$item.name}</td>
 						<td><span class="toggle-status label {if $item.type eq constant('App\Models\Cust::TYPE_STORE')}label-danger{else}label-success{/if}" data-id="{$item.id}" data-status="{$item.status}">{trans('cust.type.'|cat:$item.type)}</span></td>
-						<td>{$item.custLevel.name}</td>
-						<td>{$item.user.name}</td>
+						<td><span class="badge bg-warning">{$item.custLevel.name}</span></td>
+						<td>{$item.user.realname}</td>
 						<td>{$item.contacts}</td>
 						<td>{$item.mobile}</td>
 						<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>

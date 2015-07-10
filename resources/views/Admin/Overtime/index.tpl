@@ -63,7 +63,7 @@
 						<!-- <td>{$item.created_at}</td> -->
 						<td>
 							{if $item.status eq constant('App\Models\Overtime::STATUS_WAIT')}
-							<a class="btn btn-sm btn-success" data-toggle="modal" href="#AuditConfirmModal" onclick="audit({$item.id},'{$item.user.realname}')"><i class="icon-pin"></i> 加班审核</a>
+							<a class="btn btn-sm btn-success" data-toggle="modal" href="#AuditConfirmModal" onclick="audit({$item.id},'{$item.user.realname}')"><i class="icon-pin"></i> 审核</a>
 							{/if}
 							<a class="btn btn-sm btn-primary" href="{route('OvertimeEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
 							<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id})"><i class="icon-trash"></i> 删除</a>

@@ -60,8 +60,8 @@
 								{$cust.cust.name}|{/if}
 							{/foreach}
 						</td>*}
-						<td>{$item.times}/{$item.visited_times}</td>
-						<td>{intval($item.visited_times*100/$item.times)}%</td>
+						<td><span class="badge bg-info">{$item.times}/{$item.visited_times}</span></td>
+						<td><span class="badge bg-success">{intval($item.visited_times*100/$item.times)}%</span></td>
 						<td><span class="toggle-status label {if constant('App\Models\TaskAssign::STATUS_STARTING') eq $item.status}label-danger{else}label-success{/if}">{trans('task_assign.status.'|cat:$item.status)}</span></td>
 						<td>
 							<a class="btn btn-sm btn-primary" href="{route('TaskAssignEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
