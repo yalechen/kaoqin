@@ -31,13 +31,15 @@ class ConfigsController extends BaseController
             'favicon' => 'required',
             'sms_sn' => 'required',
             'sms_pwd' => 'required',
-            'sms_signature' => 'required'
+            'sms_signature' => 'required',
+            'sign_cust_range' => 'required',
         ], [
             'logo.required' => '系统Logo路径不能为空',
             'favicon.required' => '系统图标路径不能为空',
             'sms_sn.required' => '短信通道SN不能为空',
             'sms_pwd.required' => '短信通道密码不能为空',
-            'sms_signature.required' => '短信签名不能为空'
+            'sms_signature.required' => '短信签名不能为空',
+            'sign_cust_range.required' => '门店签到范围限制不能为空',
         ]);
 
         if ($validator->fails()) {
@@ -53,6 +55,7 @@ class ConfigsController extends BaseController
         $setup['sms_pwd'] = Input::get('sms_pwd', '');
         $setup['sms_signature'] = trim(Input::get('sms_signature'));
         $setup['sms_pretend'] = Input::get('sms_pretend', '');
+        $setup['sign_cust_range'] = Input::get('sign_cust_range', 0);
 
         file_put_contents(config_path('base_info.php'), '<?php return ' . var_export($setup, true) . '; ');
 

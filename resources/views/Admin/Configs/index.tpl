@@ -49,6 +49,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="sms_pretend" class="control-label col-lg-2">门店签到范围限制(米)</label>
+                            <div class="col-lg-10">
+                                <input class="form-control " id="sms_pretend" type="number" name="sign_cust_range" value="{old('sign_cust_range')|default:$data.sign_cust_range}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <div class="col-lg-offset-2 col-lg-10">
                                 <button class="btn btn-success" type="submit"> 保存</button>
                                 <button class="btn btn-default" type="button" onclick="javascript:history.go(-1)"> 取消</button>
