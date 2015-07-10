@@ -4,6 +4,7 @@ use App\Models\TaskGeneral;
 use App\Models\User;
 use App\Models\CustLevel;
 use App\Models\Cust;
+use App\Models\TaskCust;
 
 class TaskGeneralTableSeeder extends Seeder
 {
@@ -15,6 +16,7 @@ class TaskGeneralTableSeeder extends Seeder
     {
         // 清空表数据
         TaskGeneral::truncate();
+        TaskCust::truncate();
 
         // 常规任务表通过每天自动根据门店等级来分配
         $cust_level = CustLevel::all();
@@ -48,6 +50,13 @@ class TaskGeneralTableSeeder extends Seeder
                         $task_general->times_remark = times_remark($sum_times);
                         $task_general->save();
                     }
+                    // 拜访明细
+                    $task_cust = new TaskCust();
+                    $task_cust->task()->associate($task_general);
+                    $task_cust->user()->associate($cust->user);
+                    $task_cust->cust()->associate($cust);
+                    $task_cust->times = $item->times;
+                    $task_cust->save();
 
                     // 生成下个月
                     $task_general = TaskGeneral::whereAcceptUserId($cust->user_id)->whereCustLevelId($item->id)
@@ -70,6 +79,13 @@ class TaskGeneralTableSeeder extends Seeder
                         $task_general->times_remark = times_remark($sum_times);
                         $task_general->save();
                     }
+                    // 拜访明细
+                    $task_cust = new TaskCust();
+                    $task_cust->task()->associate($task_general);
+                    $task_cust->user()->associate($cust->user);
+                    $task_cust->cust()->associate($cust);
+                    $task_cust->times = $item->times;
+                    $task_cust->save();
                 }
             }
         }

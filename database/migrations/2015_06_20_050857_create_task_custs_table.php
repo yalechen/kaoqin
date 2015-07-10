@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\Models\TaskCust;
 
 class CreateTaskCustsTable extends Migration
 {
@@ -33,8 +34,15 @@ class CreateTaskCustsTable extends Migration
             // 已拜访次数
             $table->tinyInteger('visited_times')->default(0);
 
+            // 状态
+            $table->enum('status', [
+                TaskCust::STATUS_STARTING,
+                TaskCust::STATUS_END
+            ])->default(TaskCust::STATUS_STARTING);
+
             $table->unique([
                 'task_id',
+                'task_type',
                 'cust_id'
             ]);
 

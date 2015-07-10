@@ -1,7 +1,7 @@
 <?php
 use Illuminate\Database\Seeder;
 use App\Models\TaskAssign;
-use App\Models\TaskAssignCust;
+use App\Models\TaskCust;
 use App\Models\User;
 use App\Models\Cust;
 use App\Models\TaskLog;
@@ -16,7 +16,6 @@ class TaskAssignTableSeeder extends Seeder
     {
         // 清空表数据
         TaskAssign::truncate();
-        TaskAssignCust::truncate();
         TaskLog::truncate();
 
         // 给每个用户添加1-3个临时任务
@@ -35,7 +34,7 @@ class TaskAssignTableSeeder extends Seeder
                 }
                 $task_assign->remark = '';
                 $task_assign->start_time = '2015-07-13 09:10:00';
-                $task_assign->end_time = '2015-07-14 18:10:00';
+                $task_assign->end_time = '2015-07-18 18:10:00';
                 $task_assign->times = mt_rand(1, 3);
                 $user->image1_path = '/upload_files/init/fa24a612110135f42e8a3b1ec5db9239.png';
                 $task_assign->save();
@@ -46,13 +45,17 @@ class TaskAssignTableSeeder extends Seeder
                     // 拜访次数和总拜访次数
                     $times = mt_rand(1, 3);
                     $cust = Cust::find(mt_rand(1, 20));
-                    if (is_null(TaskAssignCust::whereTaskAssignId($task_assign->id)->whereCustId($cust->id)->first())) {
+                    if (is_null(TaskCust::whereTaskId($task_assign->id)->whereTaskType($task_assign->getMorphClass())
+                        ->whereUserId($user->id)
+                        ->whereCustId($cust->id)
+                        ->first())) {
                         $all_times += $times;
-                        $task_assign_cust = new TaskAssignCust();
-                        $task_assign_cust->task()->associate($task_assign);
-                        $task_assign_cust->cust()->associate($cust);
-                        $task_assign_cust->times = $times;
-                        $task_assign_cust->save();
+                        $task_cust = new TaskCust();
+                        $task_cust->task()->associate($task_assign);
+                        $task_cust->user()->associate($user);
+                        $task_cust->cust()->associate($cust);
+                        $task_cust->times = $times;
+                        $task_cust->save();
                     }
                 }
                 $task_assign->times = $all_times;
