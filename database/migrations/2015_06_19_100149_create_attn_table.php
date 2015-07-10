@@ -56,10 +56,10 @@ class CreateAttnTable extends Migration
             ])->default(Attn::STATUS_NG);
 
             // 里程数
-            $table->tinyInteger('mileage')->default(0);
+            $table->decimal('mileage',8,2)->default(0);
 
             // 巡店数
-            $table->tinyInteger('visited_custs')->default(0);
+            $table->integer('visited_custs')->default(0);
 
             $table->timestamps();
         });

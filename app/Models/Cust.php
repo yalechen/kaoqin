@@ -2,6 +2,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\TaskLog;
+use Auth;
 
 class Cust extends Model
 {
@@ -63,5 +65,24 @@ class Cust extends Model
     public function getLogoPathAttribute()
     {
         return config('app.url') . str_replace('\\', '/', $this->attributes['logo_path']);
+    }
+
+    /**
+     * 门店签到状态
+     */
+    public function getCustSignStatusAttribute(){
+
+        $task_log = TaskLog::where('visit_date',date('Y-m-d',time()))
+            ->where('cust_id',$this->attributes['id'])
+            ->where('user_id',Auth::user()->id)
+            ->first();
+        if(is_null($task_log)){
+            $sign_status = 'N';
+        }else{
+            $sign_status = 'Y';
+        }
+
+        return $sign_status;
+
     }
 }

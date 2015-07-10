@@ -46,7 +46,7 @@ class CreateTaskLogsTable extends Migration
             //$table->tinyInteger('times');
 
             // 拜访时间
-            $table->timestamp('visit_time');
+            $table->date('visit_date');
 
             // 备注
             $table->string('remark');

@@ -34,14 +34,14 @@
  *              type="string"
  *          ),
  *          @SWG\Parameter(
- *              name="lat",
+ *              name="lng",
  *              description="经度",
  *              paramType="query",
  *              required=true,
  *              type="string"
  *          ),
  *          @SWG\Parameter(
- *              name="lng",
+ *              name="lat",
  *              description="纬度",
  *              paramType="query",
  *              required=true,
@@ -64,6 +64,7 @@
  */
 Route::post('/task/sign', [
     'as' => 'ApiTaskSign',
+    'middleware' => 'auth',
     'uses' => 'TaskController@postTaskSign'
 ]);
 
@@ -95,7 +96,7 @@ Route::post('/task/sign', [
  *          ),
  *          @SWG\Parameter(
  *              name="name",
- *              description="门店名称搜索",
+ *              description="门店名称搜索,搜索员工负责门店，不限制位置",
  *              paramType="query",
  *              required=false,
  *              type="string"
@@ -108,8 +109,9 @@ Route::post('/task/sign', [
  *   )
  * )
  */
-Route::post('/task/assign_cust_list', [
+Route::get('/task/assign_cust_list', [
     'as' => 'ApiAssignCustList',
+    'middleware' => 'auth',
     'uses' => 'TaskController@getAssignCustList'
 ]);
 
@@ -155,7 +157,7 @@ Route::post('/task/assign_cust_list', [
  *          ),
  *          @SWG\Parameter(
  *              name="mileage",
- *              description="里程，距上次打卡之间的里程",
+ *              description="里程(单位：公里)，距上次打卡之间的里程",
  *              paramType="query",
  *              required=true,
  *              type="string"
@@ -170,5 +172,6 @@ Route::post('/task/assign_cust_list', [
  */
 Route::post('/task/assign_cust_sign', [
     'as' => 'ApiAssignCustSign',
+    'middleware' => 'auth',
     'uses' => 'TaskController@postAssignCustSign'
 ]);

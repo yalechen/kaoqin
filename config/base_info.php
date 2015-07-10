@@ -5,5 +5,5 @@
   'sms_pwd' => '333334444',
   'sms_signature' => '[智慧码云名片]',
   'sms_pretend' => '',
-  'sign_cust_range' => '500',
+  'sign_cust_range' => '5000',
 ); 
