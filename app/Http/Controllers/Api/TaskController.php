@@ -123,8 +123,7 @@ class TaskController extends Controller
         } else {
             $attn = new Attn();
             $attn->user_id = Auth::user()->id;
-            $attn->ymonth = date('Ym', time());
-            $attn->day = date('d', time());
+            $attn->date = date('Y-m-d', time());
             $attn->weekday = date('w', time());
 
             if (Input::get('type') == TaskSign::TYPE_ON) {

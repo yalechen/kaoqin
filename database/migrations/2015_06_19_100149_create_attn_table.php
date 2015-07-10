@@ -22,11 +22,13 @@ class CreateAttnTable extends Migration
             // 员工ID
             $table->unsignedInteger('user_id');
 
-            // 月份
+            /*// 月份
             $table->string('ymonth');
 
             // 哪天
-            $table->tinyInteger('day');
+            $table->tinyInteger('day');*/
+
+            $table->date('date');
 
             // 星期几
             $table->string('weekday');
