@@ -329,4 +329,110 @@ class TaskController extends Controller
     }
 
 
+    /**
+     * 外勤日志列表
+     */
+    public function getTaskLogList()
+    {
+        $validator = Validator::make(Input::all(), [
+            'limit' => 'integer',
+            'page' => 'integer',
+            'date' => 'date',
+
+        ], [
+            'limit.integer' => '每页数量需为整数',
+            'page.integer' => '页码需为整数',
+            'date.date' => '日期格式不合法',
+        ]);
+
+        if ($validator->fails()) {
+            // 验证失败，返回错误信息。
+            return $this->apiReturn(402, $validator->messages()->first());
+        }
+
+        $attn_list = Attn::where('user_id',Auth::user()->id);
+
+        //日期搜索
+        if(Input::has('date')){
+            $attn_list =  $attn_list->where('date',Input::get('date'));
+        }
+
+        $limit = Input::get('limit');
+
+        if(Input::has('limit')){
+            $attn_list =  $attn_list->latest()->paginate($limit)->getCollection();;
+        }else{
+            $attn_list =  $attn_list->latest()->get();
+        }
+
+        $list = [];
+
+        //处理返回结果
+        if(! $attn_list->isEmpty()){
+            foreach($attn_list as $key=>$item){
+                $list[$key]['id'] = $item->id;
+                $list[$key]['date'] = $item->date;
+                $list[$key]['mileage'] = $item->mileage;
+                $list[$key]['visited_custs'] = $item->visited_custs;
+            }
+        }
+
+        $count = Attn::where('user_id',Auth::user()->id)->count();
+
+        return $this->apiReturn(402, "外勤日志列表",$list,$count);
+    }
+
+
+    /**
+     * 外勤日志详情
+     */
+    public function getTaskLogDetail()
+    {
+        $validator = Validator::make(Input::all(), [
+            'visit_date' => 'date|exists:task_logs,visit_date,user_id,'.Auth::user()->id,
+
+        ], [
+            'visit_date.date' => '日期格式不合法',
+            'visit_date.exists' => '该日期没有外勤日志详情',
+        ]);
+
+        if ($validator->fails()) {
+            // 验证失败，返回错误信息。
+            return $this->apiReturn(402, $validator->messages()->first());
+        }
+
+        $attn = Attn::where('user_id',Auth::user()->id)->where('date',Input::get('visit_date'))->first();
+
+        //当日统计信息
+        $info = [];
+        //当日日志详情
+        $list = [];
+
+        if(! is_null($attn)){
+            $info['date'] = $attn->date;
+            $info['mileage'] = $attn->mileage;
+            $info['visited_custs'] = $attn->visited_custs;
+        }
+
+        $logs = TaskLog::where('user_id',Auth::user()->id)->where('visit_date',date('Y-m-d',time()))->orderBy('id','asc')->get();
+
+        //处理返回结果
+        if(! $logs->isEmpty()){
+            foreach($logs as $key=>$item){
+                $list[$key]['id'] = $item->id;
+                $list[$key]['visit_date'] = $item->visit_date;
+                $list[$key]['title'] = $item->title;
+                $list[$key]['location'] = $item->location;
+                $list[$key]['mileage'] = $item->mileage;
+                $list[$key]['created_at'] = date_format($item->created_at,'H:i:s');
+            }
+        }
+
+        $rs['info'] = $info;
+        $rs['log_list'] = $list;
+
+        return $this->apiReturn(402, "外勤日志详情",$rs);
+
+    }
+
 }

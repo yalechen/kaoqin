@@ -175,3 +175,82 @@ Route::post('/task/assign_cust_sign', [
     'middleware' => 'auth',
     'uses' => 'TaskController@postAssignCustSign'
 ]);
+
+
+/**
+ *
+ * @SWG\Api(
+ *   path="/task/log_list",
+ *   @SWG\Operation(
+ *      method="GET",
+ *      nickname="ApiTaskLogList",
+ *      summary="外勤日志列表",
+ *      notes="外勤日志列表",
+ *      type="TaskGeneral",
+ *      @SWG\Parameters(
+ *          @SWG\Parameter(
+ *              name="date",
+ *              description="日期",
+ *              paramType="query",
+ *              required=false,
+ *              type="string"
+ *          ),
+ *          @SWG\Parameter(
+ *              name="limit",
+ *              description="每页显示数量",
+ *              paramType="query",
+ *              type="string"
+ *          ),
+ *          @SWG\Parameter(
+ *              name="page",
+ *              description="页码",
+ *              paramType="query",
+ *              type="string"
+ *          )
+ *      ),
+ *      @SWG\ResponseMessages(
+ *          @SWG\ResponseMessage(code=402, message="帐号或密码不正确。"),
+ *          @SWG\ResponseMessage(code=200, message="成功。")
+ *      )
+ *   )
+ * )
+ */
+Route::get('/task/log_list', [
+    'as' => 'ApiTaskLogList',
+    'middleware' => 'auth',
+    'uses' => 'TaskController@getTaskLogList'
+]);
+
+
+
+/**
+ *
+ * @SWG\Api(
+ *   path="/task/log_detail",
+ *   @SWG\Operation(
+ *      method="GET",
+ *      nickname="ApiTaskLogDetail",
+ *      summary="外勤日志详情",
+ *      notes="外勤日志详情",
+ *      type="TaskGeneral",
+ *      @SWG\Parameters(
+ *          @SWG\Parameter(
+ *              name="visit_date",
+ *              description="日期",
+ *              paramType="query",
+ *              required=true,
+ *              type="string"
+ *          )
+ *      ),
+ *      @SWG\ResponseMessages(
+ *          @SWG\ResponseMessage(code=402, message="帐号或密码不正确。"),
+ *          @SWG\ResponseMessage(code=200, message="成功。")
+ *      )
+ *   )
+ * )
+ */
+Route::get('/task/log_detail', [
+    'as' => 'ApiTaskLogDetail',
+    'middleware' => 'auth',
+    'uses' => 'TaskController@getTaskLogDetail'
+]);
