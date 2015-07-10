@@ -39,7 +39,7 @@ class Purview extends Model
      */
     public function roles()
     {
-        return $this->belongsToMany('Role', 'role_purviews', 'purview_id', 'role_id');
+        return $this->belongsToMany('App\Models\Role', 'role_purviews', 'purview_id', 'role_id');
     }
 
 /**

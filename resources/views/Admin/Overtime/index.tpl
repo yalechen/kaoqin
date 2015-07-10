@@ -127,7 +127,7 @@
 		                        	</div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="exampleInputPassword1">备注</label>
+                                    <label for="remark">备注</label>
                                     <textarea class="form-control " id="remark" name="remark" required></textarea>
                                 </div>
 							</div>

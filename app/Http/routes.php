@@ -204,6 +204,13 @@ Route::group([
                         'parent' => 'PurviewIndex',
                         'uses' => 'PurviewController@delete'
                     ]);
+                    // 权限信息
+                    Route::get('info', [
+                        'as' => 'PurviewInfo',
+                        'name' => '权限信息',
+                        'parent' => 'PurviewInfo',
+                        'uses' => 'PurviewController@info'
+                    ]);
                     // 权限填充页
                     Route::get('seed', [
                         'as' => 'PurviewSeed',

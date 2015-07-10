@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Role;
 use App\Models\Purview;
 use Validator;
 use Input;
@@ -10,6 +9,7 @@ use Redirect;
 use Response;
 use URL;
 use Illuminate\Support\Facades\Route;
+use Exception;
 
 class PurviewController extends BaseController
 {
@@ -49,66 +49,114 @@ class PurviewController extends BaseController
     {
         // 验证输入。
         $validator = Validator::make(Input::all(), [
-            'key' => 'required|min:3|max:30|alpha_dash|unique:roles,key,' . Input::get('id'),
-            'name' => 'required|min:3|max:30',
-            'status' => 'required|in:' . Role::STATUS_OFF . ',' . Role::STATUS_ON
+            'id' => 'exists:purviews',
+            'name' => 'required',
+            'key' => 'required|min:3|max:50|alpha_dash|unique:purviews,key,' . Input::get('id'),
+            'controller' => 'required_if:type,' . Purview::TYPE_ACTION,
+            'action' => 'required_if:type,' . Purview::TYPE_ACTION,
+            'type' => 'required|in:' . Purview::TYPE_ACTION . ',' . Purview::TYPE_MENU,
+            'useon' => 'required|in:' . Purview::USEON_PC . ',' . Purview::USEON_APP,
+            'status' => 'required|in:' . Purview::STATUS_ON . ',' . Purview::STATUS_OFF,
+            'sort' => 'integer'
         ], [
+            'id.exists' => '修改的权限不存在',
+            'name.required' => '权限名称不能为空',
             'key.required' => '标识key不能为空',
             'key.alpha_dash' => '标识key仅允许字母、数字、破折号（-）以及底线（_）',
             'key.unique' => '标识key已存在',
             'key.min' => '标识key不能少于3个字符',
             'key.max' => '标识key不能多余30个字符',
-            'name.required' => '角色名称不能为空',
-            'name.min' => '角色名称必须最少要有3个字符',
-            'name.max' => '角色名称不能大于30个字符',
+            'controller.required_if' => '当类型为功能方法时，控制器不能为空',
+            'action.required_if' => '当类型为功能方法时，方法不能为空',
+            'type.required' => '权限类型不能为空',
+            'type.in' => '权限类型仅能为功能方法或菜单',
+            'useon.required' => '使用平台不能为空',
+            'useon.in' => '使用平台仅能为PC或APP',
             'status.required' => '状态不能为空',
             'status.in' => '状态仅能为开启和关闭'
         ]);
         if ($validator->fails()) {
-            return Redirect::to(URL::previous())->withMessageError($validator->messages()
-                ->all())
-                ->withInput();
+            return Response::make($validator->messages()->first(), 402);
         }
-        // 获取Logo图片信息
-        $id = Input::has('id') ? Input::get('id') : 0;
-        $role = Role::findOrNew(Input::get('id'));
-        $role->key = Input::get('key');
-        $role->name = trim(Input::get('name'));
-        $role->remark = Input::get('remark', '');
-        $role->status = Input::get('status');
-        $role->save();
 
-        return Redirect::route("RoleIndex")->withMessageSuccess($id > 0 ? '修改成功' : '新增成功');
+        // 获取已经有相同的路由名的路由规则
+        $have_key = Purview::whereKey(Input::get('key'));
+        // 防止上级指派为自己
+        if (! is_null($have_key->first())) {
+            if ($have_key->first()->id == Input::get('parent_id')) {
+                return Response::make('亲，上级权限不能指派成自己哦', 402);
+            }
+        }
+
+        Input::has('id') && $have_key->where('id', '!=', Input::get('id'));
+        $have_key = $have_key->get();
+
+        // 如果有相同的路由名，则附加条件必须不能相同
+        $query = [];
+        if (! $have_key->isEmpty()) {
+            if (Input::has('condition')) {
+                parse_str(Input::get('condition'), $query);
+                count(array_filter($query)) < 1 && $query = [
+                    Input::get('condition')
+                ];
+            }
+            foreach ($have_key as $key) {
+                if (empty($query)) {
+                    if (empty($key->condition)) {
+                        return Response::make('已经有相同的权限规则了！', 402);
+                    }
+                } else {
+                    $diff = array_diff_assoc($query, $key->condition);
+                    if (empty($diff)) {
+                        return Response::make('已经有相同的权限规则了！', 402);
+                    }
+                }
+            }
+        }
+
+        try {
+            $purview = Purview::findOrNew(Input::get('id', 0));
+            $purview->name = Input::get('name');
+            $purview->key = Input::get('key');
+            $purview->parent_id = Input::get('parent_id');
+            $purview->controller = Input::get('controller');
+            $purview->action = Input::get('action');
+            $purview->type = Input::get('type');
+            $purview->useon = Input::get('useon');
+            $purview->condition = Input::get('condition', '');
+            $purview->status = Input::get('status');
+            $purview->sort = Input::get('sort', 100);
+            $purview->save();
+        } catch (Exception $e) {
+            return Response::make($e->getMessage(), 402);
+        }
+
+        return $purview;
     }
 
     /**
-     * 删除角色
+     * 删除权限
      */
     public function delete()
     {
         // 验证数据。
         $validator = Validator::make(Input::all(), [
-            'id' => 'required|exists:roles,id'
+            'id' => 'required|exists:purviews,id'
         ], [
-            'id.required' => '所选角色不能为空',
-            'id.exists' => '所选角色不存在'
+            'id.required' => '所选权限不能为空',
+            'id.exists' => '所选权限不存在'
         ]);
         if ($validator->fails()) {
-            return Redirect::route("RoleIndex")->withMessageError($validator->messages()
-                ->all());
+            return Response::make($validator->messages()->first(), 402);
         }
 
-        // 查看是否有指派了权限或者角色
-        $role = Role::find(Input::get('id'));
-        if (empty($role->users) !== true) {
-            return Redirect::route("RoleIndex")->withMessageError('角色已经被指派了用户，请先取消指派，在进行删除');
+        // 查看此权限是否被指派到角色中了
+        $temp = Purview::find(Input::get('id'))->roles()->get();
+        if (! $temp->isEmpty()) {
+            return Response::make('此权限已经被指派到角色，不能被删除', 402);
         }
-        if (empty($role->purviews) !== true) {
-            return Redirect::route("RoleIndex")->withMessageError('角色已经被指派了权限，请先取消指派，在进行删除');
-        }
-
-        $role->delete();
-        return Redirect::to(URL::previous())->withMessageSuccess('删除成功');
+        Purview::find(Input::get('id'))->delete();
+        return 'success';
     }
 
     /**
@@ -264,9 +312,7 @@ class PurviewController extends BaseController
     public function info()
     {
         $validator = Validator::make(Input::all(), [
-            'id' => [
-                'required'
-            ]
+            'id' => 'required|exists:purviews,id'
         ]);
 
         if ($validator->fails()) {
@@ -274,11 +320,6 @@ class PurviewController extends BaseController
         }
 
         $purview_info = Purview::find(Input::get('id'))->toArray();
-        if (! empty($purview_info['condition']) && current(array_keys($purview_info['condition'])) == 0) {
-            $purview_info['condition'] = current($purview_info['condition']);
-        } else {
-            $purview_info['condition'] = http_build_query($purview_info['condition']);
-        }
         return $purview_info;
     }
 
@@ -308,28 +349,24 @@ class PurviewController extends BaseController
         $html = "";
         $sub = array_filter(array_fetch($list, 'sub_node'));
         if (empty($sub)) {
-            //$html .= '<div style="margin-left: 10px;margin-top: 0px;">';
             foreach ($list as $item) {
                 $html .= <<<HTML
-<span data-id='{$item['id']}' class='node' style='width: 220px; margin:10px 10px 10px 0px; font-size:13px;display: inline-block;cursor: pointer;' data-toggle='popover' data-placement='top'>{$item['name']}</span>
+<span data-id='{$item['id']}' class='node' style='margin:10px 40px 10px 40px; font-size:13px;display: inline-block;cursor: pointer;' data-toggle='popover'>{$item['name']}</span>
 HTML;
             }
-            //$html .= '</div>';
         } else {
             foreach ($list as $item) {
                 $level = count(array_filter(explode(':', $item['path']))) - 1;
                 $style = "";
-                //$span_style = "width: 150px;";
                 if (empty($level)) {
                     $style = "border:1px solid #EBEBEB;";
-                    //$span_style = "background:#ECECEC;font-weight:bolder;padding:5px 15px;";
                 }
                 $sub_html = '';
                 if (! empty($item['sub_node'])) {
                     $sub_html = $this->returnTreeView($item['sub_node']);
                 }
                 $html .= <<<HTML
-<section class="panel"><header class="panel-heading" data-id='{$item['id']}'><span data-id='{$item['id']}' class='node' data-toggle='popover' data-placement='top'>{$item['name']}</span></header><div class="panel-body"><div style="margin-left: 10px;margin-top: 0px;{$style}">{$sub_html}</div></div></section>
+<section class="panel"><header class="panel-heading" data-id='{$item['id']}'><span data-id='{$item['id']}' class='node' data-toggle='popover'>{$item['name']}</span></header><div class="panel-body"><div style="margin-left: 10px;margin-top: 0px;{$style}">{$sub_html}</div></div></section>
 HTML;
             }
         }
