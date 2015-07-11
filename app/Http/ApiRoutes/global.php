@@ -87,6 +87,40 @@ Route::POST('captcha/check_sms_vcode', [
 
 
 
+/**
+ *
+ * @SWG\Api(
+ *   path="/feedback/add",
+ *   @SWG\Operation(
+ *      method="POST",
+ *      nickname="PostAddFeedback",
+ *      summary="添加反馈",
+ *      notes="添加意见反馈",
+ *      type="Feedback",
+ *      @SWG\Parameters(
+ *          @SWG\Parameter(
+ *              name="content",
+ *              description="内容",
+ *              paramType="query",
+ *              required=true,
+ *              type="string"
+ *          ),
+ *      ),
+ *      @SWG\ResponseMessages(
+ *          @SWG\ResponseMessage(code=402, message="表单验证失败。"),
+ *          @SWG\ResponseMessage(code=200, message="成功。")
+ *      )
+ *   )
+ * )
+ */
+Route::post('/feedback/add', [
+    'as' => 'PostAddFeedback',
+    'middleware'=>'auth',
+    'uses' => 'FeedbackController@postAddFeedback'
+]);
+
+
+
 
 
 

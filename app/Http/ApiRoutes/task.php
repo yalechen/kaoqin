@@ -72,7 +72,7 @@ Route::post('/task/sign', [
 /**
  *
  * @SWG\Api(
- *   path="/task/assign_cust_list",
+ *   path="/task/cust_list",
  *   @SWG\Operation(
  *      method="GET",
  *      nickname="ApiAssignCustList",
@@ -96,7 +96,14 @@ Route::post('/task/sign', [
  *          ),
  *          @SWG\Parameter(
  *              name="name",
- *              description="门店名称搜索,搜索员工负责门店，不限制位置",
+ *              description="门店名称搜索（搜索员工负责门店，不限制位置）",
+ *              paramType="query",
+ *              required=false,
+ *              type="string"
+ *          ),
+ *          @SWG\Parameter(
+ *              name="level_id",
+ *              description="门店等级搜索（搜索员工负责门店，不限制位置）",
  *              paramType="query",
  *              required=false,
  *              type="string"
@@ -109,7 +116,7 @@ Route::post('/task/sign', [
  *   )
  * )
  */
-Route::get('/task/assign_cust_list', [
+Route::get('/task/cust_list', [
     'as' => 'ApiAssignCustList',
     'middleware' => 'auth',
     'uses' => 'TaskController@getAssignCustList'
@@ -119,7 +126,7 @@ Route::get('/task/assign_cust_list', [
 /**
  *
  * @SWG\Api(
- *   path="/task/assign_cust_sign",
+ *   path="/task/cust_sign",
  *   @SWG\Operation(
  *      method="POST",
  *      nickname="ApiAssignCustSign",
@@ -170,7 +177,7 @@ Route::get('/task/assign_cust_list', [
  *   )
  * )
  */
-Route::post('/task/assign_cust_sign', [
+Route::post('/task/cust_sign', [
     'as' => 'ApiAssignCustSign',
     'middleware' => 'auth',
     'uses' => 'TaskController@postAssignCustSign'
@@ -185,7 +192,7 @@ Route::post('/task/assign_cust_sign', [
  *      method="GET",
  *      nickname="ApiTaskLogList",
  *      summary="外勤日志列表",
- *      notes="外勤日志列表",
+ *      notes="用于外勤日志列表，里程统计页面",
  *      type="TaskGeneral",
  *      @SWG\Parameters(
  *          @SWG\Parameter(
@@ -282,5 +289,29 @@ Route::get('/task/index', [
     'as' => 'ApiTaskLogIndex',
     'middleware' => 'auth',
     'uses' => 'TaskController@getTaskLogIndex'
+]);
+
+
+/**
+ *
+ * @SWG\Api(
+ *   path="/task/visit",
+ *   @SWG\Operation(
+ *      method="GET",
+ *      nickname="ApiTaskVisit",
+ *      summary="我的巡店任务",
+ *      notes="每月固定的巡店任务",
+ *      type="TaskGeneral",
+ *      @SWG\ResponseMessages(
+ *          @SWG\ResponseMessage(code=402, message="帐号或密码不正确。"),
+ *          @SWG\ResponseMessage(code=200, message="成功。")
+ *      )
+ *   )
+ * )
+ */
+Route::get('/task/visit', [
+    'as' => 'ApiTaskVisit',
+    'middleware' => 'auth',
+    'uses' => 'TaskController@getTaskVisit'
 ]);
 
