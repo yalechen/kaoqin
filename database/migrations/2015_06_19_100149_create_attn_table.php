@@ -22,13 +22,14 @@ class CreateAttnTable extends Migration
             // 员工ID
             $table->unsignedInteger('user_id');
 
-            /*// 月份
-            $table->string('ymonth');
-
-            // 哪天
-            $table->tinyInteger('day');*/
-
+            //日期
             $table->date('date');
+
+            // 月份
+            //$table->string('ymonth');
+
+            //哪天
+            $table->tinyInteger('day');
 
             // 星期几
             $table->string('weekday');
@@ -61,7 +62,7 @@ class CreateAttnTable extends Migration
             $table->decimal('mileage',8,2)->default(0);
 
             // 巡店数
-            $table->integer('visited_custs')->default(0);
+            $table->tinyInteger('visited_custs')->default(0);
 
             $table->timestamps();
         });

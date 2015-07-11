@@ -337,12 +337,15 @@ class TaskController extends Controller
         $validator = Validator::make(Input::all(), [
             'limit' => 'integer',
             'page' => 'integer',
-            'date' => 'date',
+            'from_date' => 'date',
+            'to_date' => 'date',
+
 
         ], [
             'limit.integer' => '每页数量需为整数',
             'page.integer' => '页码需为整数',
-            'date.date' => '日期格式不合法',
+            'from_date.date' => '开始日期格式不合法',
+            'to_date.date' => '结束日期格式不合法',
         ]);
 
         if ($validator->fails()) {
@@ -352,9 +355,15 @@ class TaskController extends Controller
 
         $attn_list = Attn::where('user_id',Auth::user()->id);
 
-        //日期搜索
-        if(Input::has('date')){
-            $attn_list =  $attn_list->where('date',Input::get('date'));
+
+        //开始日期
+        if (Input::has('from_date')) {
+            $attn_list = $attn_list->where('date', '>=' , Input::get('from_date'));
+        }
+
+        //结束日期
+        if (Input::has('to_date')) {
+            $attn_list = $attn_list->where('date', '<=' , Input::get('to_date'));
         }
 
         $limit = Input::get('limit');
@@ -405,8 +414,6 @@ class TaskController extends Controller
 
         //当日统计信息
         $info = [];
-        //当日日志详情
-        $list = [];
 
         if(! is_null($attn)){
             $info['date'] = $attn->date;
@@ -414,7 +421,23 @@ class TaskController extends Controller
             $info['visited_custs'] = $attn->visited_custs;
         }
 
-        $logs = TaskLog::where('user_id',Auth::user()->id)->where('visit_date',date('Y-m-d',time()))->orderBy('id','asc')->get();
+        //签到记录
+        $task_logs = $this->_getTaskLogs(Input::get('visit_date'));
+
+        $rs['info'] = $info;
+        $rs['log_list'] = $task_logs;
+
+        return $this->apiReturn(402, "外勤日志详情",$rs);
+
+    }
+
+    /**
+     * 获取今天签到记录
+     */
+    public function _getTaskLogs($date){
+        $logs = TaskLog::where('user_id',Auth::user()->id)->where('visit_date',$date)->orderBy('id','asc')->get();
+
+        $list = [];
 
         //处理返回结果
         if(! $logs->isEmpty()){
@@ -428,10 +451,7 @@ class TaskController extends Controller
             }
         }
 
-        $rs['info'] = $info;
-        $rs['log_list'] = $list;
-
-        return $this->apiReturn(402, "外勤日志详情",$rs);
+        return $list;
 
     }
 

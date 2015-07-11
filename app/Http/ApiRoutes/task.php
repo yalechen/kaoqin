@@ -189,8 +189,15 @@ Route::post('/task/assign_cust_sign', [
  *      type="TaskGeneral",
  *      @SWG\Parameters(
  *          @SWG\Parameter(
- *              name="date",
- *              description="日期",
+ *              name="from_date",
+ *              description="开始日期",
+ *              paramType="query",
+ *              required=false,
+ *              type="string"
+ *          ),
+ *          @SWG\Parameter(
+ *              name="to_date",
+ *              description="结束日期",
  *              paramType="query",
  *              required=false,
  *              type="string"
