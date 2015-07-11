@@ -101,8 +101,7 @@ class TaskController extends Controller
 
         //新增，修改考勤统计表
         $attn_info = Attn::where('user_id', Auth::user()->id)
-            ->where('ymonth', date('Ym', time()))
-            ->where('day', date('d', time()))
+            ->where('date', date('Y-m-d', time()))
             ->first();
 
         if (!is_null($attn_info)) {
@@ -125,6 +124,8 @@ class TaskController extends Controller
             $attn->user_id = Auth::user()->id;
             $attn->date = date('Y-m-d', time());
             $attn->weekday = date('w', time());
+            $attn->day = date('d', time());
+            $attn->ymonth = date('Y-m', time());
 
             if (Input::get('type') == TaskSign::TYPE_ON) {
                 $attn->is_sign_on = 1;
@@ -269,8 +270,7 @@ class TaskController extends Controller
 
         //判断是否有上班打卡
         $attn_info = Attn::where('user_id', Auth::user()->id)
-            ->where('ymonth', date('Ym', time()))
-            ->where('day', date('d', time()))
+            ->where('date', date('Y-m-d', time()))
             ->where('is_sign_on', 1)
             ->first();
 
@@ -324,7 +324,70 @@ class TaskController extends Controller
 
         DB::commit();
 
+        if ($task_log->task) {
+            unset($task_log->task);
+        }
+
         return $this->apiReturn(402, "巡店签到成功",$task_log);
+
+    }
+
+    /**
+     * 外勤日志首页
+     */
+    public function getTaskLogIndex()
+    {
+        $sum_need_visit_times =  TaskGeneral::where('accept_user_id',Auth::user()->id)
+            ->where('ymonth',date('Y-m',time()))
+            ->sum('times');
+
+        $sum_visited_times =  TaskGeneral::where('accept_user_id',Auth::user()->id)
+            ->where('ymonth',date('Y-m',time()))
+            ->sum('visited_times');
+
+
+        if($sum_need_visit_times <= 0 ){
+            return $this->apiReturn(402, "没有巡店任务");
+        }
+
+        //当日统计信息
+        $today_info = [];
+
+        //本月统计信息
+        $month_info = [];
+
+        //完成率
+        $complete_ratio = ($sum_visited_times / $sum_need_visit_times) * 100  ;
+
+
+        //月总里程
+        $month_mileage = Attn::where('user_id',Auth::user()->id)
+            ->where('ymonth',date('Y-m',time()))
+            ->sum('mileage');
+
+        $month_info['complete_ratio'] = round($complete_ratio,2)."%";
+        $month_info['month_mileage'] = $month_mileage;
+
+
+        //今日签到统计信息
+        $attn = Attn::where('user_id',Auth::user()->id)
+                ->where('date',date('Y-m-d',time()))->first();
+
+
+        if(! is_null($attn)){
+            $today_info['date'] = $attn->date;
+            $today_info['mileage'] = $attn->mileage;
+            $today_info['visited_custs'] = $attn->visited_custs;
+        }
+
+        //签到记录
+        $task_logs = $this->_getTaskLogs(date('Y-m-d',time()), 'desc');
+
+        $rs['month_info'] = $month_info;
+        $rs['today_info'] = $today_info;
+        $rs['log_list'] = $task_logs;
+
+        return $this->apiReturn(402, "外勤日志首页信息",$rs);
 
     }
 
@@ -434,8 +497,12 @@ class TaskController extends Controller
     /**
      * 获取今天签到记录
      */
-    public function _getTaskLogs($date){
-        $logs = TaskLog::where('user_id',Auth::user()->id)->where('visit_date',$date)->orderBy('id','asc')->get();
+    public function _getTaskLogs($date , $orderBy = "asc"){
+
+        if($orderBy == "desc"){
+            $orderBy = "desc";
+        }
+        $logs = TaskLog::where('user_id',Auth::user()->id)->where('visit_date',$date)->orderBy('id',$orderBy)->get();
 
         $list = [];
 

@@ -34,14 +34,14 @@
  *              type="string"
  *          ),
  *          @SWG\Parameter(
- *              name="lng",
+ *              name="lat",
  *              description="经度",
  *              paramType="query",
  *              required=true,
  *              type="string"
  *          ),
  *          @SWG\Parameter(
- *              name="lat",
+ *              name="lng",
  *              description="纬度",
  *              paramType="query",
  *              required=true,
@@ -228,8 +228,6 @@ Route::get('/task/log_list', [
     'uses' => 'TaskController@getTaskLogList'
 ]);
 
-
-
 /**
  *
  * @SWG\Api(
@@ -261,3 +259,28 @@ Route::get('/task/log_detail', [
     'middleware' => 'auth',
     'uses' => 'TaskController@getTaskLogDetail'
 ]);
+
+
+/**
+ *
+ * @SWG\Api(
+ *   path="/task/index",
+ *   @SWG\Operation(
+ *      method="GET",
+ *      nickname="ApiTaskLogIndex",
+ *      summary="外勤日志首页",
+ *      notes="外勤日志首页",
+ *      type="TaskGeneral",
+ *      @SWG\ResponseMessages(
+ *          @SWG\ResponseMessage(code=402, message="帐号或密码不正确。"),
+ *          @SWG\ResponseMessage(code=200, message="成功。")
+ *      )
+ *   )
+ * )
+ */
+Route::get('/task/index', [
+    'as' => 'ApiTaskLogIndex',
+    'middleware' => 'auth',
+    'uses' => 'TaskController@getTaskLogIndex'
+]);
+
