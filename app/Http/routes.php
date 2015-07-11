@@ -162,6 +162,20 @@ Route::group([
                         'parent' => 'RoleIndex',
                         'uses' => 'RoleController@delete'
                     ]);
+                    // 角色成员指派
+                    Route::get('user', [
+                        'as' => 'RoleUsers',
+                        'name' => '角色成员指派列表',
+                        'parent' => 'RoleIndex',
+                        'uses' => 'RoleController@users'
+                    ]);
+                    // 角色成员指派
+                    Route::post('user', [
+                        'as' => 'RoleUserAssign',
+                        'name' => '角色成员指派',
+                        'parent' => 'RoleIndex',
+                        'uses' => 'RoleController@userAssign'
+                    ]);
                 });
 
                 // 权限管理

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Role;
+use App\Models\User;
 use Validator;
 use Input;
 use Auth;
@@ -118,5 +119,76 @@ class RoleController extends BaseController
 
         $role->delete();
         return Redirect::to(URL::previous())->withMessageSuccess('删除成功');
+    }
+
+    /**
+     * 角色成员指派页面
+     */
+    public function users()
+    {
+        // 验证数据。
+        $validator = Validator::make(Input::all(), [
+            'role_id' => 'required|exists:roles,id,status,' . Role::STATUS_ON
+        ], [
+            'role_id.required' => '所选角色不能为空',
+            'role_id.exists' => '所选角色不存在或状态已被禁用'
+        ]);
+        if ($validator->fails()) {
+            return Redirect::to(URL::previous())->withMessageError($validator->messages()
+                ->all());
+        }
+
+        // 所有状态为在职的成员
+        if (Input::has('number')) {
+            $users = User::whereStatus(User::STATUS_ON)->orderBy('number', Input::get('number'))->paginate(15);
+        } else {
+            $users = User::whereStatus(User::STATUS_ON)->paginate(15);
+        }
+
+        // 此角色已指派的成员
+        $role_id = Input::get('role_id');
+        $role = Role::find($role_id);
+        $user_ids = Role::find($role_id)->users()
+            ->lists('user_id')
+            ->all();
+
+        return v('users', compact('role_id', 'role', 'users', 'user_ids'));
+    }
+
+    /**
+     * 角色成员指派
+     */
+    public function userAssign()
+    {
+        $validator = Validator::make(Input::all(), [
+            'user_id' => 'required|exists:users,id,status,' . User::STATUS_ON,
+            'role_id' => 'required|exists:roles,id,status,' . Role::STATUS_ON
+        ], [
+            'user_id.required' => '用户不能为空',
+            'user_id.exists' => '用户不存在或已离职',
+            'role_id.required' => '被指派角色不能为空',
+            'role_id.exists' => '被指派角色不存在或已禁用'
+        ]);
+        if ($validator->fails()) {
+            return Response::make($validator->messages()->first(), 402);
+        }
+
+        // 查看是否已经指派
+        $role = Role::find(Input::get('role_id'));
+        $temp = $role->users()
+            ->whereUserId(Input::get('user_id'))
+            ->first();
+        if (is_null($temp)) {
+            $role->users()->attach(Input::get('user_id'));
+            return '指派成功';
+        } else {
+            $role->users()->detach(Input::get('user_id'));
+            return '取消指派成功';
+        }
+
+        // $ids = explode(',', Input::get('user_id'));
+        // $users = User::whereIn('id', $ids)->get();
+        // 重新指派用户
+        // Role::find(Input::get('role_id'))->users()->sync($ids);
     }
 }

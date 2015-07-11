@@ -41,12 +41,13 @@
 						<td><span class="toggle-status label {if $item.status eq constant('App\Models\Role::STATUS_OFF')}label-danger{else}label-success{/if}" data-id="{$item.id}" data-status="{$item.status}">{trans('role.status.'|cat:$item.status)}</span></td>
 						<td>{$item.created_at|date_format:"%Y-%m-%d"}</td>
 						<td>
+							<a class="btn btn-sm btn-success" href="{route('RoleUsers', ['role_id'=>$item.id])}"><i class="icon-user"></i> 成员</a>
 							<a class="btn btn-sm btn-primary" href="{route('RoleEdit', ['id'=>$item.id])}"><i class="icon-pencil"></i> 编辑</a>
 							<a class="btn btn-sm btn-danger" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id}, '{$item.name}')"><i class="icon-trash"></i> 删除</a>
 						</td>
 					</tr>
 					{foreachelse}
-						<tr><td colspan="12" class="text-center">无相关数据！</td></tr>
+						<tr><td colspan="7" class="text-center">无相关数据！</td></tr>
 					{/foreach}
 				</tbody>
 			</table>
