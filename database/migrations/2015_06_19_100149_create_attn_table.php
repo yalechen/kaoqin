@@ -26,7 +26,7 @@ class CreateAttnTable extends Migration
             $table->date('date');
 
             // 月份
-            //$table->string('ymonth');
+            $table->string('ymonth')->index();
 
             //哪天
             $table->tinyInteger('day');
