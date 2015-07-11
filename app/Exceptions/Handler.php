@@ -39,6 +39,18 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if ($this->isHttpException($e)) {
+            $statusCode = $e->getStatusCode();
+            switch ($statusCode) {
+            	case '404':
+//             	    return response()->view('Admin/404', [
+//             	    'content' => Auth::guest() ? view('errors/404_guest') : view('errors/404')
+//             	    ]);
+            	    return response()->view('Admin/404');
+            	case '500':
+            	    return response()->view('Admin/500');
+            }
+        }
         return parent::render($request, $e);
     }
 }

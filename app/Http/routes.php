@@ -645,20 +645,6 @@ Route::group([
                         'parent' => 'TaskGeneralIndex',
                         'uses' => 'TaskGeneralController@detail'
                     ]);
-                    // 修改常规任务
-                    Route::get('general/edit', [
-                        'as' => 'TaskGeneralEdit',
-                        'name' => '常规任务编辑',
-                        'parent' => 'TaskGeneralIndex',
-                        'uses' => 'TaskGeneralController@edit'
-                    ]);
-                    // 常规任务修改
-                    Route::post('general/save', [
-                        'as' => 'TaskGeneralSave',
-                        'name' => '常规任务保存',
-                        'parent' => 'TaskGeneralIndex',
-                        'uses' => 'TaskGeneralController@save'
-                    ]);
                     // 删除常规任务数据
                     Route::post('general/delete', [
                         'as' => 'TaskGeneralDelete',
