@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\CustLevel;
 use App\Models\TaskGeneral;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -192,6 +193,18 @@ class TaskController extends Controller
         $cust_ids = [];
         $cust_list = [];
 
+        //按照经纬度查询
+        foreach($task_cust_list as $key => $id){
+            $cust = Cust::find($id);
+            if($cust->lat && $cust->lng){
+                $distinct = $this->getDistance($cust->lat,$cust->lng,Input::get('lat'),Input::get('lng'));
+                //后台设置签到距离范围内，显示门店
+                if($sign_cust_range >= $distinct  ){
+                    $cust_ids[] = $id;
+                }
+            }
+        }
+
 
         if(Input::has('name')){
             //按照门店名称查询
@@ -201,20 +214,17 @@ class TaskController extends Controller
                     $q->where('name','like','%'.Input::get('name').'%');
                 })
                 ->lists('cust_id');
-
-        }else{
-            //按照经纬度查询
-            foreach($task_cust_list as $key => $id){
-                $cust = Cust::find($id);
-                if($cust->lat && $cust->lng){
-                    $distinct = $this->getDistance($cust->lat,$cust->lng,Input::get('lat'),Input::get('lng'));
-                    //后台设置签到距离范围内，显示门店
-                    if($sign_cust_range >= $distinct  ){
-                        $cust_ids[] = $id;
-                    }
-                }
-            }
         }
+
+        //门店等级搜索
+        if(Input::has('level_id')){
+            //按照门店名称查询
+            $cust_ids = TaskCust::where('user_id',Auth::user()->id)
+                ->where('ymonth',date('Y-m',time()))
+                ->where('cust_level_id',Input::get('level_id'))
+                ->lists('cust_id');
+        }
+
 
         if(count($cust_ids)){
             foreach($cust_ids as $key => $id){
@@ -224,7 +234,8 @@ class TaskController extends Controller
                 $cust_list[$key]['number'] = $cust->number;
                 $cust_list[$key]['lat'] = $cust->lat;
                 $cust_list[$key]['lng'] = $cust->lng;
-                $cust_list[$key]['cust_level_id'] = $cust->custLevel->name;
+                $cust_list[$key]['cust_level_id'] = $cust->custLevel->id;
+                $cust_list[$key]['cust_level_name'] = $cust->custLevel->name;
                 $cust_list[$key]['sign_status'] = $cust->CustSignStatus;
                 $cust_list[$key]['province'] = $cust->province ? $cust->province->name : "";
                 $cust_list[$key]['city'] = $cust->city ? $cust->city->name : "";
@@ -347,7 +358,10 @@ class TaskController extends Controller
 
 
         if($sum_need_visit_times <= 0 ){
-            return $this->apiReturn(402, "没有巡店任务");
+            $complete_ratio = 0;
+        }else{
+            //完成率
+            $complete_ratio = ($sum_visited_times / $sum_need_visit_times) * 100  ;
         }
 
         //当日统计信息
@@ -355,10 +369,6 @@ class TaskController extends Controller
 
         //本月统计信息
         $month_info = [];
-
-        //完成率
-        $complete_ratio = ($sum_visited_times / $sum_need_visit_times) * 100  ;
-
 
         //月总里程
         $month_mileage = Attn::where('user_id',Auth::user()->id)
@@ -519,6 +529,72 @@ class TaskController extends Controller
         }
 
         return $list;
+
+    }
+
+
+    /**
+     * 我的巡店任务
+     */
+    public function getTaskVisit()
+    {
+        $sum_need_visit_times =  TaskGeneral::where('accept_user_id',Auth::user()->id)
+            ->where('ymonth',date('Y-m',time()))
+            ->sum('times');
+
+        $sum_visited_times =  TaskGeneral::where('accept_user_id',Auth::user()->id)
+            ->where('ymonth',date('Y-m',time()))
+            ->sum('visited_times');
+
+
+        if($sum_need_visit_times <= 0 ){
+            $complete_ratio = 0;
+        }else{
+            //完成率
+            $complete_ratio = ($sum_visited_times / $sum_need_visit_times) * 100  ;
+        }
+
+        //按门店等级统计信息
+        $task_list = [];
+
+        //本月统计信息
+        $month_info = [];
+
+        //月总里程
+        $month_mileage = Attn::where('user_id',Auth::user()->id)
+            ->where('ymonth',date('Y-m',time()))
+            ->sum('mileage');
+
+        $month_info['complete_ratio'] = round($complete_ratio,2)."%";
+        $month_info['month_mileage'] = $month_mileage;
+
+
+        //按门店等级遍历任务
+        $cust_level = CustLevel::all();
+
+        if(! $cust_level->isEmpty()){
+            foreach($cust_level as $key => $item){
+                $task_general = TaskGeneral::where('cust_level_id',$item->id)
+                    ->where('accept_user_id',Auth::user()->id)
+                    ->where('ymonth',date('Y-m',time()))
+                    ->first();
+
+                $task_list[$key]['level_id']  = $item->id;
+                $task_list[$key]['level_name']  = $item->name;
+                $task_list[$key]['times']  = $item->times;
+
+                if(is_null($task_general)){
+                    $task_list[$key]['cust_count']  = 0;
+                }else{
+                    $task_list[$key]['cust_count']  = $task_general->custs;
+                }
+            }
+        }
+
+        $rs['month_info'] = $month_info;
+        $rs['task_list'] = $task_list;
+
+        return $this->apiReturn(402, "我的巡店任务",$rs);
 
     }
 
