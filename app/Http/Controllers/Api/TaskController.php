@@ -426,6 +426,25 @@ class TaskController extends Controller
             return $this->apiReturn(402, $validator->messages()->first());
         }
 
+        //统计信息
+        $info = [];
+
+        //列表信息
+        $list = [];
+
+
+        //里程统计
+        if (Input::has('from_date') && Input::has('to_date')) {
+            $mileage = Attn::where('user_id', Auth::user()->id)
+                ->where('date', '>=' , Input::get('from_date'))
+                ->where('date', '<=' , Input::get('to_date'))
+                ->sum('mileage');
+
+            $info['from_date'] = Input::get('from_date');
+            $info['to_date'] = Input::get('to_date');
+            $info['mileage'] = $mileage;
+        }
+
         $attn_list = Attn::where('user_id',Auth::user()->id);
 
 
@@ -447,7 +466,7 @@ class TaskController extends Controller
             $attn_list =  $attn_list->latest()->get();
         }
 
-        $list = [];
+
 
         //处理返回结果
         if(! $attn_list->isEmpty()){
@@ -461,7 +480,10 @@ class TaskController extends Controller
 
         $count = Attn::where('user_id',Auth::user()->id)->count();
 
-        return $this->apiReturn(402, "外勤日志列表",$list,$count);
+        $rs['info'] = $info;
+        $rs['list'] = $list;
+
+        return $this->apiReturn(402, "外勤日志列表",$rs,$count);
     }
 
 

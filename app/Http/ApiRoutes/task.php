@@ -192,7 +192,7 @@ Route::post('/task/cust_sign', [
  *      method="GET",
  *      nickname="ApiTaskLogList",
  *      summary="外勤日志列表",
- *      notes="外勤日志列表",
+ *      notes="用于外勤日志列表，里程统计页面",
  *      type="TaskGeneral",
  *      @SWG\Parameters(
  *          @SWG\Parameter(
