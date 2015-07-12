@@ -138,21 +138,27 @@ class RoleController extends BaseController
                 ->all());
         }
 
-        // 所有状态为在职的成员
+        // 所有状态为在职的成员,当页的所有用户ID
+        $user = User::whereStatus(User::STATUS_ON);
         if (Input::has('number')) {
-            $users = User::whereStatus(User::STATUS_ON)->orderBy('number', Input::get('number'))->paginate(15);
+            $users = $user->orderBy('number', Input::get('number'))->paginate(15);
+            $user_ids = $users->lists('id')->all();
         } else {
-            $users = User::whereStatus(User::STATUS_ON)->paginate(15);
+            $users = $user->paginate(15);
+            $user_ids = $users->lists('id')->all();
         }
+        $user_ids_str = implode(',', $user_ids);
 
-        // 此角色已指派的成员
+        // 当页中此角色已指派的成员ID
         $role_id = Input::get('role_id');
         $role = Role::find($role_id);
-        $user_ids = Role::find($role_id)->users()
+        $assigned_user_ids = Role::find($role_id)->users()
+            ->whereIn('user_id', $user_ids)
             ->lists('user_id')
             ->all();
+        $assigned_user_ids_str = implode(',', $assigned_user_ids);
 
-        return v('users', compact('role_id', 'role', 'users', 'user_ids'));
+        return v('users', compact('role_id', 'role', 'users', 'user_ids', 'assigned_user_ids', 'user_ids_str', 'assigned_user_ids_str'));
     }
 
     /**
@@ -162,12 +168,15 @@ class RoleController extends BaseController
     {
         $validator = Validator::make(Input::all(), [
             'user_id' => 'required|exists:users,id,status,' . User::STATUS_ON,
-            'role_id' => 'required|exists:roles,id,status,' . Role::STATUS_ON
+            'role_id' => 'required|exists:roles,id,status,' . Role::STATUS_ON,
+            'flag' => 'required|in:1,2'
         ], [
             'user_id.required' => '用户不能为空',
             'user_id.exists' => '用户不存在或已离职',
             'role_id.required' => '被指派角色不能为空',
-            'role_id.exists' => '被指派角色不存在或已禁用'
+            'role_id.exists' => '被指派角色不存在或已禁用',
+            'flag.required' => '指派方式不能为空',
+            'flag.in' => '指派方式错误'
         ]);
         if ($validator->fails()) {
             return Response::make($validator->messages()->first(), 402);
@@ -175,20 +184,41 @@ class RoleController extends BaseController
 
         // 查看是否已经指派
         $role = Role::find(Input::get('role_id'));
-        $temp = $role->users()
-            ->whereUserId(Input::get('user_id'))
-            ->first();
-        if (is_null($temp)) {
-            $role->users()->attach(Input::get('user_id'));
-            return '指派成功';
+        if (Input::get('flag') == 1) {
+            // 单个指派
+            $temp = $role->users()
+                ->whereUserId(Input::get('user_id'))
+                ->first();
+            if (is_null($temp)) {
+                $role->users()->attach(Input::get('user_id'));
+                return '指派成功';
+            } else {
+                $role->users()->detach(Input::get('user_id'));
+                return '取消指派成功';
+            }
         } else {
-            $role->users()->detach(Input::get('user_id'));
-            return '取消指派成功';
+            // 批量指派，同时要传当页的所有用户ID，因为可能存在page=1指派了几个，到page=2又指派了一些，那page=1是否就不存在了
+            // 所以要只针对当页的用户ID做增删
+            if (Input::has('all_user_ids')) {
+                $user_id = explode(',', Input::get('user_id'));
+                $all_user_ids = explode(',', Input::get('all_user_ids'));
+                foreach ($all_user_ids as $uid) {
+                    if (in_array($uid, $user_id)) {
+                        $uid = intval($uid);
+                        $temp = $role->users()
+                            ->whereUserId($uid)
+                            ->first();
+                        if (is_null($temp)) {
+                            $role->users()->attach($uid);
+                        }
+                    } else {
+                        $uid = intval($uid);
+                        $role->users()->detach($uid);
+                    }
+                }
+                return '批量指派成功';
+            }
+            return '批量指派不成功，因为当页用户不存在';
         }
-
-        // $ids = explode(',', Input::get('user_id'));
-        // $users = User::whereIn('id', $ids)->get();
-        // 重新指派用户
-        // Role::find(Input::get('role_id'))->users()->sync($ids);
     }
 }

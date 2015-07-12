@@ -35,7 +35,7 @@
 				</thead>
 				<tbody>
 					{foreach $users as $item}
-					{if in_array($item.id,$user_ids)}{assign 'flag' 1}{else}{assign 'flag' 0}{/if}
+					{if in_array($item.id,$assigned_user_ids)}{assign 'flag' 1}{else}{assign 'flag' 0}{/if}
 					<tr>
 						<td><input type="checkbox" class="checkboxes" value="{$item.id}" {if $flag eq 1}checked{/if} /></td>
 						<td>{$item.id}</td>
@@ -55,7 +55,8 @@
 			</table>
 			<div>
 				<div class="col-lg-3" style="margin: 20px 0px; text-align:left;">
-					<button type="button" class="btn btn-primary">批量指派</button>
+					<button type="button" class="btn btn-primary" id="multiAssignBtn" onclick="multiAssign({$role_id},'{$role.name}')">单页批量指派</button>
+					<input type="hidden" name="ids" id="ids" value="{$assigned_user_ids_str}"/>
 				</div>
 				<div class="col-lg-9" style="text-align:right;">{$users->appends(['role_id'=>$role_id,'key' => $smarty.get.key])->render()}</div>
 			</div>
@@ -66,18 +67,20 @@
 
 {block script} 
 <script type="text/javascript">
-//确认
+//确认 flag=1标识单个指派
 function userAssign(role_id,role_name, user_id,real_name,flag){
 	var desc='指派';
 	if(flag==1){
 		var desc='取消指派';
+		//取消选中复选框
+		//$(this).parent().parent().find(".checkboxes").prop('checked',false);
 	}
 	if(role_id>0 && user_id>0){
 		iconfirm('确认要给<b>"'+role_name+'"</b>角色<b>'+desc+'"'+real_name+'"</b>用户吗？', function() {
 			$.ajax({
 				type: 'POST',
 		        url: '{route("RoleUserAssign")}',
-		        data: { role_id : role_id, user_id : user_id },
+		        data: { role_id : role_id, user_id : user_id, flag:1 },
 		        dataType: 'text',
 		        success: function(data) {
 		        	ialert(data);
@@ -98,16 +101,51 @@ $("#checkAll").click(function(){
     if ($(this).attr("checked")) {
     	$(this).prop('checked',true);
         $(".checkboxes").prop('checked',true);
-        
-        //$("#ids").val(ids_clone);
+        //添加当页全部用户ID
+        $("#ids").val('{$user_ids_str}');
     } else {
     	$(this).prop('checked',false);
         $(".checkboxes").prop('checked',false);
         //清空ids
-        var ids=new Array();
-        $("#ids").val(ids);
+        $("#ids").val('');
     }
 });
+
+//单个复选框选择时，移除和添加元素
+$(".checkboxes").click(function(){
+	nids=new Array();
+	$(".checkboxes").each(function(){
+		if($(this).attr("checked")){
+			nids.push($(this).val());
+			$("#ids").val(nids);
+		}
+	});
+});
+
+//批量指派用户 flag=2标识批量指派
+function multiAssign(role_id,role_name){
+	var user_ids=$("#ids").val();
+	var all_user_ids='{$user_ids_str}';
+	if(user_ids!='' && role_id>0 && all_user_ids!=''){
+		iconfirm('确认要给<b>"'+role_name+'"</b>角色批量指派此页中勾选的这些用户吗？', function() {
+			$.ajax({
+				type: 'POST',
+		        url: '{route("RoleUserAssign")}',
+		        data: { role_id : role_id, user_id : user_ids, all_user_ids : all_user_ids, flag:2 },
+		        dataType: 'text',
+		        success: function(data) {
+		        	ialert(data);
+		        	window.location.reload();
+		        },
+		        error: function(xhq){
+		        	ialert(xhq.responseText);
+		        }
+		    });
+        });
+	}else{
+		ialert('参数错误，请选择角色和用户');
+	}
+};
 
 //排序
 $(".number_sort").click(function() {
