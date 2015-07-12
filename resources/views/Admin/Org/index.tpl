@@ -57,6 +57,8 @@
 								<a class="btn btn-danger btn-sm" data-toggle="modal" href="#DeleteConfirmModal" onclick="deleteConfirm({$item.id}, '{$item.name}')"><i class="icon-trash"></i> 删除</a>
 							</td>
 						</tr>
+						{foreachelse}
+							<tr><td colspan="8" class="text-center">无相关数据！</td></tr>
 						{/foreach}
 					{/if}
 				</tbody>

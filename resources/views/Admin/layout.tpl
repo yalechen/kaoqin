@@ -142,7 +142,6 @@
 <!--common scripts for all pages-->
 <script type="text/javascript" src="{asset('js/scripts.js')}"></script>
 <script type="text/javascript" src="{asset('js/ajaxfileupload.js')}"></script>
-{block script}{/block}
 <script type="text/javascript">
 $(document).ready(function() {
     //countTo
@@ -156,12 +155,12 @@ $(document).ready(function() {
         singleItem : true,
         autoPlay:true
     }); */
-    
-    function ialert(msg) {
-        $("#alertMessage").html(msg);
-        $("#alertModal").modal('show');
-    }
 });
+
+function ialert(msg) {
+    $("#alertMessage").html(msg);
+    $("#alertModal").modal('show');
+}
 
 function iconfirm(msg, func)
 {
@@ -180,5 +179,6 @@ function iconfirm(msg, func)
     //})
 }
 </script>
+{block script}{/block}
 </body>
 </html>
