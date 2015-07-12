@@ -56,6 +56,7 @@ class ConfigsController extends BaseController
         $setup['sms_signature'] = trim(Input::get('sms_signature'));
         $setup['sms_pretend'] = Input::get('sms_pretend', '');
         $setup['sign_cust_range'] = Input::get('sign_cust_range', 0);
+        $setup['work_time'] = Input::get('work_time', 8);
 
         file_put_contents(config_path('base_info.php'), '<?php return ' . var_export($setup, true) . '; ');
 

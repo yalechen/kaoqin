@@ -759,4 +759,7 @@ Route::group([
 
         // 任务模块
         require __DIR__ . '/ApiRoutes/task.php';
+
+        // 考勤模块
+        require __DIR__ . '/ApiRoutes/attendance.php';
     }));
