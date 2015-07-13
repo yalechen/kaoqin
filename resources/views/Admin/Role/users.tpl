@@ -84,7 +84,8 @@ function userAssign(role_id,role_name, user_id,real_name,flag){
 		        dataType: 'text',
 		        success: function(data) {
 		        	ialert(data);
-		        	window.location.reload();
+		        	window.location.reload();//用reload会出现一种问题，就是当批量指派完，再进行单个取消指派，则会reload后还会选中文本框的问题
+		        	//window.location.href='{route('RoleUsers')}'+'?role_id='+role_id;
 		        },
 		        error: function(xhq){
 		        	ialert(xhq.responseText);
