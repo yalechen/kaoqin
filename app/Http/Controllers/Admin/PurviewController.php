@@ -155,6 +155,12 @@ class PurviewController extends BaseController
         if (! $temp->isEmpty()) {
             return Response::make('此权限已经被指派到角色，不能被删除', 402);
         }
+
+        // 查看是否还有子权限
+        $temp = Purview::find(Input::get('id'))->childNode()->get();
+        if (! $temp->isEmpty()) {
+            return Response::make('删除失败，此权限旗下还有自权限，请先删除子权限', 402);
+        }
         Purview::find(Input::get('id'))->delete();
         return 'success';
     }

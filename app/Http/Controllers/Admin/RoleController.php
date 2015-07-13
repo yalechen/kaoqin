@@ -9,6 +9,7 @@ use Auth;
 use Redirect;
 use Response;
 use URL;
+use App\Models\Purview;
 
 class RoleController extends BaseController
 {
@@ -220,5 +221,65 @@ class RoleController extends BaseController
             }
             return '批量指派不成功，因为当页用户不存在';
         }
+    }
+
+    /**
+     * 获取角色权限【返回ztree 格式】
+     */
+    public function getPurview()
+    {
+        $validator = Validator::make(Input::all(), [
+            'role_id' => 'required|exists:roles,id,status,' . Role::STATUS_ON
+        ], [
+            'role_id.required' => '被指派角色不能为空',
+            'role_id.exists' => '被指派角色不存在或已禁用'
+        ]);
+        if ($validator->fails()) {
+            return Response::make($validator->messages()->first(), 402);
+        }
+
+        $purviews = Purview::whereStatus(Purview::STATUS_ON)->get();
+
+        $role_purview_ids = Role::find(Input::get('role_id'))->purviews()
+            ->lists('purview_id')
+            ->all();
+
+        $data = [];
+        foreach ($purviews as $i => $item) {
+            $data[$i]['id'] = $item['id'];
+            $data[$i]['pid'] = $item['parent_id'];
+            $data[$i]['key'] = $item['key'];
+            $data[$i]['name'] = $item['name'];
+            if (in_array($item['id'], $role_purview_ids)) {
+                $data[$i]['checked'] = "true";
+            } else {
+                $data[$i]['checked'] = "false";
+            }
+        }
+
+        return json_encode($data);
+    }
+
+    /**
+     * 角色权限指派
+     */
+    public function purviewAssign()
+    {
+        $validator = Validator::make(Input::all(), [
+            'role_id' => 'required|exists:roles,id,status,' . Role::STATUS_ON
+        ], [
+            'role_id.required' => '被指派角色不能为空',
+            'role_id.exists' => '被指派角色不存在或已禁用'
+        ]);
+        if ($validator->fails()) {
+            return Response::make($validator->messages()->first(), 402);
+        }
+
+        $role = Role::find(Input::get('role_id'));
+        $purview_ids = Input::get('purview_ids', []);
+
+        $role->purviews()->sync($purview_ids);
+
+        return $role;
     }
 }

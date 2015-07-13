@@ -130,6 +130,7 @@ $('.node').click(function() {
     $('.node_action').attr('data-id', $(this).attr('data-id'));
 });
 
+// 添加权限
 $(document).on('click', '.addNode', function() {
     $('.node').popover('hide');
     var id = $(this).parent().attr('data-id');
@@ -146,16 +147,27 @@ $(document).on('click', '.addNode', function() {
     $("#nodeModal").modal('show');
 });
 
+// 删除权限
 $(document).on('click', '.deleteNode', function() {
     $('.node').popover('hide');
     var id = $(this).parent().attr('data-id');
     iconfirm('确认要删除吗？', function() {
-        $.post('{route("PurviewDelete")}', { id : id }, function(data) {
-            window.location.reload();
-        }, 'text');
+    	$.ajax({
+            "type" : 'POST',
+            "dataType" : 'text',
+            "url" : '{route("PurviewDelete")}',
+            "data" : { id : id },
+            success : function(data){
+            	window.location.reload();
+            },
+            error : function(e){
+                ialert(e.responseText);
+            }
+        });
     });
 });
 
+//编辑权限
 $(document).on('click', '.editNode', function() {
     $('.node').popover('hide');
     var id = $(this).closest('.node_action').attr('data-id');
@@ -183,6 +195,7 @@ $(document).on('click', '.editNode', function() {
     }
 });
 
+// 编辑保存
 $("#submitAction").click(function() {
     var data = $("#form").serialize();
     $.ajax({

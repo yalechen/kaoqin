@@ -97,9 +97,6 @@
                 	<a href="{route('PurviewSeed')}"> 权限填充</a>
                 </li>
                 <li>
-                	<a href="###"> 角色权限指派</a>
-                </li>
-                <li>
                 	<a href="###"> 操作日志</a>
                 </li>
             </ul>

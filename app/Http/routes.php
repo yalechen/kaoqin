@@ -176,6 +176,20 @@ Route::group([
                         'parent' => 'RoleIndex',
                         'uses' => 'RoleController@userAssign'
                     ]);
+                    // 角色权限指派，根据角色ID获取权限树
+                    Route::get('purview', [
+                        'as' => 'GetPurviewByRoleId',
+                        'name' => '获取角色权限',
+                        'parent' => 'RoleIndex',
+                        'uses' => 'RoleController@getPurview'
+                    ]);
+                    // 角色权限指派
+                    Route::post('purview', [
+                        'as' => 'RolePurviewAssign',
+                        'name' => '角色权限指派',
+                        'parent' => 'RoleIndex',
+                        'uses' => 'RoleController@purviewAssign'
+                    ]);
                 });
 
                 // 权限管理
@@ -222,7 +236,7 @@ Route::group([
                     Route::get('info', [
                         'as' => 'PurviewInfo',
                         'name' => '权限信息',
-                        'parent' => 'PurviewInfo',
+                        'parent' => 'PurviewIndex',
                         'uses' => 'PurviewController@info'
                     ]);
                     // 权限填充页
@@ -635,7 +649,7 @@ Route::group([
                     Route::post('overtime/audit', [
                         'as' => 'OvertimeAudit',
                         'name' => '加班审核',
-                        'parent' => 'OvertimeAudit',
+                        'parent' => 'OvertimeIndex',
                         'uses' => 'OvertimeController@audit'
                     ]);
                 });
