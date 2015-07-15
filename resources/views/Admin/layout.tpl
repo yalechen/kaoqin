@@ -142,6 +142,7 @@
 <!--common scripts for all pages-->
 <script type="text/javascript" src="{asset('js/scripts.js')}"></script>
 <script type="text/javascript" src="{asset('js/ajaxfileupload.js')}"></script>
+<script type="text/javascript" src="{asset('js/jquery.qrcode.min.js')}"></script>
 <script type="text/javascript">
 $(document).ready(function() {
     //countTo
@@ -155,6 +156,23 @@ $(document).ready(function() {
         singleItem : true,
         autoPlay:true
     }); */
+    
+	//app下载二维码
+	$("#app-download-qrcode").click(function(){
+	    $("#appDownloadModal").modal('show');
+	    $('#appDownloadQrcode').html("");
+	    $("#appDownloadQrcode").qrcode({
+	        //render: "div", //table方式
+	        width: 200, //宽度
+	        height:200, //高度
+	        text: "http://m.kaoqin.com/app-download" //任意内容
+	    });
+	});
+    
+    //保存二维码
+	$("#saveQrcode").click(function(){
+		window.location.href="{route('AppDownload')}";
+	});
 });
 
 function ialert(msg) {

@@ -42,6 +42,13 @@ Route::group([
             'parent' => 'SystemModule',
             'uses' => 'BaseController@getDistrict'
         ]);
+        // 下载页
+        Route::get('download', [
+            'as' => 'AppDownload',
+            'name' => 'App下载',
+            'parent' => 'SystemModule',
+            'uses' => 'IndexController@download'
+        ]);
 
         // 退出
         Route::get('logout', [

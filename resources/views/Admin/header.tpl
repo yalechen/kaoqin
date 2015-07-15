@@ -247,6 +247,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-usermenu purple pull-right">
                     <li><a href="{route('UserEdit',['id'=>Auth::user()->id])}">  个人资料</a></li>
+                    <li><a href="javascript:;" id="app-download-qrcode">  App下载</a></li>
                     <li><a href="{route('AdminLogout')}"><i class="fa fa-sign-out pull-right"></i> 退出</a></li>
                     <!-- <li>
                         <a href="javascript:;">
@@ -267,3 +268,36 @@
     <!--right notification end-->
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="appDownloadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">下载或扫描App客户端</h4>
+            </div>
+            <div class="modal-body">
+            	<div class="row">
+	                <div class="col-sm-12">
+						<section class="panel">
+							<dl class="modal-code">
+								<dt id="appDownloadQrcode"></dt>
+	                            <dd>
+	                            	<!-- 请填写外网地址 -->
+	                                <a href="###" class="down-android">Android 下载</a>
+	                                <a href="###"class="down-app">IOS 下载</a>
+	                            </dd>
+	                        </dl>
+						</section>
+					</div>
+				</div>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-default" type="button" id="closeModal">关闭</button>
+                <button data-dismiss="modal" class="btn btn-success" type="button" id="saveQrcode">保存二维码</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal -->

@@ -6530,3 +6530,13 @@ a.view-all:hover {
     width: 100%;
     height: auto;
 }
+
+/*------------------modal-code-----------------*/
+.modal-code {}
+.modal-code dt { float: left; display:block; width: 200px; height:200px; padding: 0px 30px 20px;}
+.modal-code dt img { width: 200px;}
+.modal-code dd { margin-left: 260px; padding-top: 40px;}
+.modal-code dd a { display: block; overflow: hidden; font-size: 16px; color: #fff; width: 200px;max-width: 100%; margin: 0px auto 15px; height: 50px; line-height: 50px; padding-left: 60px; border-radius: 4px; background:#5cc691 no-repeat 15px 5px; text-decoration: none;}
+.modal-code dd a:hover { }
+.modal-code dd a.down-app { background-image: url("../img/icon-app.png");}
+.modal-code dd a.down-android { background-image: url("../img/icon-android.png");}

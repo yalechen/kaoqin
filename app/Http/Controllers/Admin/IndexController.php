@@ -84,4 +84,15 @@ class IndexController extends BaseController
         Auth::logout();
         return Redirect::route('AdminGetLogin');
     }
+
+    /**
+     * 保存二维码
+     */
+    public function download()
+    {
+        $filename = "img/canvas.png";
+        header('Content-type: image/png');
+        header('Content-Disposition: attachment; filename=' . $filename);
+        @readfile($filename);
+    }
 }
